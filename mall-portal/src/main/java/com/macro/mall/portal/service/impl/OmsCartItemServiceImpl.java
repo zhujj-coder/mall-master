@@ -48,12 +48,13 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         if (existCartItem == null) {
             cartItem.setCreateDate(new Date());
             count = cartItemMapper.insert(cartItem);
+            return cartItem.getId().intValue();
         } else {
             cartItem.setModifyDate(new Date());
             existCartItem.setQuantity(existCartItem.getQuantity() + cartItem.getQuantity());
             count = cartItemMapper.updateByPrimaryKey(existCartItem);
+            return  existCartItem.getId().intValue();
         }
-        return count;
     }
 
     /**
