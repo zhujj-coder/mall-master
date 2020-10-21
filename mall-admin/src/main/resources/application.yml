@@ -50,10 +50,10 @@ secure:
 
 aliyun:
   oss:
-    endpoint: oss-cn-shenzhen.aliyuncs.com # oss对外服务的访问域名
+    endpoint: oss-cn-beijing.aliyuncs.com # oss对外服务的访问域名
     accessKeyId: LTAI4GL2QUwqBAmD1Fet2AV9 # 访问身份验证中用到用户标识
     accessKeySecret: zt4Js8NzaHOxufmVuHgnZsH9XQzQU1 # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
-    bucketName: jj-oss # oss的存储空间
+    bucketName: szjjkj # oss的存储空间
     policy:
       expire: 300 # 签名有效期(S)
     maxSize: 10 # 上传文件大小(M)
