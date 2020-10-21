@@ -1,3 +1,5 @@
+server:
+  port: 8092
 spring:
   application:
     name: mall-admin
@@ -66,3 +68,4 @@ minio:
   bucketName: mall #存储桶名称
   accessKey: minioadmin #访问的key
   secretKey: minioadmin #访问的秘钥
+
