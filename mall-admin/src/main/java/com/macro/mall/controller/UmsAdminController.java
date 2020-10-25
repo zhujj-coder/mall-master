@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,12 @@ public class UmsAdminController {
         if (umsAdmin == null) {
             return CommonResult.failed();
         }
+//        默认分配商品管理员角色（roleIds:1）
+        List<Long> list  = new ArrayList<>();
+        list.add(1L);
+        adminService.updateRole(umsAdmin.getId(),list);
         return CommonResult.success(umsAdmin);
+
     }
 
     @ApiOperation(value = "登录以后返回token")
