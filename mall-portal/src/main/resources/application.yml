@@ -34,7 +34,7 @@ secure:
       - /product/**
       - /brand/**
       - /wx/login_by_weixin
-      - /wx/login
+      - /wx/login**
 
 # 自定义redis key
 redis:

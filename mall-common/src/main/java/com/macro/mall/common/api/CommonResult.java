@@ -1,5 +1,7 @@
 package com.macro.mall.common.api;
 
+import com.macro.mall.common.enums.ExceptionEnum;
+
 /**
  * 通用返回对象
  * Created by macro on 2019/4/19.
@@ -53,7 +55,9 @@ public class CommonResult<T> {
     public static <T> CommonResult<T> failed(IErrorCode errorCode) {
         return new CommonResult<T>(errorCode.getCode(), errorCode.getMessage(), null);
     }
-
+    public static <T> CommonResult<T> failed(ExceptionEnum errorCode) {
+        return new CommonResult<T>(errorCode.getCode(), errorCode.getMessage(), null);
+    }
     /**
      * 失败返回结果
      * @param errorCode 错误码

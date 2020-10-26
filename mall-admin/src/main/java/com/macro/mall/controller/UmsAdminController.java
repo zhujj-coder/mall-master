@@ -3,6 +3,7 @@ package com.macro.mall.controller;
 import cn.hutool.core.collection.CollUtil;
 import com.macro.mall.common.api.CommonPage;
 import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.common.util.RequestUtil;
 import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
@@ -51,6 +52,15 @@ public class UmsAdminController {
             return CommonResult.failed();
         }
         return CommonResult.success(umsAdmin);
+    }
+
+    @ApiOperation(value = "用户获取注册验证码")
+    @RequestMapping(value = "/getCode", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getCode( @RequestBody Map<String,String> map,HttpServletRequest request) {
+        String ip = RequestUtil.getRequestIp(request);
+        adminService.getCode(map.get("mobile"),ip);
+        return CommonResult.success(null);
     }
 
     @ApiOperation(value = "登录以后返回token")

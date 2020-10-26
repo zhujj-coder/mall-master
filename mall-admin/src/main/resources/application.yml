@@ -49,6 +49,8 @@ secure:
       - /admin/info
       - /admin/logout
       - /minio/upload
+      - /admin/getCode
+      - /admin/checkCode
 
 aliyun:
   oss:

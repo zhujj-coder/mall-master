@@ -1,6 +1,7 @@
 package com.macro.mall.security.component;
 
 import com.macro.mall.security.config.IgnoreUrlsConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.SecurityMetadataSource;
@@ -18,6 +19,7 @@ import java.io.IOException;
  * 动态权限过滤器，用于实现基于路径的动态权限过滤
  * Created by macro on 2020/2/7.
  */
+@Slf4j
 public class DynamicSecurityFilter extends AbstractSecurityInterceptor implements Filter {
 
     @Autowired
@@ -45,6 +47,7 @@ public class DynamicSecurityFilter extends AbstractSecurityInterceptor implement
         }
         //白名单请求直接放行
         PathMatcher pathMatcher = new AntPathMatcher();
+        log.info("ignoreUrlsConfig.getUrls[{}]",ignoreUrlsConfig.getUrls());
         for (String path : ignoreUrlsConfig.getUrls()) {
             if(pathMatcher.match(path,request.getRequestURI())){
                 fi.getChain().doFilter(fi.getRequest(), fi.getResponse());

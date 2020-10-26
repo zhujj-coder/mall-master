@@ -8,10 +8,13 @@ import com.macro.mall.service.UmsResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,18 @@ public class MallSecurityConfig extends SecurityConfig {
     private UmsAdminService adminService;
     @Autowired
     private UmsResourceService resourceService;
+    @Bean
+    public RestTemplate restTemplate(ClientHttpRequestFactory factory) {
+        return new RestTemplate(factory);
+    }
+
+    @Bean
+    public ClientHttpRequestFactory simpleClientHttpRequestFactory() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(5000);//ms
+        factory.setConnectTimeout(15000);//ms
+        return factory;
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {

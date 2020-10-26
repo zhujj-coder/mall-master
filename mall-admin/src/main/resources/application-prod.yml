@@ -28,3 +28,6 @@ logging:
 
 logstash:
   host: localhost
+common:
+  getCodeUrl: "http://127.0.0.1:8090/common/mobile/getCode"
+  checkCodeUrl: "http://127.0.0.1:8090/common/mobile/checkCode"

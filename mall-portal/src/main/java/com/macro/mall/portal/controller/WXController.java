@@ -96,7 +96,7 @@ public class WXController {
     public CommonResult loginByWeixin(@RequestParam String code) {
         //获取openid
         String requestUrl = String.format(this.webAccessTokenhttps,
-                this.appId,
+                this.appId,// redis 中获取没有用接口拿
                 this.secret,
                 code);//通过自定义工具类组合出小程序需要的登录凭证 code
 

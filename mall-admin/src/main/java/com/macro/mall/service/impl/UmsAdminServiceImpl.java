@@ -2,9 +2,13 @@ package com.macro.mall.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.macro.mall.bo.AdminUserDetails;
+import com.macro.mall.common.enums.ExceptionEnum;
 import com.macro.mall.common.exception.Asserts;
+import com.macro.mall.common.exception.MyException;
 import com.macro.mall.common.util.RequestUtil;
 import com.macro.mall.dao.UmsAdminRoleRelationDao;
 import com.macro.mall.dto.UmsAdminParam;
@@ -20,6 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,9 +37,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +54,10 @@ import java.util.List;
 @Service
 public class UmsAdminServiceImpl implements UmsAdminService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
+    @Value("${common.getCodeUrl}")
+    private String getCodeUrl;
+    @Value("${common.checkCodeUrl}")
+    private String checkCodeUrl;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
@@ -58,7 +72,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     private UmsAdminLoginLogMapper loginLogMapper;
     @Autowired
     private UmsAdminCacheService adminCacheService;
-
+    @Autowired
+    private RestTemplate restTemplate;
     @Override
     public UmsAdmin getAdminByUsername(String username) {
         UmsAdmin admin = adminCacheService.getAdmin(username);
@@ -76,6 +91,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 
     @Override
     public UmsAdmin register(UmsAdminParam umsAdminParam) {
+//        验证码
+        checkCode(umsAdminParam);
         UmsAdmin umsAdmin = new UmsAdmin();
         BeanUtils.copyProperties(umsAdminParam, umsAdmin);
         umsAdmin.setCreateTime(new Date());
@@ -92,6 +109,34 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         umsAdmin.setPassword(encodePassword);
         adminMapper.insert(umsAdmin);
         return umsAdmin;
+    }
+    @Override
+    public void getCode(String mobile, String ip) {
+//        验证码
+        JSONObject jsonObject =new JSONObject();
+        jsonObject.put("mobile",mobile);
+        jsonObject.put("ip",ip);
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        JSONObject resData = restTemplate.postForObject(getCodeUrl, jsonObject, JSONObject.class,headers);
+        String code = resData.getString("code");
+        if(!"200".equals(code)){
+            throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),resData.getString("message"));
+        }
+    }
+    private void checkCode(UmsAdminParam umsAdminParam) {
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        HttpEntity<String> httpEntity =new HttpEntity<>(JSONObject.toJSONString(umsAdminParam).replace("username","mobile"),headers);
+        JSONObject resData = restTemplate.postForObject(checkCodeUrl, httpEntity, JSONObject.class);
+        String code = resData.getString("code");
+        if(!"200".equals(code)){
+            throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),resData.getString("message"));
+        }
     }
 
     @Override

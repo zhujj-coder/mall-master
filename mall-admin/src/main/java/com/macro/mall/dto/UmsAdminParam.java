@@ -20,8 +20,8 @@ public class UmsAdminParam {
     @NotEmpty
     @ApiModelProperty(value = "密码", required = true)
     private String password;
-    @ApiModelProperty(value = "用户头像")
-    private String icon;
+    @ApiModelProperty(value = "验证码")
+    private String code;
     @Email
     @ApiModelProperty(value = "邮箱")
     private String email;

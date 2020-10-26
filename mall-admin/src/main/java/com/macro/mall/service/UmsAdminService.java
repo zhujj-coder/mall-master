@@ -25,6 +25,8 @@ public interface UmsAdminService {
      */
     UmsAdmin register(UmsAdminParam umsAdminParam);
 
+    void getCode(String mobile, String ip);
+
     /**
      * 登录功能
      * @param username 用户名
