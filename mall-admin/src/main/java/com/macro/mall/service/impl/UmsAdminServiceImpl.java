@@ -92,7 +92,6 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Override
     public UmsAdmin register(UmsAdminParam umsAdminParam) {
 //        验证码
-        checkCode(umsAdminParam);
         UmsAdmin umsAdmin = new UmsAdmin();
         BeanUtils.copyProperties(umsAdminParam, umsAdmin);
         umsAdmin.setCreateTime(new Date());
@@ -102,13 +101,19 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         example.createCriteria().andUsernameEqualTo(umsAdmin.getUsername());
         List<UmsAdmin> umsAdminList = adminMapper.selectByExample(example);
         if (umsAdminList.size() > 0) {
-            return null;
+            throw new MyException(ExceptionEnum.DOUBLE_REGISTER_ERROR);
         }
         //将密码进行加密操作
         String encodePassword = passwordEncoder.encode(umsAdmin.getPassword());
         umsAdmin.setPassword(encodePassword);
         adminMapper.insert(umsAdmin);
         return umsAdmin;
+    }
+    @Override
+    public UmsAdmin registerCode(UmsAdminParam umsAdminParam) {
+//        验证码
+        checkCode(umsAdminParam);
+        return register(umsAdminParam);
     }
     @Override
     public void getCode(String mobile, String ip) {

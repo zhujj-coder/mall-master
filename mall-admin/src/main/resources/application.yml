@@ -45,6 +45,7 @@ secure:
       - /druid/**
       - /admin/login
       - /admin/register
+      - /admin/registerCode
       - /admin/update/**
       - /admin/info
       - /admin/logout

@@ -59,7 +59,21 @@ public class UmsAdminController {
         return CommonResult.success(umsAdmin);
 
     }
+    @ApiOperation(value = "用户注册")
+    @RequestMapping(value = "/registerCode", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<UmsAdmin> registerCode(@Validated @RequestBody UmsAdminParam umsAdminParam) {
+        UmsAdmin umsAdmin = adminService.registerCode(umsAdminParam);
+        if (umsAdmin == null) {
+            return CommonResult.failed();
+        }
+//        默认分配商品管理员角色（roleIds:1）
+        List<Long> list  = new ArrayList<>();
+        list.add(1L);
+        adminService.updateRole(umsAdmin.getId(),list);
+        return CommonResult.success(umsAdmin);
 
+    }
     @ApiOperation(value = "用户获取注册验证码")
     @RequestMapping(value = "/getCode", method = RequestMethod.POST)
     @ResponseBody

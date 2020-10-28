@@ -25,6 +25,8 @@ public interface UmsAdminService {
      */
     UmsAdmin register(UmsAdminParam umsAdminParam);
 
+    UmsAdmin registerCode(UmsAdminParam umsAdminParam);
+
     void getCode(String mobile, String ip);
 
     /**
