@@ -29,7 +29,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -317,5 +319,12 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             return new AdminUserDetails(admin,resourceList);
         }
         throw new UsernameNotFoundException("用户名或密码错误");
+    }
+    @Override
+    public UmsAdmin getCurrentAdmin() {
+        SecurityContext ctx = SecurityContextHolder.getContext();
+        Authentication auth = ctx.getAuthentication();
+        AdminUserDetails details = (AdminUserDetails) auth.getPrincipal();
+        return details.getUmsAdmin();
     }
 }
