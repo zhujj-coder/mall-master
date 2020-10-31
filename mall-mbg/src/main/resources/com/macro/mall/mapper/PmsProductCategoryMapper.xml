@@ -13,6 +13,7 @@
     <result column="sort" jdbcType="INTEGER" property="sort" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.macro.mall.model.PmsProductCategory">
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, parent_id, name, level, product_count, product_unit, nav_status, show_status, 
-    sort, icon, keywords
+    sort, icon, keywords, admin_id
   </sql>
   <sql id="Blob_Column_List">
     description
@@ -137,11 +138,13 @@
     insert into pms_product_category (parent_id, name, level, 
       product_count, product_unit, nav_status, 
       show_status, sort, icon, 
-      keywords, description)
+      keywords, admin_id, description
+      )
     values (#{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{productCount,jdbcType=INTEGER}, #{productUnit,jdbcType=VARCHAR}, #{navStatus,jdbcType=INTEGER}, 
       #{showStatus,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}, 
-      #{keywords,jdbcType=VARCHAR}, #{description,jdbcType=LONGVARCHAR})
+      #{keywords,jdbcType=VARCHAR}, #{adminId,jdbcType=BIGINT}, #{description,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.PmsProductCategory">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -179,6 +182,9 @@
       <if test="keywords != null">
         keywords,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
       <if test="description != null">
         description,
       </if>
@@ -213,6 +219,9 @@
       </if>
       <if test="keywords != null">
         #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
       <if test="description != null">
         #{description,jdbcType=LONGVARCHAR},
@@ -261,6 +270,9 @@
       <if test="record.keywords != null">
         keywords = #{record.keywords,jdbcType=VARCHAR},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=LONGVARCHAR},
       </if>
@@ -282,6 +294,7 @@
       sort = #{record.sort,jdbcType=INTEGER},
       icon = #{record.icon,jdbcType=VARCHAR},
       keywords = #{record.keywords,jdbcType=VARCHAR},
+      admin_id = #{record.adminId,jdbcType=BIGINT},
       description = #{record.description,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -299,7 +312,8 @@
       show_status = #{record.showStatus,jdbcType=INTEGER},
       sort = #{record.sort,jdbcType=INTEGER},
       icon = #{record.icon,jdbcType=VARCHAR},
-      keywords = #{record.keywords,jdbcType=VARCHAR}
+      keywords = #{record.keywords,jdbcType=VARCHAR},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -337,6 +351,9 @@
       <if test="keywords != null">
         keywords = #{keywords,jdbcType=VARCHAR},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
       <if test="description != null">
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
@@ -355,6 +372,7 @@
       sort = #{sort,jdbcType=INTEGER},
       icon = #{icon,jdbcType=VARCHAR},
       keywords = #{keywords,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=BIGINT},
       description = #{description,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -369,7 +387,8 @@
       show_status = #{showStatus,jdbcType=INTEGER},
       sort = #{sort,jdbcType=INTEGER},
       icon = #{icon,jdbcType=VARCHAR},
-      keywords = #{keywords,jdbcType=VARCHAR}
+      keywords = #{keywords,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

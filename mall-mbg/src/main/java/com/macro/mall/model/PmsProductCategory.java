@@ -31,6 +31,9 @@ public class PmsProductCategory implements Serializable {
 
     private String keywords;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     @ApiModelProperty(value = "描述")
     private String description;
 
@@ -124,34 +127,19 @@ public class PmsProductCategory implements Serializable {
         this.keywords = keywords;
     }
 
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", parentId=").append(parentId);
-        sb.append(", name=").append(name);
-        sb.append(", level=").append(level);
-        sb.append(", productCount=").append(productCount);
-        sb.append(", productUnit=").append(productUnit);
-        sb.append(", navStatus=").append(navStatus);
-        sb.append(", showStatus=").append(showStatus);
-        sb.append(", sort=").append(sort);
-        sb.append(", icon=").append(icon);
-        sb.append(", keywords=").append(keywords);
-        sb.append(", description=").append(description);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
     }
 }
