@@ -40,4 +40,6 @@ public class PmsProductCategoryParam {
     private String description;
     @ApiModelProperty("产品相关筛选属性集合")
     private List<Long> productAttributeIdList;
+    @ApiModelProperty("admin_Id")
+    private Long adminId;
 }

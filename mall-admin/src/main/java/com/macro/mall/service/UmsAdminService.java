@@ -88,4 +88,10 @@ public interface UmsAdminService {
      * 获取用户信息
      */
     UserDetails loadUserByUsername(String username);
+
+    /**
+     * 获取当前用户信息
+     * @return
+     */
+    UmsAdmin getCurrentAdmin();
 }
