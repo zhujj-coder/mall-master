@@ -30,6 +30,9 @@ public class PmsBrand implements Serializable {
     @ApiModelProperty(value = "专区大图")
     private String bigPic;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     @ApiModelProperty(value = "品牌故事")
     private String brandStory;
 
@@ -115,33 +118,19 @@ public class PmsBrand implements Serializable {
         this.bigPic = bigPic;
     }
 
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
     public String getBrandStory() {
         return brandStory;
     }
 
     public void setBrandStory(String brandStory) {
         this.brandStory = brandStory;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", firstLetter=").append(firstLetter);
-        sb.append(", sort=").append(sort);
-        sb.append(", factoryStatus=").append(factoryStatus);
-        sb.append(", showStatus=").append(showStatus);
-        sb.append(", productCount=").append(productCount);
-        sb.append(", productCommentCount=").append(productCommentCount);
-        sb.append(", logo=").append(logo);
-        sb.append(", bigPic=").append(bigPic);
-        sb.append(", brandStory=").append(brandStory);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
     }
 }

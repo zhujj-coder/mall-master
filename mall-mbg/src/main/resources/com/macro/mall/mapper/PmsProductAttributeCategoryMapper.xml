@@ -6,6 +6,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="attribute_count" jdbcType="INTEGER" property="attributeCount" />
     <result column="param_count" jdbcType="INTEGER" property="paramCount" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, attribute_count, param_count
+    id, name, attribute_count, param_count, admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.PmsProductAttributeCategoryExample" resultMap="BaseResultMap">
     select
@@ -102,10 +103,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into pms_product_attribute_category (name, attribute_count, param_count
-      )
-    values (#{name,jdbcType=VARCHAR}, #{attributeCount,jdbcType=INTEGER}, #{paramCount,jdbcType=INTEGER}
-      )
+    insert into pms_product_attribute_category (name, attribute_count, param_count, 
+      admin_id)
+    values (#{name,jdbcType=VARCHAR}, #{attributeCount,jdbcType=INTEGER}, #{paramCount,jdbcType=INTEGER}, 
+      #{adminId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.PmsProductAttributeCategory">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -122,6 +123,9 @@
       <if test="paramCount != null">
         param_count,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -132,6 +136,9 @@
       </if>
       <if test="paramCount != null">
         #{paramCount,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -156,6 +163,9 @@
       <if test="record.paramCount != null">
         param_count = #{record.paramCount,jdbcType=INTEGER},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,7 +176,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
       attribute_count = #{record.attributeCount,jdbcType=INTEGER},
-      param_count = #{record.paramCount,jdbcType=INTEGER}
+      param_count = #{record.paramCount,jdbcType=INTEGER},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,6 +194,9 @@
       <if test="paramCount != null">
         param_count = #{paramCount,jdbcType=INTEGER},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -190,7 +204,8 @@
     update pms_product_attribute_category
     set name = #{name,jdbcType=VARCHAR},
       attribute_count = #{attributeCount,jdbcType=INTEGER},
-      param_count = #{paramCount,jdbcType=INTEGER}
+      param_count = #{paramCount,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

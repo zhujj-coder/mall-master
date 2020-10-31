@@ -14,6 +14,9 @@ public class PmsProductAttributeCategory implements Serializable {
     @ApiModelProperty(value = "参数数量")
     private Integer paramCount;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -48,18 +51,11 @@ public class PmsProductAttributeCategory implements Serializable {
         this.paramCount = paramCount;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", attributeCount=").append(attributeCount);
-        sb.append(", paramCount=").append(paramCount);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

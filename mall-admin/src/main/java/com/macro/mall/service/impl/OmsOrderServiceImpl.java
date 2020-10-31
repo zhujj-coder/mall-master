@@ -122,7 +122,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         UmsAdmin admin = adminService.getCurrentAdmin();
         OmsOrderExample example = new OmsOrderExample();
         example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
-        int count = orderMapper.updateByExample(order, example);
+        int count = orderMapper.updateByExampleSelective(order, example);
         //插入操作记录
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
         history.setOrderId(receiverInfoParam.getOrderId());
@@ -144,7 +144,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         UmsAdmin admin = adminService.getCurrentAdmin();
         OmsOrderExample example = new OmsOrderExample();
         example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
-        int count = orderMapper.updateByExample(order, example);
+        int count = orderMapper.updateByExampleSelective(order, example);
         //插入操作记录
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
         history.setOrderId(moneyInfoParam.getOrderId());
@@ -165,7 +165,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         UmsAdmin admin = adminService.getCurrentAdmin();
         OmsOrderExample example = new OmsOrderExample();
         example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
-        int count = orderMapper.updateByExample(order, example);
+        int count = orderMapper.updateByExampleSelective(order, example);
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
         history.setOrderId(id);
         history.setCreateTime(new Date());

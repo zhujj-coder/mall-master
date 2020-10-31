@@ -6,14 +6,14 @@ import com.macro.mall.dto.PmsProductAttributeParam;
 import com.macro.mall.dto.ProductAttrInfo;
 import com.macro.mall.mapper.PmsProductAttributeCategoryMapper;
 import com.macro.mall.mapper.PmsProductAttributeMapper;
-import com.macro.mall.model.PmsProductAttribute;
-import com.macro.mall.model.PmsProductAttributeCategory;
-import com.macro.mall.model.PmsProductAttributeExample;
+import com.macro.mall.model.*;
 import com.macro.mall.service.PmsProductAttributeService;
+import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,19 +22,22 @@ import java.util.List;
  */
 @Service
 public class PmsProductAttributeServiceImpl implements PmsProductAttributeService {
-    @Autowired
+    @Resource
     private PmsProductAttributeMapper productAttributeMapper;
-    @Autowired
+    @Resource
     private PmsProductAttributeCategoryMapper productAttributeCategoryMapper;
-    @Autowired
+    @Resource
     private PmsProductAttributeDao productAttributeDao;
-
+    @Autowired
+    private UmsAdminService umsAdminService;
     @Override
     public List<PmsProductAttribute> getList(Long cid, Integer type, Integer pageSize, Integer pageNum) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PageHelper.startPage(pageNum, pageSize);
         PmsProductAttributeExample example = new PmsProductAttributeExample();
         example.setOrderByClause("sort desc");
-        example.createCriteria().andProductAttributeCategoryIdEqualTo(cid).andTypeEqualTo(type);
+        example.createCriteria().andProductAttributeCategoryIdEqualTo(cid).andTypeEqualTo(type)
+        .andAdminIdEqualTo(currentAdmin.getId());
         return productAttributeMapper.selectByExample(example);
     }
 
@@ -42,6 +45,8 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
     public int create(PmsProductAttributeParam pmsProductAttributeParam) {
         PmsProductAttribute pmsProductAttribute = new PmsProductAttribute();
         BeanUtils.copyProperties(pmsProductAttributeParam, pmsProductAttribute);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        pmsProductAttribute.setAdminId(currentAdmin.getId());
         int count = productAttributeMapper.insertSelective(pmsProductAttribute);
         //新增商品属性以后需要更新商品属性分类数量
         PmsProductAttributeCategory pmsProductAttributeCategory = productAttributeCategoryMapper.selectByPrimaryKey(pmsProductAttribute.getProductAttributeCategoryId());
@@ -50,7 +55,10 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
         }else if(pmsProductAttribute.getType()==1){
             pmsProductAttributeCategory.setParamCount(pmsProductAttributeCategory.getParamCount()+1);
         }
-        productAttributeCategoryMapper.updateByPrimaryKey(pmsProductAttributeCategory);
+        PmsProductAttributeCategoryExample example2 =new PmsProductAttributeCategoryExample();
+        example2.or().andIdEqualTo(pmsProductAttributeCategory.getId())
+                .andAdminIdEqualTo(currentAdmin.getId());
+        productAttributeCategoryMapper.updateByExampleSelective(pmsProductAttributeCategory,example2);
         return count;
     }
 
@@ -59,12 +67,22 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
         PmsProductAttribute pmsProductAttribute = new PmsProductAttribute();
         pmsProductAttribute.setId(id);
         BeanUtils.copyProperties(productAttributeParam, pmsProductAttribute);
-        return productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+        PmsProductAttributeExample example =new PmsProductAttributeExample();
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        pmsProductAttribute.setAdminId(currentAdmin.getId());
+        example.or().andIdEqualTo(pmsProductAttribute.getId())
+                .andAdminIdEqualTo(currentAdmin.getId());
+        return productAttributeMapper.updateByExampleSelective(pmsProductAttribute,example);
     }
 
     @Override
     public PmsProductAttribute getItem(Long id) {
-        return productAttributeMapper.selectByPrimaryKey(id);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        PmsProductAttribute pmsProductAttribute = productAttributeMapper.selectByPrimaryKey(id);
+        if(pmsProductAttribute.getAdminId().equals(currentAdmin.getId())){
+            return pmsProductAttribute;
+        }
+        return null;
     }
 
     @Override
@@ -73,8 +91,11 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
         PmsProductAttribute pmsProductAttribute = productAttributeMapper.selectByPrimaryKey(ids.get(0));
         Integer type = pmsProductAttribute.getType();
         PmsProductAttributeCategory pmsProductAttributeCategory = productAttributeCategoryMapper.selectByPrimaryKey(pmsProductAttribute.getProductAttributeCategoryId());
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        pmsProductAttribute.setAdminId(currentAdmin.getId());
         PmsProductAttributeExample example = new PmsProductAttributeExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids)
+        .andAdminIdEqualTo(currentAdmin.getId());
         int count = productAttributeMapper.deleteByExample(example);
         //删除完成后修改数量
         if(type==0){
@@ -90,7 +111,10 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
                 pmsProductAttributeCategory.setParamCount(0);
             }
         }
-        productAttributeCategoryMapper.updateByPrimaryKey(pmsProductAttributeCategory);
+        PmsProductAttributeCategoryExample example2 =new PmsProductAttributeCategoryExample();
+        example2.or().andIdEqualTo(pmsProductAttributeCategory.getId())
+                .andAdminIdEqualTo(currentAdmin.getId());
+        productAttributeCategoryMapper.updateByExampleSelective(pmsProductAttributeCategory,example2);
         return count;
     }
 

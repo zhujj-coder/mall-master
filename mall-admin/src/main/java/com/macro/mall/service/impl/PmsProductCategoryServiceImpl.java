@@ -10,6 +10,7 @@ import com.macro.mall.mapper.PmsProductCategoryMapper;
 import com.macro.mall.mapper.PmsProductMapper;
 import com.macro.mall.model.*;
 import com.macro.mall.service.PmsProductCategoryService;
+import com.macro.mall.service.UmsAdminService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
     private PmsProductCategoryAttributeRelationMapper productCategoryAttributeRelationMapper;
     @Autowired
     private PmsProductCategoryDao productCategoryDao;
+    @Autowired
+    private UmsAdminService umsAdminService;
     @Override
     public int create(PmsProductCategoryParam pmsProductCategoryParam) {
         PmsProductCategory productCategory = new PmsProductCategory();
@@ -41,6 +44,8 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
         BeanUtils.copyProperties(pmsProductCategoryParam, productCategory);
         //没有父分类时为一级分类
         setCategoryLevel(productCategory);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        productCategory.setAdminId(currentAdmin.getId());
         int count = productCategoryMapper.insertSelective(productCategory);
         //创建筛选属性关联
         List<Long> productAttributeIdList = pmsProductCategoryParam.getProductAttributeIdList();
@@ -95,9 +100,12 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
     @Override
     public List<PmsProductCategory> getList(Long parentId, Integer pageSize, Integer pageNum) {
         PageHelper.startPage(pageNum, pageSize);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProductCategoryExample example = new PmsProductCategoryExample();
         example.setOrderByClause("sort desc");
-        example.createCriteria().andParentIdEqualTo(parentId);
+        example.createCriteria().
+                andParentIdEqualTo(parentId)
+                .andAdminIdEqualTo(currentAdmin.getId());
         return productCategoryMapper.selectByExample(example);
     }
 
@@ -116,7 +124,9 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
         PmsProductCategory productCategory = new PmsProductCategory();
         productCategory.setNavStatus(navStatus);
         PmsProductCategoryExample example = new PmsProductCategoryExample();
-        example.createCriteria().andIdIn(ids);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        example.createCriteria().andIdIn(ids)
+                .andAdminIdEqualTo(currentAdmin.getId());
         return productCategoryMapper.updateByExampleSelective(productCategory, example);
     }
 
@@ -124,14 +134,17 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
     public int updateShowStatus(List<Long> ids, Integer showStatus) {
         PmsProductCategory productCategory = new PmsProductCategory();
         productCategory.setShowStatus(showStatus);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProductCategoryExample example = new PmsProductCategoryExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids)
+                .andAdminIdEqualTo(currentAdmin.getId());
         return productCategoryMapper.updateByExampleSelective(productCategory, example);
     }
 
     @Override
     public List<PmsProductCategoryWithChildrenItem> listWithChildren() {
-        return productCategoryDao.listWithChildren();
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        return productCategoryDao.listWithChildren(currentAdmin.getId());
     }
 
     /**

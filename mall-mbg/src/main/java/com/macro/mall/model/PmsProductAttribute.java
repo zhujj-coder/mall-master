@@ -37,6 +37,9 @@ public class PmsProductAttribute implements Serializable {
     @ApiModelProperty(value = "属性的类型；0->规格；1->参数")
     private Integer type;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -135,26 +138,11 @@ public class PmsProductAttribute implements Serializable {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", productAttributeCategoryId=").append(productAttributeCategoryId);
-        sb.append(", name=").append(name);
-        sb.append(", selectType=").append(selectType);
-        sb.append(", inputType=").append(inputType);
-        sb.append(", inputList=").append(inputList);
-        sb.append(", sort=").append(sort);
-        sb.append(", filterType=").append(filterType);
-        sb.append(", searchType=").append(searchType);
-        sb.append(", relatedStatus=").append(relatedStatus);
-        sb.append(", handAddStatus=").append(handAddStatus);
-        sb.append(", type=").append(type);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

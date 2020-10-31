@@ -4,11 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.macro.mall.dto.PmsBrandParam;
 import com.macro.mall.mapper.PmsBrandMapper;
 import com.macro.mall.mapper.PmsProductMapper;
-import com.macro.mall.model.PmsBrand;
-import com.macro.mall.model.PmsBrandExample;
-import com.macro.mall.model.PmsProduct;
-import com.macro.mall.model.PmsProductExample;
+import com.macro.mall.model.*;
 import com.macro.mall.service.PmsBrandService;
+import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,16 +24,22 @@ public class PmsBrandServiceImpl implements PmsBrandService {
     private PmsBrandMapper brandMapper;
     @Autowired
     private PmsProductMapper productMapper;
-
+    @Autowired
+    private UmsAdminService umsAdminService;
     @Override
     public List<PmsBrand> listAllBrand() {
-        return brandMapper.selectByExample(new PmsBrandExample());
+        PmsBrandExample pmsBrandExample = new PmsBrandExample();
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        pmsBrandExample.or().andAdminIdEqualTo(currentAdmin.getId());
+        return brandMapper.selectByExample(pmsBrandExample);
     }
 
     @Override
     public int createBrand(PmsBrandParam pmsBrandParam) {
         PmsBrand pmsBrand = new PmsBrand();
         BeanUtils.copyProperties(pmsBrandParam, pmsBrand);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        pmsBrand.setAdminId(currentAdmin.getId());
         //如果创建时首字母为空，取名称的第一个为首字母
         if (StringUtils.isEmpty(pmsBrand.getFirstLetter())) {
             pmsBrand.setFirstLetter(pmsBrand.getName().substring(0, 1));
@@ -45,6 +49,7 @@ public class PmsBrandServiceImpl implements PmsBrandService {
 
     @Override
     public int updateBrand(Long id, PmsBrandParam pmsBrandParam) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsBrand pmsBrand = new PmsBrand();
         BeanUtils.copyProperties(pmsBrandParam, pmsBrand);
         pmsBrand.setId(id);
@@ -56,20 +61,27 @@ public class PmsBrandServiceImpl implements PmsBrandService {
         PmsProduct product = new PmsProduct();
         product.setBrandName(pmsBrand.getName());
         PmsProductExample example = new PmsProductExample();
-        example.createCriteria().andBrandIdEqualTo(id);
+        example.createCriteria().andBrandIdEqualTo(id).andAdminIdEqualTo(currentAdmin.getId());
         productMapper.updateByExampleSelective(product,example);
-        return brandMapper.updateByPrimaryKeySelective(pmsBrand);
+        PmsBrandExample example2 =new PmsBrandExample();
+        example2.or().andIdEqualTo(pmsBrand.getId()).andAdminIdEqualTo(currentAdmin.getId());
+        return brandMapper.updateByExampleSelective(pmsBrand,example2);
     }
 
     @Override
     public int deleteBrand(Long id) {
-        return brandMapper.deleteByPrimaryKey(id);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        PmsBrandExample example =new PmsBrandExample();
+        example.or().andIdEqualTo(id).andAdminIdEqualTo(currentAdmin.getId());
+        return brandMapper.deleteByExample(example);
     }
 
     @Override
     public int deleteBrand(List<Long> ids) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsBrandExample pmsBrandExample = new PmsBrandExample();
-        pmsBrandExample.createCriteria().andIdIn(ids);
+        pmsBrandExample.createCriteria().andIdIn(ids)
+        .andAdminIdEqualTo(currentAdmin.getId());
         return brandMapper.deleteByExample(pmsBrandExample);
     }
 
@@ -82,29 +94,40 @@ public class PmsBrandServiceImpl implements PmsBrandService {
         if (!StringUtils.isEmpty(keyword)) {
             criteria.andNameLike("%" + keyword + "%");
         }
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        criteria.andAdminIdEqualTo(currentAdmin.getId());
         return brandMapper.selectByExample(pmsBrandExample);
     }
 
     @Override
     public PmsBrand getBrand(Long id) {
-        return brandMapper.selectByPrimaryKey(id);
+        PmsBrand pmsBrand = brandMapper.selectByPrimaryKey(id);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        if(pmsBrand.getAdminId().equals(currentAdmin.getId())){
+            return pmsBrand;
+        }
+        return null;
     }
 
     @Override
     public int updateShowStatus(List<Long> ids, Integer showStatus) {
         PmsBrand pmsBrand = new PmsBrand();
         pmsBrand.setShowStatus(showStatus);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsBrandExample pmsBrandExample = new PmsBrandExample();
-        pmsBrandExample.createCriteria().andIdIn(ids);
+        pmsBrandExample.createCriteria().andIdIn(ids)
+        .andAdminIdEqualTo(currentAdmin.getId());
         return brandMapper.updateByExampleSelective(pmsBrand, pmsBrandExample);
     }
 
     @Override
     public int updateFactoryStatus(List<Long> ids, Integer factoryStatus) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsBrand pmsBrand = new PmsBrand();
         pmsBrand.setFactoryStatus(factoryStatus);
         PmsBrandExample pmsBrandExample = new PmsBrandExample();
-        pmsBrandExample.createCriteria().andIdIn(ids);
+        pmsBrandExample.createCriteria().andIdIn(ids)
+        .andAdminIdEqualTo(currentAdmin.getId());
         return brandMapper.updateByExampleSelective(pmsBrand, pmsBrandExample);
     }
 }

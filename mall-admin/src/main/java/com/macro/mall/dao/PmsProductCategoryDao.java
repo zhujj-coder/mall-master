@@ -1,6 +1,7 @@
 package com.macro.mall.dao;
 
 import com.macro.mall.dto.PmsProductCategoryWithChildrenItem;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public interface PmsProductCategoryDao {
     /**
      * 获取商品分类及其子分类
      */
-    List<PmsProductCategoryWithChildrenItem> listWithChildren();
+    List<PmsProductCategoryWithChildrenItem> listWithChildren(@Param("adminId") Long adminId);
 }

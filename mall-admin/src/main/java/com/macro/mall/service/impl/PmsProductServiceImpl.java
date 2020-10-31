@@ -9,6 +9,7 @@ import com.macro.mall.dto.PmsProductResult;
 import com.macro.mall.mapper.*;
 import com.macro.mall.model.*;
 import com.macro.mall.service.PmsProductService;
+import com.macro.mall.service.UmsAdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,8 @@ public class PmsProductServiceImpl implements PmsProductService {
     private PmsProductDao productDao;
     @Autowired
     private PmsProductVertifyRecordDao productVertifyRecordDao;
+    @Autowired
+    private UmsAdminService umsAdminService;
 
     @Override
     public int create(PmsProductParam productParam) {
@@ -71,6 +74,8 @@ public class PmsProductServiceImpl implements PmsProductService {
         //创建商品
         PmsProduct product = productParam;
         product.setId(null);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        product.setAdminId(currentAdmin.getId());
         productMapper.insertSelective(product);
         //根据促销类型设置价格：会员价格、阶梯价格、满减价格
         Long productId = product.getId();
@@ -121,9 +126,12 @@ public class PmsProductServiceImpl implements PmsProductService {
     public int update(Long id, PmsProductParam productParam) {
         int count;
         //更新商品信息
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProduct product = productParam;
         product.setId(id);
-        productMapper.updateByPrimaryKeySelective(product);
+        PmsProductExample example =new PmsProductExample();
+        example.or().andIdEqualTo(id).andAdminIdEqualTo(currentAdmin.getId());
+        productMapper.updateByExampleSelective(product,example);
         //会员价格
         PmsMemberPriceExample pmsMemberPriceExample = new PmsMemberPriceExample();
         pmsMemberPriceExample.createCriteria().andProductIdEqualTo(id);
@@ -205,10 +213,12 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Override
     public List<PmsProduct> list(PmsProductQueryParam productQueryParam, Integer pageSize, Integer pageNum) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PageHelper.startPage(pageNum, pageSize);
         PmsProductExample productExample = new PmsProductExample();
         PmsProductExample.Criteria criteria = productExample.createCriteria();
         criteria.andDeleteStatusEqualTo(0);
+        criteria.andAdminIdEqualTo(currentAdmin.getId());
         if (productQueryParam.getPublishStatus() != null) {
             criteria.andPublishStatusEqualTo(productQueryParam.getPublishStatus());
         }
@@ -232,10 +242,12 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Override
     public int updateVerifyStatus(List<Long> ids, Integer verifyStatus, String detail) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProduct product = new PmsProduct();
         product.setVerifyStatus(verifyStatus);
         PmsProductExample example = new PmsProductExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids)
+        .andAdminIdEqualTo(currentAdmin.getId());
         List<PmsProductVertifyRecord> list = new ArrayList<>();
         int count = productMapper.updateByExampleSelective(product, example);
         //修改完审核状态后插入审核记录
@@ -254,45 +266,51 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Override
     public int updatePublishStatus(List<Long> ids, Integer publishStatus) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProduct record = new PmsProduct();
         record.setPublishStatus(publishStatus);
         PmsProductExample example = new PmsProductExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids).andAdminIdEqualTo(currentAdmin.getId());
         return productMapper.updateByExampleSelective(record, example);
     }
 
     @Override
     public int updateRecommendStatus(List<Long> ids, Integer recommendStatus) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProduct record = new PmsProduct();
         record.setRecommandStatus(recommendStatus);
         PmsProductExample example = new PmsProductExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids).andAdminIdEqualTo(currentAdmin.getId());
         return productMapper.updateByExampleSelective(record, example);
     }
 
     @Override
     public int updateNewStatus(List<Long> ids, Integer newStatus) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProduct record = new PmsProduct();
         record.setNewStatus(newStatus);
         PmsProductExample example = new PmsProductExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids).andAdminIdEqualTo(currentAdmin.getId());
         return productMapper.updateByExampleSelective(record, example);
     }
 
     @Override
     public int updateDeleteStatus(List<Long> ids, Integer deleteStatus) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProduct record = new PmsProduct();
         record.setDeleteStatus(deleteStatus);
         PmsProductExample example = new PmsProductExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids).andAdminIdEqualTo(currentAdmin.getId());
         return productMapper.updateByExampleSelective(record, example);
     }
 
     @Override
     public List<PmsProduct> list(String keyword) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PmsProductExample productExample = new PmsProductExample();
         PmsProductExample.Criteria criteria = productExample.createCriteria();
         criteria.andDeleteStatusEqualTo(0);
+        criteria.andAdminIdEqualTo(currentAdmin.getId());
         if(!StringUtils.isEmpty(keyword)){
             criteria.andNameLike("%" + keyword + "%");
             productExample.or().andDeleteStatusEqualTo(0).andProductSnLike("%" + keyword + "%");
