@@ -46,6 +46,7 @@
     <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
     <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -112,7 +113,8 @@
     integration, growth, promotion_info, bill_type, bill_header, bill_content, bill_receiver_phone, 
     bill_receiver_email, receiver_name, receiver_phone, receiver_post_code, receiver_province, 
     receiver_city, receiver_region, receiver_detail_address, note, confirm_status, delete_status, 
-    use_integration, payment_time, delivery_time, receive_time, comment_time, modify_time
+    use_integration, payment_time, delivery_time, receive_time, comment_time, modify_time, 
+    admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.OmsOrderExample" resultMap="BaseResultMap">
     select
@@ -162,7 +164,7 @@
       receiver_detail_address, note, confirm_status, 
       delete_status, use_integration, payment_time, 
       delivery_time, receive_time, comment_time, 
-      modify_time)
+      modify_time, admin_id)
     values (#{memberId,jdbcType=BIGINT}, #{couponId,jdbcType=BIGINT}, #{orderSn,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{memberUsername,jdbcType=VARCHAR}, #{totalAmount,jdbcType=DECIMAL}, 
       #{payAmount,jdbcType=DECIMAL}, #{freightAmount,jdbcType=DECIMAL}, #{promotionAmount,jdbcType=DECIMAL}, 
@@ -177,7 +179,7 @@
       #{receiverDetailAddress,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{confirmStatus,jdbcType=INTEGER}, 
       #{deleteStatus,jdbcType=INTEGER}, #{useIntegration,jdbcType=INTEGER}, #{paymentTime,jdbcType=TIMESTAMP}, 
       #{deliveryTime,jdbcType=TIMESTAMP}, #{receiveTime,jdbcType=TIMESTAMP}, #{commentTime,jdbcType=TIMESTAMP}, 
-      #{modifyTime,jdbcType=TIMESTAMP})
+      #{modifyTime,jdbcType=TIMESTAMP}, #{adminId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.OmsOrder">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -314,6 +316,9 @@
       <if test="modifyTime != null">
         modify_time,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="memberId != null">
@@ -444,6 +449,9 @@
       </if>
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -588,6 +596,9 @@
       <if test="record.modifyTime != null">
         modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -638,7 +649,8 @@
       delivery_time = #{record.deliveryTime,jdbcType=TIMESTAMP},
       receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
       comment_time = #{record.commentTime,jdbcType=TIMESTAMP},
-      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{record.modifyTime,jdbcType=TIMESTAMP},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -775,6 +787,9 @@
       <if test="modifyTime != null">
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -822,7 +837,8 @@
       delivery_time = #{deliveryTime,jdbcType=TIMESTAMP},
       receive_time = #{receiveTime,jdbcType=TIMESTAMP},
       comment_time = #{commentTime,jdbcType=TIMESTAMP},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

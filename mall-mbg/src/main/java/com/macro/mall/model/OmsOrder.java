@@ -136,6 +136,9 @@ public class OmsOrder implements Serializable {
     @ApiModelProperty(value = "修改时间")
     private Date modifyTime;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -490,58 +493,11 @@ public class OmsOrder implements Serializable {
         this.modifyTime = modifyTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", memberId=").append(memberId);
-        sb.append(", couponId=").append(couponId);
-        sb.append(", orderSn=").append(orderSn);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", memberUsername=").append(memberUsername);
-        sb.append(", totalAmount=").append(totalAmount);
-        sb.append(", payAmount=").append(payAmount);
-        sb.append(", freightAmount=").append(freightAmount);
-        sb.append(", promotionAmount=").append(promotionAmount);
-        sb.append(", integrationAmount=").append(integrationAmount);
-        sb.append(", couponAmount=").append(couponAmount);
-        sb.append(", discountAmount=").append(discountAmount);
-        sb.append(", payType=").append(payType);
-        sb.append(", sourceType=").append(sourceType);
-        sb.append(", status=").append(status);
-        sb.append(", orderType=").append(orderType);
-        sb.append(", deliveryCompany=").append(deliveryCompany);
-        sb.append(", deliverySn=").append(deliverySn);
-        sb.append(", autoConfirmDay=").append(autoConfirmDay);
-        sb.append(", integration=").append(integration);
-        sb.append(", growth=").append(growth);
-        sb.append(", promotionInfo=").append(promotionInfo);
-        sb.append(", billType=").append(billType);
-        sb.append(", billHeader=").append(billHeader);
-        sb.append(", billContent=").append(billContent);
-        sb.append(", billReceiverPhone=").append(billReceiverPhone);
-        sb.append(", billReceiverEmail=").append(billReceiverEmail);
-        sb.append(", receiverName=").append(receiverName);
-        sb.append(", receiverPhone=").append(receiverPhone);
-        sb.append(", receiverPostCode=").append(receiverPostCode);
-        sb.append(", receiverProvince=").append(receiverProvince);
-        sb.append(", receiverCity=").append(receiverCity);
-        sb.append(", receiverRegion=").append(receiverRegion);
-        sb.append(", receiverDetailAddress=").append(receiverDetailAddress);
-        sb.append(", note=").append(note);
-        sb.append(", confirmStatus=").append(confirmStatus);
-        sb.append(", deleteStatus=").append(deleteStatus);
-        sb.append(", useIntegration=").append(useIntegration);
-        sb.append(", paymentTime=").append(paymentTime);
-        sb.append(", deliveryTime=").append(deliveryTime);
-        sb.append(", receiveTime=").append(receiveTime);
-        sb.append(", commentTime=").append(commentTime);
-        sb.append(", modifyTime=").append(modifyTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

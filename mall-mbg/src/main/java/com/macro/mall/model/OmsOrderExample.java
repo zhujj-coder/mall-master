@@ -2915,6 +2915,66 @@ public class OmsOrderExample {
             addCriterion("modify_time not between", value1, value2, "modifyTime");
             return (Criteria) this;
         }
+
+        public Criteria andAdminIdIsNull() {
+            addCriterion("admin_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdIsNotNull() {
+            addCriterion("admin_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdEqualTo(Long value) {
+            addCriterion("admin_id =", value, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdNotEqualTo(Long value) {
+            addCriterion("admin_id <>", value, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdGreaterThan(Long value) {
+            addCriterion("admin_id >", value, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("admin_id >=", value, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdLessThan(Long value) {
+            addCriterion("admin_id <", value, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdLessThanOrEqualTo(Long value) {
+            addCriterion("admin_id <=", value, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdIn(List<Long> values) {
+            addCriterion("admin_id in", values, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdNotIn(List<Long> values) {
+            addCriterion("admin_id not in", values, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdBetween(Long value1, Long value2) {
+            addCriterion("admin_id between", value1, value2, "adminId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminIdNotBetween(Long value1, Long value2) {
+            addCriterion("admin_id not between", value1, value2, "adminId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

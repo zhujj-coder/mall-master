@@ -23,4 +23,6 @@ public class OrderParam {
     private Integer payType;
     @ApiModelProperty("被选中的购物车商品ID")
     private List<Long> cartIds;
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
 }
