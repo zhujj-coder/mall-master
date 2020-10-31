@@ -31,12 +31,12 @@
         </jdbcConnection>
         <javaModelGenerator targetPackage="com.macro.mall.model" targetProject="E:\mall\mall\mall-master\mall-mbg\src\main\java"/>
 
-        <sqlMapGenerator targetPackage="com.macro.mall.mapper" targetProject="E:\mall\mall\mall-master\mall-mbg\src\main\java"/>
+        <sqlMapGenerator targetPackage="com.macro.mall.mapper" targetProject="E:\mall\mall\mall-master\mall-mbg\src\main\resources"/>
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.macro.mall.mapper"
-                             targetProject="E:\mall\mall\mall-master\mall-mbg\src\main\resources"/>
+                             targetProject="E:\mall\mall\mall-master\mall-mbg\src\main\java"/>
         <!--生成全部表tableName设为%-->
-        <table tableName="ums_member">
+        <table tableName="pms_product_category">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

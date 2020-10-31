@@ -7,16 +7,19 @@ import java.util.Date;
 public class UmsMember implements Serializable {
     private Long id;
 
+    private Long memberLevelId;
+
     @ApiModelProperty(value = "用户名")
     private String username;
 
-    @ApiModelProperty(value = "所做城市")
-    private String city;
+    @ApiModelProperty(value = "密码")
+    private String password;
 
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
-    private Long memberLevelId;
+    @ApiModelProperty(value = "手机号码")
+    private String phone;
 
     @ApiModelProperty(value = "帐号启用状态:0->禁用；1->启用")
     private Integer status;
@@ -24,8 +27,8 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "注册时间")
     private Date createTime;
 
-    @ApiModelProperty(value = "密码")
-    private String password;
+    @ApiModelProperty(value = "头像")
+    private String icon;
 
     @ApiModelProperty(value = "性别：0->未知；1->男；2->女")
     private Integer gender;
@@ -33,8 +36,8 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "生日")
     private Date birthday;
 
-    @ApiModelProperty(value = "剩余抽奖次数")
-    private Integer luckeyCount;
+    @ApiModelProperty(value = "所做城市")
+    private String city;
 
     @ApiModelProperty(value = "职业")
     private String job;
@@ -51,17 +54,16 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "成长值")
     private Integer growth;
 
-    @ApiModelProperty(value = "手机号码")
-    private String phone;
+    @ApiModelProperty(value = "剩余抽奖次数")
+    private Integer luckeyCount;
 
     @ApiModelProperty(value = "历史积分数量")
     private Integer historyIntegration;
 
-    @ApiModelProperty(value = "头像")
-    private String icon;
-
+    @ApiModelProperty(value = "openId")
     private String openId;
 
+    @ApiModelProperty(value = "union_id")
     private String unionId;
 
     private static final long serialVersionUID = 1L;
@@ -74,6 +76,14 @@ public class UmsMember implements Serializable {
         this.id = id;
     }
 
+    public Long getMemberLevelId() {
+        return memberLevelId;
+    }
+
+    public void setMemberLevelId(Long memberLevelId) {
+        this.memberLevelId = memberLevelId;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -82,12 +92,12 @@ public class UmsMember implements Serializable {
         this.username = username;
     }
 
-    public String getCity() {
-        return city;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getNickname() {
@@ -98,12 +108,12 @@ public class UmsMember implements Serializable {
         this.nickname = nickname;
     }
 
-    public Long getMemberLevelId() {
-        return memberLevelId;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMemberLevelId(Long memberLevelId) {
-        this.memberLevelId = memberLevelId;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Integer getStatus() {
@@ -122,12 +132,12 @@ public class UmsMember implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getPassword() {
-        return password;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public Integer getGender() {
@@ -146,12 +156,12 @@ public class UmsMember implements Serializable {
         this.birthday = birthday;
     }
 
-    public Integer getLuckeyCount() {
-        return luckeyCount;
+    public String getCity() {
+        return city;
     }
 
-    public void setLuckeyCount(Integer luckeyCount) {
-        this.luckeyCount = luckeyCount;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getJob() {
@@ -194,12 +204,12 @@ public class UmsMember implements Serializable {
         this.growth = growth;
     }
 
-    public String getPhone() {
-        return phone;
+    public Integer getLuckeyCount() {
+        return luckeyCount;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setLuckeyCount(Integer luckeyCount) {
+        this.luckeyCount = luckeyCount;
     }
 
     public Integer getHistoryIntegration() {
@@ -208,14 +218,6 @@ public class UmsMember implements Serializable {
 
     public void setHistoryIntegration(Integer historyIntegration) {
         this.historyIntegration = historyIntegration;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 
     public String getOpenId() {
