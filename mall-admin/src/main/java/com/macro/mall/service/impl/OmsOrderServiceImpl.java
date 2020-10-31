@@ -9,7 +9,9 @@ import com.macro.mall.mapper.OmsOrderOperateHistoryMapper;
 import com.macro.mall.model.OmsOrder;
 import com.macro.mall.model.OmsOrderExample;
 import com.macro.mall.model.OmsOrderOperateHistory;
+import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.service.OmsOrderService;
+import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +33,13 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     private OmsOrderOperateHistoryDao orderOperateHistoryDao;
     @Autowired
     private OmsOrderOperateHistoryMapper orderOperateHistoryMapper;
+    @Autowired
+    private UmsAdminService adminService;
 
     @Override
     public List<OmsOrder> list(OmsOrderQueryParam queryParam, Integer pageSize, Integer pageNum) {
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        queryParam.setAdminId(admin.getId());
         PageHelper.startPage(pageNum, pageSize);
         return orderDao.getList(queryParam);
     }
@@ -41,6 +47,10 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     @Override
     public int delivery(List<OmsOrderDeliveryParam> deliveryParamList) {
         //批量发货
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        deliveryParamList.forEach(item -> {
+            item.setAdminId(admin.getId());
+        });
         int count = orderDao.delivery(deliveryParamList);
         //添加操作记录
         List<OmsOrderOperateHistory> operateHistoryList = deliveryParamList.stream()
@@ -62,7 +72,9 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         OmsOrder record = new OmsOrder();
         record.setStatus(4);
         OmsOrderExample example = new OmsOrderExample();
-        example.createCriteria().andDeleteStatusEqualTo(0).andIdIn(ids);
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        example.createCriteria().andDeleteStatusEqualTo(0).andIdIn(ids)
+                .andAdminIdEqualTo(admin.getId());
         int count = orderMapper.updateByExampleSelective(record, example);
         List<OmsOrderOperateHistory> historyList = ids.stream().map(orderId -> {
             OmsOrderOperateHistory history = new OmsOrderOperateHistory();
@@ -70,7 +82,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
             history.setCreateTime(new Date());
             history.setOperateMan("后台管理员");
             history.setOrderStatus(4);
-            history.setNote("订单关闭:"+note);
+            history.setNote("订单关闭:" + note);
             return history;
         }).collect(Collectors.toList());
         orderOperateHistoryDao.insertList(historyList);
@@ -82,18 +94,21 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         OmsOrder record = new OmsOrder();
         record.setDeleteStatus(1);
         OmsOrderExample example = new OmsOrderExample();
-        example.createCriteria().andDeleteStatusEqualTo(0).andIdIn(ids);
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        example.createCriteria().andDeleteStatusEqualTo(0).andIdIn(ids)
+                .andAdminIdEqualTo(admin.getId());
         return orderMapper.updateByExampleSelective(record, example);
     }
 
     @Override
     public OmsOrderDetail detail(Long id) {
-        return orderDao.getDetail(id);
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        return orderDao.getDetail(id, admin.getId());
     }
 
     @Override
     public int updateReceiverInfo(OmsReceiverInfoParam receiverInfoParam) {
-        OmsOrder order = new OmsOrder();
+        OmsOrder order = orderMapper.selectByPrimaryKey(receiverInfoParam.getOrderId());
         order.setId(receiverInfoParam.getOrderId());
         order.setReceiverName(receiverInfoParam.getReceiverName());
         order.setReceiverPhone(receiverInfoParam.getReceiverPhone());
@@ -103,7 +118,11 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         order.setReceiverCity(receiverInfoParam.getReceiverCity());
         order.setReceiverRegion(receiverInfoParam.getReceiverRegion());
         order.setModifyTime(new Date());
-        int count = orderMapper.updateByPrimaryKeySelective(order);
+
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        OmsOrderExample example = new OmsOrderExample();
+        example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
+        int count = orderMapper.updateByExample(order, example);
         //插入操作记录
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
         history.setOrderId(receiverInfoParam.getOrderId());
@@ -117,12 +136,15 @@ public class OmsOrderServiceImpl implements OmsOrderService {
 
     @Override
     public int updateMoneyInfo(OmsMoneyInfoParam moneyInfoParam) {
-        OmsOrder order = new OmsOrder();
+        OmsOrder order = orderMapper.selectByPrimaryKey(moneyInfoParam.getOrderId());
         order.setId(moneyInfoParam.getOrderId());
         order.setFreightAmount(moneyInfoParam.getFreightAmount());
         order.setDiscountAmount(moneyInfoParam.getDiscountAmount());
         order.setModifyTime(new Date());
-        int count = orderMapper.updateByPrimaryKeySelective(order);
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        OmsOrderExample example = new OmsOrderExample();
+        example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
+        int count = orderMapper.updateByExample(order, example);
         //插入操作记录
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
         history.setOrderId(moneyInfoParam.getOrderId());
@@ -136,17 +158,20 @@ public class OmsOrderServiceImpl implements OmsOrderService {
 
     @Override
     public int updateNote(Long id, String note, Integer status) {
-        OmsOrder order = new OmsOrder();
+        OmsOrder order = orderMapper.selectByPrimaryKey(id);
         order.setId(id);
         order.setNote(note);
         order.setModifyTime(new Date());
-        int count = orderMapper.updateByPrimaryKeySelective(order);
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        OmsOrderExample example = new OmsOrderExample();
+        example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
+        int count = orderMapper.updateByExample(order, example);
         OmsOrderOperateHistory history = new OmsOrderOperateHistory();
         history.setOrderId(id);
         history.setCreateTime(new Date());
         history.setOperateMan("后台管理员");
         history.setOrderStatus(status);
-        history.setNote("修改备注信息："+note);
+        history.setNote("修改备注信息：" + note);
         orderOperateHistoryMapper.insert(history);
         return count;
     }

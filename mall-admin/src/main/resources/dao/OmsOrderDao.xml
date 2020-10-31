@@ -13,7 +13,7 @@
         FROM
         oms_order
         WHERE
-        delete_status = 0 AND admin_id LIKE concat(#{queryParam.adminId},"%")
+        delete_status = 0 AND admin_id = #{queryParam.adminId}
         <if test="queryParam.orderSn!=null and queryParam.orderSn!=''">
             AND order_sn = #{queryParam.orderSn}
         </if>
@@ -56,6 +56,11 @@
             WHEN #{item.orderId} THEN now()
         </foreach>
         END,
+        admin_id = CASE id
+        <foreach collection="list" item="item">
+            WHEN #{item.orderId} THEN #{item.adminId}
+        </foreach>
+        END,
         `status` = CASE id
         <foreach collection="list" item="item">
             WHEN #{item.orderId} THEN 2
@@ -89,7 +94,7 @@
             LEFT JOIN oms_order_item oi ON o.id = oi.order_id
             LEFT JOIN oms_order_operate_history oh ON o.id = oh.order_id
         WHERE
-            o.id = #{id}
+            o.id = #{id} AND o.admin_id = #{adminId}
         ORDER BY oi.id ASC,oh.create_time DESC
     </select>
 </mapper>

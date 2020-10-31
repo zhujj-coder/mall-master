@@ -23,4 +23,6 @@ public class OmsOrderQueryParam {
     private Integer sourceType;
     @ApiModelProperty(value = "订单提交时间")
     private String createTime;
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
 }
