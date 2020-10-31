@@ -21,7 +21,7 @@ spring:
 
 logging:
   file:
-    path: /var/logs
+    path: ./logs
   level:
     root: info
     com.macro.mall: debug
