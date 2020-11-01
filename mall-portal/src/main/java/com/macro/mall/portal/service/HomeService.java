@@ -16,7 +16,7 @@ public interface HomeService {
     /**
      * 获取首页内容
      */
-    HomeContentResult content();
+    HomeContentResult content(Long adminId);
 
     /**
      * 首页商品推荐
@@ -27,7 +27,7 @@ public interface HomeService {
      * 获取商品分类
      * @param parentId 0:获取一级分类；其他：获取指定二级分类
      */
-    List<PmsProductCategory> getProductCateList(Long parentId);
+    List<PmsProductCategory> getProductCateList(Long parentId,Long adminId);
 
     /**
      * 根据专题分类分页获取专题
@@ -38,10 +38,12 @@ public interface HomeService {
     /**
      * 分页获取人气推荐商品
      */
-    List<PmsProduct> hotProductList(Integer pageNum, Integer pageSize);
+
+    List<PmsProduct> hotProductList(Integer pageNum, Integer pageSize, Long adminId);
 
     /**
      * 分页获取新品推荐商品
      */
-    List<PmsProduct> newProductList(Integer pageNum, Integer pageSize);
+
+    List<PmsProduct> newProductList(Integer pageNum, Integer pageSize, Long adminId);
 }

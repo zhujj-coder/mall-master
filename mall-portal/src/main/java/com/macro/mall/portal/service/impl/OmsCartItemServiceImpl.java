@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,9 +29,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OmsCartItemServiceImpl implements OmsCartItemService {
-    @Autowired
+    @Resource
     private OmsCartItemMapper cartItemMapper;
-    @Autowired
+    @Resource
     private PortalProductDao productDao;
     @Autowired
     private OmsPromotionService promotionService;
@@ -38,12 +39,13 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     private UmsMemberService memberService;
 
     @Override
-    public int add(OmsCartItem cartItem) {
+    public int add(OmsCartItem cartItem,Long adminId) {
         int count;
         UmsMember currentMember =memberService.getCurrentMember();
         cartItem.setMemberId(currentMember.getId());
         cartItem.setMemberNickname(currentMember.getNickname());
         cartItem.setDeleteStatus(0);
+        cartItem.setAdminId(adminId);
         OmsCartItem existCartItem = getCartItem(cartItem);
         if (existCartItem == null) {
             cartItem.setCreateDate(new Date());
@@ -63,7 +65,8 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     private OmsCartItem getCartItem(OmsCartItem cartItem) {
         OmsCartItemExample example = new OmsCartItemExample();
         OmsCartItemExample.Criteria criteria = example.createCriteria().andMemberIdEqualTo(cartItem.getMemberId())
-                .andProductIdEqualTo(cartItem.getProductId()).andDeleteStatusEqualTo(0);
+                .andProductIdEqualTo(cartItem.getProductId()).andDeleteStatusEqualTo(0)
+                .andAdminIdEqualTo(cartItem.getAdminId());
         if (!StringUtils.isEmpty(cartItem.getProductSkuId())) {
             criteria.andProductSkuIdEqualTo(cartItem.getProductSkuId());
         }
@@ -75,15 +78,16 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     }
 
     @Override
-    public List<OmsCartItem> list(Long memberId) {
+    public List<OmsCartItem> list(Long memberId, Long adminId) {
         OmsCartItemExample example = new OmsCartItemExample();
-        example.createCriteria().andDeleteStatusEqualTo(0).andMemberIdEqualTo(memberId);
+        example.createCriteria().andDeleteStatusEqualTo(0).andMemberIdEqualTo(memberId)
+            .andAdminIdEqualTo(adminId);
         return cartItemMapper.selectByExample(example);
     }
 
     @Override
-    public List<CartPromotionItem> listPromotion(Long memberId, List<Long> cartIds) {
-        List<OmsCartItem> cartItemList = list(memberId);
+    public List<CartPromotionItem> listPromotion(Long memberId, List<Long> cartIds, Long adminId) {
+        List<OmsCartItem> cartItemList = list(memberId,adminId);
         cartItemList.forEach(omsCartItem -> {
             omsCartItem.setProductAttrJson(JSONArray.parseArray(omsCartItem.getProductAttr()));
         });
@@ -98,31 +102,33 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     }
 
     @Override
-    public int updateQuantity(Long id, Long memberId, Integer quantity) {
+    public int updateQuantity(Long id, Long memberId, Integer quantity,Long adminId) {
         OmsCartItem cartItem = new OmsCartItem();
         cartItem.setQuantity(quantity);
         OmsCartItemExample example = new OmsCartItemExample();
         example.createCriteria().andDeleteStatusEqualTo(0)
-                .andIdEqualTo(id).andMemberIdEqualTo(memberId);
+                .andIdEqualTo(id).andMemberIdEqualTo(memberId)
+                .andAdminIdEqualTo(adminId);
         return cartItemMapper.updateByExampleSelective(cartItem, example);
     }
 
     @Override
-    public int delete(Long memberId, List<Long> ids) {
+    public int delete(Long memberId, List<Long> ids,Long amindId) {
         OmsCartItem record = new OmsCartItem();
         record.setDeleteStatus(1);
         OmsCartItemExample example = new OmsCartItemExample();
-        example.createCriteria().andIdIn(ids).andMemberIdEqualTo(memberId);
+        example.createCriteria().andIdIn(ids).andMemberIdEqualTo(memberId)
+        .andAdminIdEqualTo(amindId);
         return cartItemMapper.updateByExampleSelective(record, example);
     }
 
     @Override
-    public CartProduct getCartProduct(Long productId) {
-        return productDao.getCartProduct(productId);
+    public CartProduct getCartProduct(Long productId, Long adminId) {
+        return productDao.getCartProduct(productId,adminId);
     }
 
     @Override
-    public int updateAttr(OmsCartItem cartItem) {
+    public int updateAttr(OmsCartItem cartItem, Long adminId) {
         //删除原购物车信息
         OmsCartItem updateCart = new OmsCartItem();
         updateCart.setId(cartItem.getId());
@@ -130,16 +136,17 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         updateCart.setDeleteStatus(1);
         cartItemMapper.updateByPrimaryKeySelective(updateCart);
         cartItem.setId(null);
-        add(cartItem);
+        add(cartItem,adminId);
         return 1;
     }
 
     @Override
-    public int clear(Long memberId) {
+    public int clear(Long memberId,Long admindId) {
         OmsCartItem record = new OmsCartItem();
         record.setDeleteStatus(1);
         OmsCartItemExample example = new OmsCartItemExample();
-        example.createCriteria().andMemberIdEqualTo(memberId);
+        example.createCriteria().andMemberIdEqualTo(memberId)
+            .andAdminIdEqualTo(admindId);
         return cartItemMapper.updateByExampleSelective(record,example);
     }
 }

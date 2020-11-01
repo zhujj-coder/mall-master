@@ -7,6 +7,7 @@
     <result column="subject_name" jdbcType="VARCHAR" property="subjectName" />
     <result column="recommend_status" jdbcType="INTEGER" property="recommendStatus" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, subject_id, subject_name, recommend_status, sort
+    id, subject_id, subject_name, recommend_status, sort, admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.SmsHomeRecommendSubjectExample" resultMap="BaseResultMap">
     select
@@ -104,9 +105,9 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into sms_home_recommend_subject (subject_id, subject_name, recommend_status, 
-      sort)
+      sort, admin_id)
     values (#{subjectId,jdbcType=BIGINT}, #{subjectName,jdbcType=VARCHAR}, #{recommendStatus,jdbcType=INTEGER}, 
-      #{sort,jdbcType=INTEGER})
+      #{sort,jdbcType=INTEGER}, #{adminId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.SmsHomeRecommendSubject">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -126,6 +127,9 @@
       <if test="sort != null">
         sort,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="subjectId != null">
@@ -139,6 +143,9 @@
       </if>
       <if test="sort != null">
         #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -166,6 +173,9 @@
       <if test="record.sort != null">
         sort = #{record.sort,jdbcType=INTEGER},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -177,7 +187,8 @@
       subject_id = #{record.subjectId,jdbcType=BIGINT},
       subject_name = #{record.subjectName,jdbcType=VARCHAR},
       recommend_status = #{record.recommendStatus,jdbcType=INTEGER},
-      sort = #{record.sort,jdbcType=INTEGER}
+      sort = #{record.sort,jdbcType=INTEGER},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,6 +208,9 @@
       <if test="sort != null">
         sort = #{sort,jdbcType=INTEGER},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -205,7 +219,8 @@
     set subject_id = #{subjectId,jdbcType=BIGINT},
       subject_name = #{subjectName,jdbcType=VARCHAR},
       recommend_status = #{recommendStatus,jdbcType=INTEGER},
-      sort = #{sort,jdbcType=INTEGER}
+      sort = #{sort,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

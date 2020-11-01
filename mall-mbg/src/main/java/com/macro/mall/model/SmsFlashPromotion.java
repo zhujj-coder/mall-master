@@ -21,6 +21,9 @@ public class SmsFlashPromotion implements Serializable {
     @ApiModelProperty(value = "秒杀时间段名称")
     private Date createTime;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -71,20 +74,11 @@ public class SmsFlashPromotion implements Serializable {
         this.createTime = createTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", title=").append(title);
-        sb.append(", startDate=").append(startDate);
-        sb.append(", endDate=").append(endDate);
-        sb.append(", status=").append(status);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

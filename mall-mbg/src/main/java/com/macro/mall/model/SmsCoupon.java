@@ -56,6 +56,9 @@ public class SmsCoupon implements Serializable {
     @ApiModelProperty(value = "可领取的会员类型：0->无限时")
     private Integer memberLevel;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -202,32 +205,11 @@ public class SmsCoupon implements Serializable {
         this.memberLevel = memberLevel;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", type=").append(type);
-        sb.append(", name=").append(name);
-        sb.append(", platform=").append(platform);
-        sb.append(", count=").append(count);
-        sb.append(", amount=").append(amount);
-        sb.append(", perLimit=").append(perLimit);
-        sb.append(", minPoint=").append(minPoint);
-        sb.append(", startTime=").append(startTime);
-        sb.append(", endTime=").append(endTime);
-        sb.append(", useType=").append(useType);
-        sb.append(", note=").append(note);
-        sb.append(", publishCount=").append(publishCount);
-        sb.append(", useCount=").append(useCount);
-        sb.append(", receiveCount=").append(receiveCount);
-        sb.append(", enableTime=").append(enableTime);
-        sb.append(", code=").append(code);
-        sb.append(", memberLevel=").append(memberLevel);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

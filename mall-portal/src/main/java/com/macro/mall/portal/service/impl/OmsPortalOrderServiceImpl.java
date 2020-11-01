@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -67,11 +68,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private CancelOrderSender cancelOrderSender;
 
     @Override
-    public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
+    public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds, Long adminId) {
         ConfirmOrderResult result = new ConfirmOrderResult();
         //获取购物车信息
         UmsMember currentMember = memberService.getCurrentMember();
-        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(),cartIds);
+        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(),cartIds,adminId);
         result.setCartPromotionItemList(cartPromotionItemList);
         //获取用户收货地址列表
         List<UmsMemberReceiveAddress> memberReceiveAddressList = memberReceiveAddressService.list();
@@ -91,11 +92,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     }
 
     @Override
-    public Map<String, Object> generateOrder(OrderParam orderParam) {
+    public Map<String, Object> generateOrder(OrderParam orderParam, Long adminId) {
         List<OmsOrderItem> orderItemList = new ArrayList<>();
         //获取购物车及优惠信息
         UmsMember currentMember = memberService.getCurrentMember();
-        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
+        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds(),adminId);
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             //生成下单商品信息
             OmsOrderItem orderItem = new OmsOrderItem();
@@ -216,7 +217,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             order.setAutoConfirmDay(orderSettings.get(0).getConfirmOvertime());
         }
         // 设置商户ID
-        order.setAdminId(orderParam.getAdminId());
+        order.setAdminId(adminId);
         // TODO: 2018/9/3 bill_*,delivery_*
         //插入order表和order_item表
         orderMapper.insert(order);
@@ -235,7 +236,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             memberService.updateIntegration(currentMember.getId(), currentMember.getIntegration() - orderParam.getUseIntegration());
         }
         //删除购物车中的下单商品
-        deleteCartItemList(cartPromotionItemList, currentMember);
+        deleteCartItemList(cartPromotionItemList, currentMember,adminId);
         //发送延迟消息取消订单
         sendDelayMessageCancelOrder(order.getId());
         Map<String, Object> result = new HashMap<>();
@@ -345,7 +346,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     }
 
     @Override
-    public CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize) {
+    public CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize,Long adminId) {
         if(status==-1){
             status = null;
         }
@@ -354,7 +355,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         OmsOrderExample orderExample = new OmsOrderExample();
         OmsOrderExample.Criteria criteria = orderExample.createCriteria();
         criteria.andDeleteStatusEqualTo(0)
-                .andMemberIdEqualTo(member.getId());
+                .andMemberIdEqualTo(member.getId())
+                .andAdminIdEqualTo(adminId);
         if(status!=null){
             criteria.andStatusEqualTo(status);
         }
@@ -437,12 +439,12 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     /**
      * 删除下单商品的购物车信息
      */
-    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember) {
+    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember,Long adminId) {
         List<Long> ids = new ArrayList<>();
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             ids.add(cartPromotionItem.getId());
         }
-        cartItemService.delete(currentMember.getId(), ids);
+        cartItemService.delete(currentMember.getId(), ids,adminId);
     }
 
     /**

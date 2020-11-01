@@ -36,6 +36,9 @@ public class SmsHomeAdvertise implements Serializable {
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -134,26 +137,11 @@ public class SmsHomeAdvertise implements Serializable {
         this.sort = sort;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", type=").append(type);
-        sb.append(", pic=").append(pic);
-        sb.append(", startTime=").append(startTime);
-        sb.append(", endTime=").append(endTime);
-        sb.append(", status=").append(status);
-        sb.append(", clickCount=").append(clickCount);
-        sb.append(", orderCount=").append(orderCount);
-        sb.append(", url=").append(url);
-        sb.append(", note=").append(note);
-        sb.append(", sort=").append(sort);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

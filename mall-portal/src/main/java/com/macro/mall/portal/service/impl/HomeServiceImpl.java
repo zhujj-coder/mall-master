@@ -38,20 +38,20 @@ public class HomeServiceImpl implements HomeService {
     private CmsSubjectMapper subjectMapper;
 
     @Override
-    public HomeContentResult content() {
+    public HomeContentResult content(Long adminId) {
         HomeContentResult result = new HomeContentResult();
         //获取首页广告
-        result.setAdvertiseList(getHomeAdvertiseList());
+        result.setAdvertiseList(getHomeAdvertiseList(adminId));
         //获取推荐品牌
-        result.setBrandList(homeDao.getRecommendBrandList(0,6));
+        result.setBrandList(homeDao.getRecommendBrandList(0,6,adminId));
         //获取秒杀信息
-        result.setHomeFlashPromotion(getHomeFlashPromotion());
+        result.setHomeFlashPromotion(getHomeFlashPromotion(adminId));
         //获取新品推荐
-        result.setNewProductList(homeDao.getNewProductList(0,4));
+        result.setNewProductList(homeDao.getNewProductList(0,4,adminId));
         //获取人气推荐
-        result.setHotProductList(homeDao.getHotProductList(0,4));
+        result.setHotProductList(homeDao.getHotProductList(0,4,adminId));
         //获取推荐专题
-        result.setSubjectList(homeDao.getRecommendSubjectList(0,4));
+        result.setSubjectList(homeDao.getRecommendSubjectList(0,4,adminId));
         return result;
     }
 
@@ -67,11 +67,12 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<PmsProductCategory> getProductCateList(Long parentId) {
+    public List<PmsProductCategory> getProductCateList(Long parentId,Long adminId) {
         PmsProductCategoryExample example = new PmsProductCategoryExample();
         example.createCriteria()
                 .andShowStatusEqualTo(1)
-                .andParentIdEqualTo(parentId);
+                .andParentIdEqualTo(parentId)
+                .andAdminIdEqualTo(adminId);
         example.setOrderByClause("sort desc");
         return productCategoryMapper.selectByExample(example);
     }
@@ -81,7 +82,8 @@ public class HomeServiceImpl implements HomeService {
         PageHelper.startPage(pageNum,pageSize);
         CmsSubjectExample example = new CmsSubjectExample();
         CmsSubjectExample.Criteria criteria = example.createCriteria();
-        criteria.andShowStatusEqualTo(1);
+        criteria.andShowStatusEqualTo(1)
+            ;
         if(cateId!=null){
             criteria.andCategoryIdEqualTo(cateId);
         }
@@ -89,18 +91,18 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<PmsProduct> hotProductList(Integer pageNum, Integer pageSize) {
+    public List<PmsProduct> hotProductList(Integer pageNum, Integer pageSize,Long  adminId) {
         int offset = pageSize * (pageNum - 1);
-        return homeDao.getHotProductList(offset, pageSize);
+        return homeDao.getHotProductList(offset, pageSize,adminId);
     }
 
     @Override
-    public List<PmsProduct> newProductList(Integer pageNum, Integer pageSize) {
+    public List<PmsProduct> newProductList(Integer pageNum, Integer pageSize,Long  adminId) {
         int offset = pageSize * (pageNum - 1);
-        return homeDao.getNewProductList(offset, pageSize);
+        return homeDao.getNewProductList(offset, pageSize,adminId);
     }
 
-    private HomeFlashPromotion getHomeFlashPromotion() {
+    private HomeFlashPromotion getHomeFlashPromotion(Long adminId) {
         HomeFlashPromotion homeFlashPromotion = new HomeFlashPromotion();
         //获取当前秒杀活动
         Date now = new Date();
@@ -118,7 +120,7 @@ public class HomeServiceImpl implements HomeService {
                     homeFlashPromotion.setNextEndTime(nextSession.getEndTime());
                 }
                 //获取秒杀商品
-                List<FlashPromotionProduct> flashProductList = homeDao.getFlashProductList(flashPromotion.getId(), flashPromotionSession.getId());
+                List<FlashPromotionProduct> flashProductList = homeDao.getFlashProductList(flashPromotion.getId(), flashPromotionSession.getId(),adminId);
                 homeFlashPromotion.setProductList(flashProductList);
             }
         }
@@ -138,9 +140,10 @@ public class HomeServiceImpl implements HomeService {
         return null;
     }
 
-    private List<SmsHomeAdvertise> getHomeAdvertiseList() {
+    private List<SmsHomeAdvertise> getHomeAdvertiseList(Long adminId) {
         SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
-        example.createCriteria().andTypeEqualTo(1).andStatusEqualTo(1);
+        example.createCriteria().andTypeEqualTo(1).andStatusEqualTo(1)
+            .andAdminIdEqualTo(adminId);
         example.setOrderByClause("sort desc");
         return advertiseMapper.selectByExample(example);
     }

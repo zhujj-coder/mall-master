@@ -16,6 +16,7 @@
         WHERE
             hb.recommend_status = 1
             AND b.show_status = 1
+            and hb.admin_id=#{adminId}
         ORDER BY
             hb.sort DESC
         LIMIT #{offset}, #{limit}
@@ -33,6 +34,7 @@
         WHERE
             pr.flash_promotion_id = #{flashPromotionId}
             AND pr.flash_promotion_session_id = #{sessionId}
+          and p.admin_id=#{adminId}
     </select>
 
     <select id="getNewProductList" resultMap="com.macro.mall.mapper.PmsProductMapper.BaseResultMap">
@@ -43,6 +45,7 @@
         WHERE
             hp.recommend_status = 1
             AND p.publish_status = 1
+          and hp.admin_id=#{adminId}
         ORDER BY
             hp.sort DESC
         LIMIT #{offset}, #{limit};
@@ -56,6 +59,7 @@
         WHERE
             hp.recommend_status = 1
             AND p.publish_status = 1
+          and hp.admin_id=#{adminId}
         ORDER BY
             hp.sort DESC
         LIMIT #{offset}, #{limit};
@@ -69,6 +73,7 @@
         WHERE
             hs.recommend_status = 1
             AND s.show_status = 1
+          and hs.admin_id=#{adminId}
         ORDER BY
             hs.sort DESC
         LIMIT #{offset}, #{limit};

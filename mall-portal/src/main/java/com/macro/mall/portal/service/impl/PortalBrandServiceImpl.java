@@ -28,9 +28,9 @@ public class PortalBrandServiceImpl implements PortalBrandService {
     private PmsProductMapper productMapper;
 
     @Override
-    public List<PmsBrand> recommendList(Integer pageNum, Integer pageSize) {
+    public List<PmsBrand> recommendList(Integer pageNum, Integer pageSize,Long amindId) {
         int offset = (pageNum - 1) * pageSize;
-        return homeDao.getRecommendBrandList(offset, pageSize);
+        return homeDao.getRecommendBrandList(offset, pageSize,amindId);
     }
 
     @Override

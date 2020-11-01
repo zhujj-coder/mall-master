@@ -15,7 +15,7 @@ public interface PortalProductDao {
     /**
      * 获取购物车商品信息
      */
-    CartProduct getCartProduct(@Param("id") Long id);
+    CartProduct getCartProduct(@Param("id") Long id,@Param("adminId") Long adminId);
 
     /**
      * 获取促销商品信息列表

@@ -28,10 +28,10 @@ public class OmsCartItemController {
     private UmsMemberService memberService;
 
     @ApiOperation("添加商品到购物车")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult add(@RequestBody OmsCartItem cartItem) {
-        int count = cartItemService.add(cartItem);
+    public CommonResult add(@RequestBody OmsCartItem cartItem,@PathVariable Long adminId) {
+        int count = cartItemService.add(cartItem,adminId);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -39,27 +39,27 @@ public class OmsCartItemController {
     }
 
     @ApiOperation("获取某个会员的购物车列表")
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/{adminId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<OmsCartItem>> list() {
-        List<OmsCartItem> cartItemList = cartItemService.list(memberService.getCurrentMember().getId());
+    public CommonResult<List<OmsCartItem>> list(@PathVariable Long adminId) {
+        List<OmsCartItem> cartItemList = cartItemService.list(memberService.getCurrentMember().getId(),adminId);
         return CommonResult.success(cartItemList);
     }
 
     @ApiOperation("获取某个会员的购物车列表,包括促销信息")
-    @RequestMapping(value = "/list/promotion", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/promotion/{adminId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<CartPromotionItem>> listPromotion(@RequestParam(required = false) List<Long> cartIds) {
-        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(memberService.getCurrentMember().getId(), cartIds);
+    public CommonResult<List<CartPromotionItem>> listPromotion(@RequestParam(required = false) List<Long> cartIds,@PathVariable Long adminId) {
+        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(memberService.getCurrentMember().getId(), cartIds,adminId);
         return CommonResult.success(cartPromotionItemList);
     }
 
     @ApiOperation("修改购物车中某个商品的数量")
-    @RequestMapping(value = "/update/quantity", method = RequestMethod.GET)
+    @RequestMapping(value = "/update/quantity/{adminId}", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult updateQuantity(@RequestParam Long id,
-                                       @RequestParam Integer quantity) {
-        int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity);
+                                       @RequestParam Integer quantity,@PathVariable Long adminId) {
+        int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity,adminId);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -67,18 +67,18 @@ public class OmsCartItemController {
     }
 
     @ApiOperation("获取购物车中某个商品的规格,用于重选规格")
-    @RequestMapping(value = "/getProduct/{productId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getProduct/{adminId}/{productId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<CartProduct> getCartProduct(@PathVariable Long productId) {
-        CartProduct cartProduct = cartItemService.getCartProduct(productId);
+    public CommonResult<CartProduct> getCartProduct(@PathVariable Long productId,@PathVariable Long adminId) {
+        CartProduct cartProduct = cartItemService.getCartProduct(productId,adminId);
         return CommonResult.success(cartProduct);
     }
 
     @ApiOperation("修改购物车中商品的规格")
-    @RequestMapping(value = "/update/attr", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/attr/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult updateAttr(@RequestBody OmsCartItem cartItem) {
-        int count = cartItemService.updateAttr(cartItem);
+    public CommonResult updateAttr(@RequestBody OmsCartItem cartItem,@PathVariable  Long adminId) {
+        int count = cartItemService.updateAttr(cartItem,adminId);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -86,10 +86,10 @@ public class OmsCartItemController {
     }
 
     @ApiOperation("删除购物车中的某个商品")
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult delete(@RequestParam("ids") List<Long> ids) {
-        int count = cartItemService.delete(memberService.getCurrentMember().getId(), ids);
+    public CommonResult delete(@RequestParam("ids") List<Long> ids,@PathVariable  Long adminId) {
+        int count = cartItemService.delete(memberService.getCurrentMember().getId(), ids,adminId);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -97,10 +97,10 @@ public class OmsCartItemController {
     }
 
     @ApiOperation("清空购物车")
-    @RequestMapping(value = "/clear", method = RequestMethod.POST)
+    @RequestMapping(value = "/clear/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult clear() {
-        int count = cartItemService.clear(memberService.getCurrentMember().getId());
+    public CommonResult clear(@PathVariable Long adminId) {
+        int count = cartItemService.clear(memberService.getCurrentMember().getId(),adminId);
         if (count > 0) {
             return CommonResult.success(count);
         }

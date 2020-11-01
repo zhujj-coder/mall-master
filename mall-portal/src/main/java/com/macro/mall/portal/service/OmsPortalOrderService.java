@@ -18,13 +18,13 @@ public interface OmsPortalOrderService {
      * 根据用户购物车信息生成确认单信息
      * @param cartIds
      */
-    ConfirmOrderResult generateConfirmOrder(List<Long> cartIds);
+    ConfirmOrderResult generateConfirmOrder(List<Long> cartIds, Long adminId);
 
     /**
      * 根据提交信息生成订单
      */
     @Transactional
-    Map<String, Object> generateOrder(OrderParam orderParam);
+    Map<String, Object> generateOrder(OrderParam orderParam, Long adminId);
 
     /**
      * 支付成功后的回调
@@ -57,7 +57,7 @@ public interface OmsPortalOrderService {
     /**
      * 分页获取用户订单
      */
-    CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize);
+    CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize, Long adminId);
 
     /**
      * 根据订单ID获取订单详情

@@ -26,10 +26,10 @@ public class HomeController {
     private HomeService homeService;
 
     @ApiOperation("首页内容页信息展示")
-    @RequestMapping(value = "/content", method = RequestMethod.GET)
+    @RequestMapping(value = "/content/{adminId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<HomeContentResult> content() {
-        HomeContentResult contentResult = homeService.content();
+    public CommonResult<HomeContentResult> content(@PathVariable Long adminId) {
+        HomeContentResult contentResult = homeService.content(adminId);
         return CommonResult.success(contentResult);
     }
 
@@ -43,38 +43,38 @@ public class HomeController {
     }
 
     @ApiOperation("获取首页商品分类")
-    @RequestMapping(value = "/productCateList/{parentId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/productCateList/{adminId}/{parentId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<PmsProductCategory>> getProductCateList(@PathVariable Long parentId) {
-        List<PmsProductCategory> productCategoryList = homeService.getProductCateList(parentId);
+    public CommonResult<List<PmsProductCategory>> getProductCateList(@PathVariable Long parentId,@PathVariable Long adminId) {
+        List<PmsProductCategory> productCategoryList = homeService.getProductCateList(parentId,adminId);
         return CommonResult.success(productCategoryList);
     }
 
     @ApiOperation("根据分类获取专题")
-    @RequestMapping(value = "/subjectList", method = RequestMethod.GET)
+    @RequestMapping(value = "/subjectList/{adminId}", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<CmsSubject>> getSubjectList(@RequestParam(required = false) Long cateId,
                                                          @RequestParam(value = "pageSize", defaultValue = "4") Integer pageSize,
-                                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+                                                         @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@PathVariable Long adminId) {
         List<CmsSubject> subjectList = homeService.getSubjectList(cateId,pageSize,pageNum);
         return CommonResult.success(subjectList);
     }
 
     @ApiOperation("分页获取人气推荐商品")
-    @RequestMapping(value = "/hotProductList", method = RequestMethod.GET)
+    @RequestMapping(value = "/hotProductList/{adminId}", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<PmsProduct>> hotProductList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                         @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
-        List<PmsProduct> productList = homeService.hotProductList(pageNum,pageSize);
+                                                         @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize,@PathVariable Long adminId) {
+        List<PmsProduct> productList = homeService.hotProductList(pageNum,pageSize,adminId);
         return CommonResult.success(productList);
     }
 
     @ApiOperation("分页获取新品推荐商品")
-    @RequestMapping(value = "/newProductList", method = RequestMethod.GET)
+    @RequestMapping(value = "/newProductList/{adminId}", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<PmsProduct>> newProductList(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                         @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
-        List<PmsProduct> productList = homeService.newProductList(pageNum,pageSize);
+                                                         @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize,@PathVariable Long adminId) {
+        List<PmsProduct> productList = homeService.newProductList(pageNum,pageSize,adminId);
         return CommonResult.success(productList);
     }
 //    @ApiOperation("获得商品总数")

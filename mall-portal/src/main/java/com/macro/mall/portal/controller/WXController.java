@@ -128,7 +128,7 @@ public class WXController {
         OmsOrderDetail detail = orderService.detail(orderId);
 
         String requestUrl = String.format(this.payUrl,
-                "商城购物",
+                detail.getAdminId().toString(),"商城购物",
                 detail.getPayAmount().multiply(new BigDecimal(100)).intValue()+"",
                 detail.getMemberUsername(),
                 orderId);//请求公共支付方法，获取前端所需要的的支付参数

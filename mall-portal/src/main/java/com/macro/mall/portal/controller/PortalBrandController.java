@@ -26,11 +26,11 @@ public class PortalBrandController {
     private PortalBrandService homeBrandService;
 
     @ApiOperation("分页获取推荐品牌")
-    @RequestMapping(value = "/recommendList", method = RequestMethod.GET)
+    @RequestMapping(value = "/recommendList/{adminId}", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<PmsBrand>> recommendList(@RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize,
-                                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        List<PmsBrand> brandList = homeBrandService.recommendList(pageNum, pageSize);
+                                                      @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,@PathVariable Long amindId) {
+        List<PmsBrand> brandList = homeBrandService.recommendList(pageNum, pageSize,amindId);
         return CommonResult.success(brandList);
     }
 

@@ -14,7 +14,7 @@ public interface PortalBrandService {
     /**
      * 分页获取推荐品牌
      */
-    List<PmsBrand> recommendList(Integer pageNum, Integer pageSize);
+    List<PmsBrand> recommendList(Integer pageNum, Integer pageSize, Long amindId);
 
     /**
      * 获取品牌详情

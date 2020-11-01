@@ -14,6 +14,9 @@ public class SmsHomeRecommendSubject implements Serializable {
 
     private Integer sort;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -56,19 +59,11 @@ public class SmsHomeRecommendSubject implements Serializable {
         this.sort = sort;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", subjectId=").append(subjectId);
-        sb.append(", subjectName=").append(subjectName);
-        sb.append(", recommendStatus=").append(recommendStatus);
-        sb.append(", sort=").append(sort);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

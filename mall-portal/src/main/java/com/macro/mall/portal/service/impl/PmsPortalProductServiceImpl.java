@@ -48,7 +48,7 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
     private PortalProductDao portalProductDao;
 
     @Override
-    public List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum, Integer pageSize, Integer sort) {
+    public List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum, Integer pageSize, Integer sort,Long adminId) {
         PageHelper.startPage(pageNum, pageSize);
         PmsProductExample example = new PmsProductExample();
         PmsProductExample.Criteria criteria = example.createCriteria();
@@ -62,6 +62,7 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         if (productCategoryId != null) {
             criteria.andProductCategoryIdEqualTo(productCategoryId);
         }
+        criteria.andAdminIdEqualTo(adminId);
         //1->按新品；2->按销量；3->价格从低到高；4->价格从高到低
         if (sort == 1) {
             example.setOrderByClause("id desc");
@@ -78,9 +79,10 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
     }
 
     @Override
-    public List<PmsProductCategoryNode> categoryTreeList() {
+    public List<PmsProductCategoryNode> categoryTreeList(Long adminId) {
         PmsProductCategoryExample example = new PmsProductCategoryExample();
-        example.or().andNavStatusEqualTo(1);
+        example.or().andNavStatusEqualTo(1)
+                .andAdminIdEqualTo(adminId);
         example.setOrderByClause("sort desc");
         List<PmsProductCategory> allList = productCategoryMapper.selectByExample(example);
         List<PmsProductCategoryNode> result = allList.stream()
@@ -90,7 +92,7 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
     }
 
     @Override
-    public PmsPortalProductDetail detail(Long id) {
+    public PmsPortalProductDetail detail(Long id, Long adminId) {
         PmsPortalProductDetail result = new PmsPortalProductDetail();
         //获取商品信息
         PmsProduct product = productMapper.selectByPrimaryKey(id);
