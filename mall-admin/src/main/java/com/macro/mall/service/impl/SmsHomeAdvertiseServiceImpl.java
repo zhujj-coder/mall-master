@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.macro.mall.mapper.SmsHomeAdvertiseMapper;
 import com.macro.mall.model.SmsHomeAdvertise;
 import com.macro.mall.model.SmsHomeAdvertiseExample;
+import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.service.SmsHomeAdvertiseService;
+import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,27 +24,37 @@ import java.util.List;
 public class SmsHomeAdvertiseServiceImpl implements SmsHomeAdvertiseService {
     @Autowired
     private SmsHomeAdvertiseMapper advertiseMapper;
-
+    @Autowired
+    private UmsAdminService umsAdminService;
     @Override
     public int create(SmsHomeAdvertise advertise) {
         advertise.setClickCount(0);
         advertise.setOrderCount(0);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        advertise.setAdminId(currentAdmin.getId());
         return advertiseMapper.insert(advertise);
     }
 
     @Override
     public int delete(List<Long> ids) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
-        example.createCriteria().andIdIn(ids);
+        example.createCriteria().andIdIn(ids)
+            .andAdminIdEqualTo(currentAdmin.getId());
         return advertiseMapper.deleteByExample(example);
     }
 
     @Override
     public int updateStatus(Long id, Integer status) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         SmsHomeAdvertise record = new SmsHomeAdvertise();
         record.setId(id);
         record.setStatus(status);
-        return advertiseMapper.updateByPrimaryKeySelective(record);
+        SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
+        example.or()
+                .andIdEqualTo(id)
+                .andAdminIdEqualTo(currentAdmin.getId());
+        return advertiseMapper.updateByExampleSelective(record,example);
     }
 
     @Override
@@ -52,15 +64,22 @@ public class SmsHomeAdvertiseServiceImpl implements SmsHomeAdvertiseService {
 
     @Override
     public int update(Long id, SmsHomeAdvertise advertise) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         advertise.setId(id);
-        return advertiseMapper.updateByPrimaryKeySelective(advertise);
+        SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
+        example.or()
+                .andIdEqualTo(id)
+                .andAdminIdEqualTo(currentAdmin.getId());
+        return advertiseMapper.updateByExampleSelective(advertise,example);
     }
 
     @Override
     public List<SmsHomeAdvertise> list(String name, Integer type, String endTime, Integer pageSize, Integer pageNum) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PageHelper.startPage(pageNum, pageSize);
         SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
         SmsHomeAdvertiseExample.Criteria criteria = example.createCriteria();
+        criteria.andAdminIdNotEqualTo(currentAdmin.getId());
         if (!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
         }
