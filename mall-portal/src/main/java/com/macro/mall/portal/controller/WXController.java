@@ -3,6 +3,8 @@ package com.macro.mall.portal.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.mapper.UmsAdminMapper;
+import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.portal.domain.LoginInfo;
 import com.macro.mall.portal.domain.OmsOrderDetail;
 import com.macro.mall.portal.service.OmsPortalOrderService;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -41,12 +44,6 @@ public class WXController {
     @Value("${wx.payUrl}")
     private String payUrl;
 
-    @Value("${wx.appId}")
-    private String appId;
-
-    @Value("${wx.secret}")
-    private String secret;
-
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
@@ -54,17 +51,21 @@ public class WXController {
     private UmsMemberService memberService;
     @Autowired
     private OmsPortalOrderService orderService;
+    @Resource
+    private UmsAdminMapper umsAdminMapper;
 
     /**
      * 显示登录
      */
     @ApiOperation(value = "登录")
-    @PostMapping("/login_by_weixin")
-    public CommonResult loginByWeixin(@RequestBody LoginInfo loginInfo, HttpServletRequest request) {
+    @PostMapping("/login_by_weixin/{adminId}")
+    public CommonResult loginByWeixin(@RequestBody LoginInfo loginInfo, HttpServletRequest request,@PathVariable Long adminId) {
+        /* 获取appId 和secret*/
+        UmsAdmin umsAdmin = umsAdminMapper.selectByPrimaryKey(adminId);
         //获取openid
         String requestUrl = String.format(this.webAccessTokenhttps,
-                this.appId,
-                this.secret,
+                umsAdmin.getAppId(),
+                umsAdmin.getAppSecret(),
                 loginInfo.getCode());//通过自定义工具类组合出小程序需要的登录凭证 code
 
         String res = restTemplate.getForObject(requestUrl, String.class);
@@ -92,12 +93,14 @@ public class WXController {
      * 静默登录
      */
     @ApiOperation(value = "静默登录")
-    @RequestMapping("/login")
-    public CommonResult loginByWeixin(@RequestParam String code) {
+    @RequestMapping("/login/{adminId}")
+    public CommonResult loginByWeixin(@RequestParam String code,@PathVariable Long adminId) {
+        /* 获取appId 和secret*/
+        UmsAdmin umsAdmin = umsAdminMapper.selectByPrimaryKey(adminId);
         //获取openid
         String requestUrl = String.format(this.webAccessTokenhttps,
-                this.appId,// redis 中获取没有用接口拿
-                this.secret,
+                umsAdmin.getAppId(),// redis 中获取没有用接口拿
+                umsAdmin.getAppSecret(),
                 code);//通过自定义工具类组合出小程序需要的登录凭证 code
 
         String res = restTemplate.getForObject(requestUrl, String.class);

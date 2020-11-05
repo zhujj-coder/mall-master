@@ -89,10 +89,10 @@ public class OmsPortalOrderController {
     }
 
     @ApiOperation("用户取消订单")
-    @RequestMapping(value = "/cancelUserOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "/cancelUserOrder/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult cancelUserOrder(Long orderId) {
-        portalOrderService.cancelOrder(orderId);
+    public CommonResult cancelUserOrder(Long orderId,@PathVariable Long adminId) {
+        portalOrderService.cancelOrder(orderId,adminId);
         return CommonResult.success(null);
     }
 

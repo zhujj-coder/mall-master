@@ -2,7 +2,6 @@ package com.macro.mall.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.macro.mall.bo.AdminUserDetails;
@@ -43,7 +42,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +58,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     private String getCodeUrl;
     @Value("${common.checkCodeUrl}")
     private String checkCodeUrl;
+    @Value("${common.updateMch}")
+    private String updateMch;
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
@@ -233,12 +234,51 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 //                admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 //            }
 //        }
+//        rawAdmin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        rawAdmin.setAppId(admin.getAppId());
+        rawAdmin.setAppSecret(admin.getAppSecret());
+        int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
+        adminCacheService.delAdmin(id);
+        return count;
+    }
+    @Override
+    public int updateWithMch(Long id, UmsAdminPo adminPo) {
+        UmsAdmin admin = new UmsAdmin();
+        BeanUtils.copyProperties(adminPo,admin);
+
+//更新 all-in-one 商户信息
+        JSONObject jsonObject =new JSONObject();
+        jsonObject.put("appId",adminPo.getAppId());
+        jsonObject.put("mchId",adminPo.getMchId());
+        jsonObject.put("mchKey",adminPo.getMchKey());
+        jsonObject.put("bizId",adminPo.getId());
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        headers.add("Accept", MediaType.APPLICATION_JSON.toString());
+        JSONObject resData = restTemplate.postForObject(updateMch, jsonObject, JSONObject.class,headers);
+        String code = resData.getString("code");
+        if(!"200".equals(code)){
+            throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),resData.getString("message"));
+        }
+//        更新本地库
+        admin.setId(id);
+        UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
+        rawAdmin.setAppId(admin.getAppId());
+        rawAdmin.setAppSecret(admin.getAppSecret());
+        int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
+        adminCacheService.delAdmin(id);
+        return count;
+    }
+    @Override
+    public int updatePassword(Long id, UmsAdmin admin) {
+        admin.setId(id);
+        UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
         rawAdmin.setPassword(passwordEncoder.encode(admin.getPassword()));
         int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
         adminCacheService.delAdmin(id);
         return count;
     }
-
     @Override
     public int delete(Long id) {
         adminCacheService.delAdmin(id);
