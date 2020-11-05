@@ -44,8 +44,7 @@ public class OmsPortalOrderController {
         return CommonResult.success(result, "下单成功");
     }
 
-    @ApiOperation("用户支付成功的回调")
-    @RequestMapping(value = "/paySuccess", method = RequestMethod.POST)
+    @RequestMapping(value = "/paySuccess")
     @ResponseBody
     public CommonResult paySuccess(@RequestParam Long orderId,@RequestParam Integer payType) {
         Integer count = portalOrderService.paySuccess(orderId,payType);
