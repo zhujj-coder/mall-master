@@ -38,7 +38,7 @@
                              targetProject="/Users/guolei/github/mall-master/mall-mbg/src/main/java"/>
 
         <!--生成全部表tableName设为%-->
-        <table tableName="oms_order">
+        <table tableName="oms_order_return_reason">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

@@ -21,6 +21,9 @@ public class OmsOrderSetting implements Serializable {
     @ApiModelProperty(value = "订单完成后自动好评时间（天）")
     private Integer commentOvertime;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -71,20 +74,11 @@ public class OmsOrderSetting implements Serializable {
         this.commentOvertime = commentOvertime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", flashOrderOvertime=").append(flashOrderOvertime);
-        sb.append(", normalOrderOvertime=").append(normalOrderOvertime);
-        sb.append(", confirmOvertime=").append(confirmOvertime);
-        sb.append(", finishOvertime=").append(finishOvertime);
-        sb.append(", commentOvertime=").append(commentOvertime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

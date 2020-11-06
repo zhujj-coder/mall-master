@@ -29,6 +29,7 @@
     <result column="receive_man" jdbcType="VARCHAR" property="receiveMan" />
     <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
     <result column="receive_note" jdbcType="VARCHAR" property="receiveNote" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -92,7 +93,8 @@
     id, order_id, company_address_id, product_id, order_sn, create_time, member_username, 
     return_amount, return_name, return_phone, status, handle_time, product_pic, product_name, 
     product_brand, product_attr, product_count, product_price, product_real_price, reason, 
-    description, proof_pics, handle_note, handle_man, receive_man, receive_time, receive_note
+    description, proof_pics, handle_note, handle_man, receive_man, receive_time, receive_note, 
+    admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.OmsOrderReturnApplyExample" resultMap="BaseResultMap">
     select
@@ -136,7 +138,8 @@
       product_count, product_price, product_real_price, 
       reason, description, proof_pics, 
       handle_note, handle_man, receive_man, 
-      receive_time, receive_note)
+      receive_time, receive_note, admin_id
+      )
     values (#{orderId,jdbcType=BIGINT}, #{companyAddressId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, 
       #{orderSn,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{memberUsername,jdbcType=VARCHAR}, 
       #{returnAmount,jdbcType=DECIMAL}, #{returnName,jdbcType=VARCHAR}, #{returnPhone,jdbcType=VARCHAR}, 
@@ -145,7 +148,8 @@
       #{productCount,jdbcType=INTEGER}, #{productPrice,jdbcType=DECIMAL}, #{productRealPrice,jdbcType=DECIMAL}, 
       #{reason,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{proofPics,jdbcType=VARCHAR}, 
       #{handleNote,jdbcType=VARCHAR}, #{handleMan,jdbcType=VARCHAR}, #{receiveMan,jdbcType=VARCHAR}, 
-      #{receiveTime,jdbcType=TIMESTAMP}, #{receiveNote,jdbcType=VARCHAR})
+      #{receiveTime,jdbcType=TIMESTAMP}, #{receiveNote,jdbcType=VARCHAR}, #{adminId,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.OmsOrderReturnApply">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -231,6 +235,9 @@
       <if test="receiveNote != null">
         receive_note,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orderId != null">
@@ -310,6 +317,9 @@
       </if>
       <if test="receiveNote != null">
         #{receiveNote,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -403,6 +413,9 @@
       <if test="record.receiveNote != null">
         receive_note = #{record.receiveNote,jdbcType=VARCHAR},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -436,7 +449,8 @@
       handle_man = #{record.handleMan,jdbcType=VARCHAR},
       receive_man = #{record.receiveMan,jdbcType=VARCHAR},
       receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
-      receive_note = #{record.receiveNote,jdbcType=VARCHAR}
+      receive_note = #{record.receiveNote,jdbcType=VARCHAR},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -522,6 +536,9 @@
       <if test="receiveNote != null">
         receive_note = #{receiveNote,jdbcType=VARCHAR},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -552,7 +569,8 @@
       handle_man = #{handleMan,jdbcType=VARCHAR},
       receive_man = #{receiveMan,jdbcType=VARCHAR},
       receive_time = #{receiveTime,jdbcType=TIMESTAMP},
-      receive_note = #{receiveNote,jdbcType=VARCHAR}
+      receive_note = #{receiveNote,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

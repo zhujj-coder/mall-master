@@ -23,4 +23,6 @@ public class OmsReturnApplyQueryParam {
     private String handleMan;
     @ApiModelProperty(value = "处理时间")
     private String handleTime;
+    @ApiModelProperty("商户用户ID")
+    private Long adminId;
 }

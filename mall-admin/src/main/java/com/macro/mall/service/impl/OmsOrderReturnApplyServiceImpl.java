@@ -8,7 +8,9 @@ import com.macro.mall.dto.OmsUpdateStatusParam;
 import com.macro.mall.mapper.OmsOrderReturnApplyMapper;
 import com.macro.mall.model.OmsOrderReturnApply;
 import com.macro.mall.model.OmsOrderReturnApplyExample;
+import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.service.OmsOrderReturnApplyService;
+import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,13 @@ public class OmsOrderReturnApplyServiceImpl implements OmsOrderReturnApplyServic
     private OmsOrderReturnApplyDao returnApplyDao;
     @Autowired
     private OmsOrderReturnApplyMapper returnApplyMapper;
+    @Autowired
+    private UmsAdminService adminService;
+
     @Override
     public List<OmsOrderReturnApply> list(OmsReturnApplyQueryParam queryParam, Integer pageSize, Integer pageNum) {
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        queryParam.setAdminId(admin.getId());
         PageHelper.startPage(pageNum,pageSize);
         return returnApplyDao.getList(queryParam);
     }
@@ -34,7 +41,8 @@ public class OmsOrderReturnApplyServiceImpl implements OmsOrderReturnApplyServic
     @Override
     public int delete(List<Long> ids) {
         OmsOrderReturnApplyExample example = new OmsOrderReturnApplyExample();
-        example.createCriteria().andIdIn(ids).andStatusEqualTo(3);
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        example.createCriteria().andIdIn(ids).andStatusEqualTo(3).andAdminIdEqualTo(admin.getId());
         return returnApplyMapper.deleteByExample(example);
     }
 
@@ -68,7 +76,11 @@ public class OmsOrderReturnApplyServiceImpl implements OmsOrderReturnApplyServic
         }else{
             return 0;
         }
-        return returnApplyMapper.updateByPrimaryKeySelective(returnApply);
+
+        OmsOrderReturnApplyExample example = new OmsOrderReturnApplyExample();
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        example.createCriteria().andIdEqualTo(id).andAdminIdEqualTo(admin.getId());
+        return returnApplyMapper.updateByExampleSelective(returnApply, example);
     }
 
     @Override

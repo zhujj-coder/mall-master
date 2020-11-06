@@ -8,6 +8,7 @@
     <result column="confirm_overtime" jdbcType="INTEGER" property="confirmOvertime" />
     <result column="finish_overtime" jdbcType="INTEGER" property="finishOvertime" />
     <result column="comment_overtime" jdbcType="INTEGER" property="commentOvertime" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +70,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, flash_order_overtime, normal_order_overtime, confirm_overtime, finish_overtime, 
-    comment_overtime
+    comment_overtime, admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.OmsOrderSettingExample" resultMap="BaseResultMap">
     select
@@ -106,11 +107,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into oms_order_setting (flash_order_overtime, normal_order_overtime, 
-      confirm_overtime, finish_overtime, comment_overtime
-      )
+      confirm_overtime, finish_overtime, comment_overtime, 
+      admin_id)
     values (#{flashOrderOvertime,jdbcType=INTEGER}, #{normalOrderOvertime,jdbcType=INTEGER}, 
-      #{confirmOvertime,jdbcType=INTEGER}, #{finishOvertime,jdbcType=INTEGER}, #{commentOvertime,jdbcType=INTEGER}
-      )
+      #{confirmOvertime,jdbcType=INTEGER}, #{finishOvertime,jdbcType=INTEGER}, #{commentOvertime,jdbcType=INTEGER}, 
+      #{adminId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.OmsOrderSetting">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -133,6 +134,9 @@
       <if test="commentOvertime != null">
         comment_overtime,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="flashOrderOvertime != null">
@@ -149,6 +153,9 @@
       </if>
       <if test="commentOvertime != null">
         #{commentOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -179,6 +186,9 @@
       <if test="record.commentOvertime != null">
         comment_overtime = #{record.commentOvertime,jdbcType=INTEGER},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -191,7 +201,8 @@
       normal_order_overtime = #{record.normalOrderOvertime,jdbcType=INTEGER},
       confirm_overtime = #{record.confirmOvertime,jdbcType=INTEGER},
       finish_overtime = #{record.finishOvertime,jdbcType=INTEGER},
-      comment_overtime = #{record.commentOvertime,jdbcType=INTEGER}
+      comment_overtime = #{record.commentOvertime,jdbcType=INTEGER},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -214,6 +225,9 @@
       <if test="commentOvertime != null">
         comment_overtime = #{commentOvertime,jdbcType=INTEGER},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -223,7 +237,8 @@
       normal_order_overtime = #{normalOrderOvertime,jdbcType=INTEGER},
       confirm_overtime = #{confirmOvertime,jdbcType=INTEGER},
       finish_overtime = #{finishOvertime,jdbcType=INTEGER},
-      comment_overtime = #{commentOvertime,jdbcType=INTEGER}
+      comment_overtime = #{commentOvertime,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

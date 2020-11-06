@@ -24,11 +24,11 @@
         <if test="queryParam.status!=null">
             AND status = #{queryParam.status}
         </if>
-        <if test="queryParam.status!=null">
-            AND status = #{queryParam.status}
-        </if>
         <if test="queryParam.handleMan!=null and queryParam.handleMan!=''">
             AND handle_man = #{queryParam.handleMan}
+        </if>
+        <if test="queryParam.adminId!=null">
+            AND admin_id = #{queryParam.adminId}
         </if>
         <if test="queryParam.createTime!=null and queryParam.createTime!=''">
             AND create_time LIKE CONCAT(#{queryParam.createTime}, '%')
