@@ -44,8 +44,7 @@ public class OmsPortalOrderController {
         return CommonResult.success(result, "下单成功");
     }
 
-    @ApiOperation("用户支付成功的回调")
-    @RequestMapping(value = "/paySuccess", method = RequestMethod.POST)
+    @RequestMapping(value = "/paySuccess")
     @ResponseBody
     public CommonResult paySuccess(@RequestParam Long orderId,@RequestParam Integer payType) {
         Integer count = portalOrderService.paySuccess(orderId,payType);
@@ -89,10 +88,10 @@ public class OmsPortalOrderController {
     }
 
     @ApiOperation("用户取消订单")
-    @RequestMapping(value = "/cancelUserOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "/cancelUserOrder/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult cancelUserOrder(Long orderId) {
-        portalOrderService.cancelOrder(orderId);
+    public CommonResult cancelUserOrder(Long orderId,@PathVariable Long adminId) {
+        portalOrderService.cancelOrder(orderId,adminId);
         return CommonResult.success(null);
     }
 

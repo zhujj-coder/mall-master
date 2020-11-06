@@ -31,3 +31,7 @@ logstash:
 common:
   getCodeUrl: "http://127.0.0.1:8090/common/mobile/getCode"
   checkCodeUrl: "http://127.0.0.1:8090/common/mobile/checkCode"
+  updateMch: "http://127.0.0.1:8090/common/wx-pay-config/add"
+sms:
+  id: "AKID0oKfouBUvBTvBDbVLxLblxySo2N0AXR4"
+  key: "XN3VSAfw2vb3IRM2uBCzAJDraDf5GxTm"

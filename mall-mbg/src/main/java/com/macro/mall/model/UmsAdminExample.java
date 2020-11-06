@@ -764,6 +764,146 @@ public class UmsAdminExample {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
+
+        public Criteria andAppIdIsNull() {
+            addCriterion("app_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdIsNotNull() {
+            addCriterion("app_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdEqualTo(String value) {
+            addCriterion("app_id =", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdNotEqualTo(String value) {
+            addCriterion("app_id <>", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdGreaterThan(String value) {
+            addCriterion("app_id >", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdGreaterThanOrEqualTo(String value) {
+            addCriterion("app_id >=", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdLessThan(String value) {
+            addCriterion("app_id <", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdLessThanOrEqualTo(String value) {
+            addCriterion("app_id <=", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdLike(String value) {
+            addCriterion("app_id like", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdNotLike(String value) {
+            addCriterion("app_id not like", value, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdIn(List<String> values) {
+            addCriterion("app_id in", values, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdNotIn(List<String> values) {
+            addCriterion("app_id not in", values, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdBetween(String value1, String value2) {
+            addCriterion("app_id between", value1, value2, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppIdNotBetween(String value1, String value2) {
+            addCriterion("app_id not between", value1, value2, "appId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretIsNull() {
+            addCriterion("app_secret is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretIsNotNull() {
+            addCriterion("app_secret is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretEqualTo(String value) {
+            addCriterion("app_secret =", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretNotEqualTo(String value) {
+            addCriterion("app_secret <>", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretGreaterThan(String value) {
+            addCriterion("app_secret >", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretGreaterThanOrEqualTo(String value) {
+            addCriterion("app_secret >=", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretLessThan(String value) {
+            addCriterion("app_secret <", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretLessThanOrEqualTo(String value) {
+            addCriterion("app_secret <=", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretLike(String value) {
+            addCriterion("app_secret like", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretNotLike(String value) {
+            addCriterion("app_secret not like", value, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretIn(List<String> values) {
+            addCriterion("app_secret in", values, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretNotIn(List<String> values) {
+            addCriterion("app_secret not in", values, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretBetween(String value1, String value2) {
+            addCriterion("app_secret between", value1, value2, "appSecret");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppSecretNotBetween(String value1, String value2) {
+            addCriterion("app_secret not between", value1, value2, "appSecret");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

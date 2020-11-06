@@ -38,11 +38,13 @@ public interface OmsPortalOrderService {
     @Transactional
     Integer cancelTimeOutOrder();
 
+    void cancelOrder(Long orderId);
+
     /**
      * 取消单个超时订单
      */
     @Transactional
-    void cancelOrder(Long orderId);
+    void cancelOrder(Long orderId, Long adminId);
 
     /**
      * 发送延迟消息取消订单

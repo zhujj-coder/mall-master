@@ -8,6 +8,7 @@ import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.model.UmsAdmin;
+import com.macro.mall.model.UmsAdminPo;
 import com.macro.mall.model.UmsRole;
 import com.macro.mall.service.UmsAdminService;
 import com.macro.mall.service.UmsRoleService;
@@ -162,8 +163,8 @@ public class UmsAdminController {
     @ApiOperation("修改指定用户信息")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult update(@PathVariable Long id, @RequestBody UmsAdmin admin) {
-        int count = adminService.update(id, admin);
+    public CommonResult update(@PathVariable Long id, @RequestBody UmsAdminPo admin) {
+        int count = adminService.updateWithMch(id, admin);
         if (count > 0) {
             return CommonResult.success(count);
         }

@@ -319,6 +319,37 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             }
         }
     }
+    @Override
+    public void cancelOrder(Long orderId, Long adminId) {
+        //查询未付款的取消订单
+        OmsOrderExample example = new OmsOrderExample();
+        example.createCriteria().andIdEqualTo(orderId).andStatusEqualTo(0).andDeleteStatusEqualTo(0)
+            .andAdminIdEqualTo(adminId);
+        List<OmsOrder> cancelOrderList = orderMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(cancelOrderList)) {
+            return;
+        }
+        OmsOrder cancelOrder = cancelOrderList.get(0);
+        if (cancelOrder != null) {
+            //修改订单状态为取消
+            cancelOrder.setStatus(4);
+            orderMapper.updateByPrimaryKeySelective(cancelOrder);
+            OmsOrderItemExample orderItemExample = new OmsOrderItemExample();
+            orderItemExample.createCriteria().andOrderIdEqualTo(orderId);
+            List<OmsOrderItem> orderItemList = orderItemMapper.selectByExample(orderItemExample);
+            //解除订单商品库存锁定
+            if (!CollectionUtils.isEmpty(orderItemList)) {
+                portalOrderDao.releaseSkuStockLock(orderItemList);
+            }
+            //修改优惠券使用状态
+            updateCouponStatus(cancelOrder.getCouponId(), cancelOrder.getMemberId(), 0);
+            //返还使用积分
+            if (cancelOrder.getUseIntegration() != null) {
+                UmsMember member = memberService.getById(cancelOrder.getMemberId());
+                memberService.updateIntegration(cancelOrder.getMemberId(), member.getIntegration() + cancelOrder.getUseIntegration());
+            }
+        }
+    }
 
     @Override
     public void sendDelayMessageCancelOrder(Long orderId) {

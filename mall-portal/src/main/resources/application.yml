@@ -35,6 +35,7 @@ secure:
       - /brand/**
       - /wx/login_by_weixin
       - /wx/login**
+      - /order/paySuccess/**
 
 # 自定义redis key
 redis:
@@ -58,5 +59,3 @@ wx:
   webAccessTokenhttps: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
   payUrl: "https://car.jianjiakeji.com/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"
 #  payUrl: "http://127.0.0.1:8090/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"
-  appId: wx8268c2c508413783
-  secret: d1205cf3ef94e20a68634c63e32a8a0d
