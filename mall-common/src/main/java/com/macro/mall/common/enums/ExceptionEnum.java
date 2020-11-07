@@ -68,7 +68,9 @@ public enum ExceptionEnum {
     MOBILE_SEND_FRE(40201,"短信发送过于频繁！"),
     MOBILE_CHECK_FRE(40202,"短信校验过于频繁！"),
     MOBILE_SEND_IP_NULL(40203,"短信发送失败【ip异常】！"),
-    MOBILE_WRONG(40204,"验证码有误！");
+    MOBILE_WRONG(40204,"验证码有误！"),
+//    退货
+    RETURN_REPEATED(40300,"请勿重复退款！");
     private Integer code;
     private String msg;
 

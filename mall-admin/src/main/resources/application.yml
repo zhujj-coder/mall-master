@@ -52,6 +52,7 @@ secure:
       - /minio/upload
       - /admin/getCode
       - /admin/checkCode
+      - /aliyun/oss/callback
 
 aliyun:
   oss:
@@ -62,7 +63,7 @@ aliyun:
     policy:
       expire: 300 # 签名有效期(S)
     maxSize: 10 # 上传文件大小(M)
-    callback: http://39.98.190.128:8080/aliyun/oss/callback # 文件上传成功后的回调地址
+    callback: https://admin.jianjiakeji.com/aliyun/oss/callback # 文件上传成功后的回调地址
     dir:
       prefix: mall/images/ # 上传文件夹路径前缀
 
@@ -71,4 +72,3 @@ minio:
   bucketName: mall #存储桶名称
   accessKey: minioadmin #访问的key
   secretKey: minioadmin #访问的秘钥
-

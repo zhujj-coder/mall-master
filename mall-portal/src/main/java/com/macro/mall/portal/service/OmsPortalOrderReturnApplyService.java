@@ -10,5 +10,7 @@ public interface OmsPortalOrderReturnApplyService {
     /**
      * 提交申请
      */
-    int create(OmsOrderReturnApplyParam returnApply);
+//    int create(OmsOrderReturnApplyParam returnApply);
+
+    int create(OmsOrderReturnApplyParam returnApply, Long adminId);
 }

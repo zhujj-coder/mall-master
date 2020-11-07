@@ -36,7 +36,7 @@ secure:
       - /wx/login_by_weixin
       - /wx/login**
       - /order/paySuccess/**
-
+      - /aliyun/oss/callback
 # 自定义redis key
 redis:
   database: mall
@@ -59,3 +59,15 @@ wx:
   webAccessTokenhttps: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
   payUrl: "https://car.jianjiakeji.com/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"
 #  payUrl: "http://127.0.0.1:8090/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"
+aliyun:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com # oss对外服务的访问域名
+    accessKeyId: LTAI3FhAr8JHV1c7 # 访问身份验证中用到用户标识
+    accessKeySecret: dFWuYdDXYMIivLpjzBoftXjki8SgoF # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    bucketName: szjjkj # oss的存储空间
+    policy:
+      expire: 300 # 签名有效期(S)
+    maxSize: 10 # 上传文件大小(M)
+    callback: https://portal.jianjiakeji.com/aliyun/oss/callback # 文件上传成功后的回调地址
+    dir:
+      prefix: mall/portal/ # 上传文件夹路径前缀

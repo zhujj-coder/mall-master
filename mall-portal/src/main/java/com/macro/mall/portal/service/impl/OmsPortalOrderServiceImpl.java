@@ -321,6 +321,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     }
     @Override
     public void cancelOrder(Long orderId, Long adminId) {
+        UmsMember umsMember= memberService.getCurrentMember();
+        OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
+        if(!umsMember.getId().equals(order.getMemberId())){
+            Asserts.fail("不能取消他人订单！");
+        }
         //查询未付款的取消订单
         OmsOrderExample example = new OmsOrderExample();
         example.createCriteria().andIdEqualTo(orderId).andStatusEqualTo(0).andDeleteStatusEqualTo(0)
