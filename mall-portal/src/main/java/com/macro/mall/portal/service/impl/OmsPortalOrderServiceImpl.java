@@ -393,8 +393,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         criteria.andDeleteStatusEqualTo(0)
                 .andMemberIdEqualTo(member.getId())
                 .andAdminIdEqualTo(adminId);
-        if(status!=null){
+        if(status!=null&&status!=10){
             criteria.andStatusEqualTo(status);
+        }else if(status!=null){
+            Integer[] arr ={5,6,7,8};
+            criteria.andStatusIn(Arrays.asList(arr));
         }
         orderExample.setOrderByClause("create_time desc");
         List<OmsOrder> orderList = orderMapper.selectByExample(orderExample);
@@ -450,6 +453,23 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }else{
             Asserts.fail("只能删除已完成或已关闭的订单！");
         }
+    }
+
+    @Override
+    public OmsOrder applyReturn(Long orderId) {
+        UmsMember member = memberService.getCurrentMember();
+        OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
+        if(!member.getId().equals(order.getMemberId())){
+            Asserts.fail("不能为他人申请退换！");
+        }
+        if(order.getStatus()==1||order.getStatus()==2||order.getStatus()==3){
+//            退货处理中
+            order.setStatus(5);
+            orderMapper.updateByPrimaryKey(order);
+        }else{
+            Asserts.fail("只能为已支付的订单申请退换！");
+        }
+        return null;
     }
 
     /**

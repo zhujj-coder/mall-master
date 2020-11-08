@@ -34,3 +34,9 @@ alter table sms_home_recommend_subject add column admin_id bigint(20) comment '�
 alter table sms_home_recommend_subject add index IDX_ADMIN_ID(admin_id);
 alter table sms_home_advertise add column admin_id bigint(20) comment '商户用户ID';
 alter table sms_home_advertise add index IDX_ADMIN_ID(admin_id);
+
+
+# appId app_secret
+
+alter table ums_admin add column app_id varchar(64) comment 'appId';
+alter table ums_admin add column app_secret varchar(64) comment 'appSecret';

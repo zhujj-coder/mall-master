@@ -175,4 +175,22 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         orderOperateHistoryMapper.insert(history);
         return count;
     }
+    @Override
+    public int updateStatus(Long id, Integer status) {
+        OmsOrder order = orderMapper.selectByPrimaryKey(id);
+        order.setId(id);
+        order.setStatus(status);
+        order.setModifyTime(new Date());
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        OmsOrderExample example = new OmsOrderExample();
+        example.or().andIdEqualTo(order.getId()).andAdminIdEqualTo(admin.getId());
+        int count = orderMapper.updateByExampleSelective(order, example);
+        OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+        history.setOrderId(id);
+        history.setCreateTime(new Date());
+        history.setOperateMan(admin.getUsername());
+        history.setOrderStatus(status);
+        orderOperateHistoryMapper.insert(history);
+        return count;
+    }
 }

@@ -1,6 +1,7 @@
 package com.macro.mall.portal.service;
 
 import com.macro.mall.common.api.CommonPage;
+import com.macro.mall.model.OmsOrder;
 import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.OmsOrderDetail;
 import com.macro.mall.portal.domain.OrderParam;
@@ -70,4 +71,6 @@ public interface OmsPortalOrderService {
      * 用户根据订单ID删除订单
      */
     void deleteOrder(Long orderId);
+
+    OmsOrder applyReturn(Long orderId);
 }

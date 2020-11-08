@@ -3,6 +3,7 @@ package com.macro.mall.portal.service.impl;
 import com.macro.mall.common.enums.ExceptionEnum;
 import com.macro.mall.common.exception.MyException;
 import com.macro.mall.mapper.OmsOrderReturnApplyMapper;
+import com.macro.mall.model.OmsOrder;
 import com.macro.mall.model.OmsOrderReturnApply;
 import com.macro.mall.model.OmsOrderReturnApplyExample;
 import com.macro.mall.portal.domain.OmsOrderDetail;
@@ -12,6 +13,7 @@ import com.macro.mall.portal.service.OmsPortalOrderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,12 +31,14 @@ public class OmsPortalOrderReturnApplyServiceImpl implements OmsPortalOrderRetur
     private OmsPortalOrderService orderService;
 
     @Override
+    @Transactional
     public int create(OmsOrderReturnApplyParam returnApply, Long adminId) {
+
         OmsOrderReturnApplyExample example =new OmsOrderReturnApplyExample();
         example.or().andOrderIdEqualTo(returnApply.getOrderId());
         List<OmsOrderReturnApply> omsOrderReturnApplies = returnApplyMapper.selectByExample(example);
         if(omsOrderReturnApplies.size()>0){
-            throw new MyException(ExceptionEnum.UNKNOWN_ERROR);
+            throw new MyException(ExceptionEnum.RETURN_REPEATED);
         }
         OmsOrderReturnApply realApply = new OmsOrderReturnApply();
         BeanUtils.copyProperties(returnApply,realApply);
@@ -48,6 +52,8 @@ public class OmsPortalOrderReturnApplyServiceImpl implements OmsPortalOrderRetur
         realApply.setCreateTime(new Date());
         realApply.setStatus(0);
         realApply.setAdminId(adminId);
+        //        先把订单改成退货处理中
+        orderService.applyReturn(orderId);
         return returnApplyMapper.insert(realApply);
     }
 }
