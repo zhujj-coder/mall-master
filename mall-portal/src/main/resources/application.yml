@@ -34,7 +34,7 @@ secure:
       - /product/**
       - /brand/**
       - /wx/login_by_weixin
-      - /wx/login**
+      - /wx/login/**
       - /order/paySuccess/**
       - /aliyun/oss/callback
 # 自定义redis key

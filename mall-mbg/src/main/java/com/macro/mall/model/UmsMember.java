@@ -66,6 +66,9 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "union_id")
     private String unionId;
 
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -234,5 +237,13 @@ public class UmsMember implements Serializable {
 
     public void setUnionId(String unionId) {
         this.unionId = unionId;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }

@@ -8,6 +8,10 @@
         <collection property="historyList" resultMap="com.macro.mall.mapper.OmsOrderOperateHistoryMapper.BaseResultMap"
                     columnPrefix="history_"/>
     </resultMap>
+    <resultMap id="omsOrderSummaryMap" type="com.macro.mall.dto.OmsOrderSummary">
+    </resultMap>
+    <resultMap id="omsStateCountMap" type="com.macro.mall.dto.OmsOrderStatusCount">
+    </resultMap>
     <select id="getList" resultMap="com.macro.mall.mapper.OmsOrderMapper.BaseResultMap">
         SELECT *
         FROM
@@ -96,5 +100,15 @@
         WHERE
             o.id = #{id} AND o.admin_id = #{adminId}
         ORDER BY oi.id ASC,oh.create_time DESC
+    </select>
+    <select id="getOrderSummary" resultMap="omsOrderSummaryMap">
+        select count(1) count,sum(pay_amount) payAmount from oms_order where admin_id=#{adminId} and status in (1,2,3,4) and create_time between #{startTime} and #{endTime};
+    </select>
+    <select id="getOrderStatusCount" resultMap="omsStateCountMap">
+        select count(if(status=0,true ,null)) count0,count(if(status=1,true ,null)) count1,
+               count(if(status=2,true ,null)) count2,count(if(status=3,true ,null)) count3,
+               count(if(status in (5,6),true ,null)) count56,
+               count(if(status in (7,8),true ,null )) count78 from oms_order
+        where admin_id=#{adminId};
     </select>
 </mapper>

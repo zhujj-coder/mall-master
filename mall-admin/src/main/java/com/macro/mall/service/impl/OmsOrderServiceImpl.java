@@ -15,8 +15,11 @@ import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -192,5 +195,16 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         history.setOrderStatus(status);
         orderOperateHistoryMapper.insert(history);
         return count;
+    }
+//    统计订单概要
+    @Override
+    public OmsOrderSummary getOrderSummary(LocalDateTime startTime, LocalDateTime endTime){
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        return orderDao.getOrderSummary(admin.getId(),startTime,endTime);
+    }
+    @Override
+    public OmsOrderStatusCount getOrderStatusCount(){
+        UmsAdmin admin = adminService.getCurrentAdmin();
+        return orderDao.getOrderStatusCount(admin.getId());
     }
 }

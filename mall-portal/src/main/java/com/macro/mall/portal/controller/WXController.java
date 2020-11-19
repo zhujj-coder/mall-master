@@ -77,7 +77,7 @@ public class WXController {
 
         String token = memberService.loginWx(openId);
         if (token == null) {
-            memberService.registerByWX(openId,sessionData.getString("unionid"));
+            memberService.registerByWX(openId,sessionData.getString("unionid"),adminId);
             token = memberService.loginWx(openId);
         }
 
@@ -112,7 +112,7 @@ public class WXController {
 
         String token = memberService.loginWx(openId);
         if (token == null) {
-            memberService.registerByWX(openId,sessionData.getString("unionid"));
+            memberService.registerByWX(openId,sessionData.getString("unionid"),adminId);
             token = memberService.loginWx(openId);
         }
 

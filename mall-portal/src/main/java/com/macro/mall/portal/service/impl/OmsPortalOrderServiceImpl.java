@@ -766,17 +766,20 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private void lockStock(List<CartPromotionItem> cartPromotionItemList) {
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             PmsSkuStock skuStock = skuStockMapper.selectByPrimaryKey(cartPromotionItem.getProductSkuId());
-            skuStock.setLockStock(skuStock.getLockStock() + cartPromotionItem.getQuantity());
-            skuStockMapper.updateByPrimaryKeySelective(skuStock);
+            if(skuStock!=null){
+                skuStock.setLockStock(skuStock.getLockStock() + cartPromotionItem.getQuantity());
+                skuStockMapper.updateByPrimaryKeySelective(skuStock);
+            }
+
         }
     }
 
     /**
-     * 判断下单商品是否都有库存
+     * 判断下单商generateConfirmOrder品是否都有库存
      */
     private boolean hasStock(List<CartPromotionItem> cartPromotionItemList) {
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
-            if (cartPromotionItem.getRealStock()==null||cartPromotionItem.getRealStock() <= 0) {
+            if (cartPromotionItem.getRealStock()!=null&&cartPromotionItem.getRealStock() <= 0) {
                 return false;
             }
         }

@@ -3,26 +3,27 @@
 <mapper namespace="com.macro.mall.mapper.UmsMemberMapper">
   <resultMap id="BaseResultMap" type="com.macro.mall.model.UmsMember">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="city" jdbcType="VARCHAR" property="city" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="member_level_id" jdbcType="BIGINT" property="memberLevelId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="gender" jdbcType="INTEGER" property="gender" />
     <result column="birthday" jdbcType="DATE" property="birthday" />
-    <result column="luckey_count" jdbcType="INTEGER" property="luckeyCount" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
     <result column="job" jdbcType="VARCHAR" property="job" />
     <result column="personalized_signature" jdbcType="VARCHAR" property="personalizedSignature" />
     <result column="source_type" jdbcType="INTEGER" property="sourceType" />
     <result column="integration" jdbcType="INTEGER" property="integration" />
     <result column="growth" jdbcType="INTEGER" property="growth" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="luckey_count" jdbcType="INTEGER" property="luckeyCount" />
     <result column="history_integration" jdbcType="INTEGER" property="historyIntegration" />
-    <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="union_id" jdbcType="VARCHAR" property="unionId" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -83,9 +84,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, city, nickname, member_level_id, status, create_time, password, gender, 
-    birthday, luckey_count, job, personalized_signature, source_type, integration, growth, 
-    phone, history_integration, icon, open_id, union_id
+    id, member_level_id, username, password, nickname, phone, status, create_time, icon, 
+    gender, birthday, city, job, personalized_signature, source_type, integration, growth, 
+    luckey_count, history_integration, open_id, union_id, admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsMemberExample" resultMap="BaseResultMap">
     select
@@ -121,20 +122,20 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ums_member (username, city, nickname, 
-      member_level_id, status, create_time, 
-      password, gender, birthday, 
-      luckey_count, job, personalized_signature, 
+    insert into ums_member (member_level_id, username, password, 
+      nickname, phone, status, 
+      create_time, icon, gender, 
+      birthday, city, job, personalized_signature, 
       source_type, integration, growth, 
-      phone, history_integration, icon, 
-      open_id, union_id)
-    values (#{username,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
-      #{memberLevelId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{password,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{birthday,jdbcType=DATE}, 
-      #{luckeyCount,jdbcType=INTEGER}, #{job,jdbcType=VARCHAR}, #{personalizedSignature,jdbcType=VARCHAR}, 
+      luckey_count, history_integration, open_id, 
+      union_id, admin_id)
+    values (#{memberLevelId,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{icon,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
+      #{birthday,jdbcType=DATE}, #{city,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{personalizedSignature,jdbcType=VARCHAR}, 
       #{sourceType,jdbcType=INTEGER}, #{integration,jdbcType=INTEGER}, #{growth,jdbcType=INTEGER}, 
-      #{phone,jdbcType=VARCHAR}, #{historyIntegration,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}, 
-      #{openId,jdbcType=VARCHAR}, #{unionId,jdbcType=VARCHAR})
+      #{luckeyCount,jdbcType=INTEGER}, #{historyIntegration,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, 
+      #{unionId,jdbcType=VARCHAR}, #{adminId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsMember">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -142,17 +143,20 @@
     </selectKey>
     insert into ums_member
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberLevelId != null">
+        member_level_id,
+      </if>
       <if test="username != null">
         username,
       </if>
-      <if test="city != null">
-        city,
+      <if test="password != null">
+        password,
       </if>
       <if test="nickname != null">
         nickname,
       </if>
-      <if test="memberLevelId != null">
-        member_level_id,
+      <if test="phone != null">
+        phone,
       </if>
       <if test="status != null">
         status,
@@ -160,8 +164,8 @@
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="password != null">
-        password,
+      <if test="icon != null">
+        icon,
       </if>
       <if test="gender != null">
         gender,
@@ -169,8 +173,8 @@
       <if test="birthday != null">
         birthday,
       </if>
-      <if test="luckeyCount != null">
-        luckey_count,
+      <if test="city != null">
+        city,
       </if>
       <if test="job != null">
         job,
@@ -187,14 +191,11 @@
       <if test="growth != null">
         growth,
       </if>
-      <if test="phone != null">
-        phone,
+      <if test="luckeyCount != null">
+        luckey_count,
       </if>
       <if test="historyIntegration != null">
         history_integration,
-      </if>
-      <if test="icon != null">
-        icon,
       </if>
       <if test="openId != null">
         open_id,
@@ -202,19 +203,25 @@
       <if test="unionId != null">
         union_id,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberLevelId != null">
+        #{memberLevelId,jdbcType=BIGINT},
+      </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
-      <if test="city != null">
-        #{city,jdbcType=VARCHAR},
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
       </if>
       <if test="nickname != null">
         #{nickname,jdbcType=VARCHAR},
       </if>
-      <if test="memberLevelId != null">
-        #{memberLevelId,jdbcType=BIGINT},
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -222,8 +229,8 @@
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
       </if>
       <if test="gender != null">
         #{gender,jdbcType=INTEGER},
@@ -231,8 +238,8 @@
       <if test="birthday != null">
         #{birthday,jdbcType=DATE},
       </if>
-      <if test="luckeyCount != null">
-        #{luckeyCount,jdbcType=INTEGER},
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
       </if>
       <if test="job != null">
         #{job,jdbcType=VARCHAR},
@@ -249,20 +256,20 @@
       <if test="growth != null">
         #{growth,jdbcType=INTEGER},
       </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
+      <if test="luckeyCount != null">
+        #{luckeyCount,jdbcType=INTEGER},
       </if>
       <if test="historyIntegration != null">
         #{historyIntegration,jdbcType=INTEGER},
-      </if>
-      <if test="icon != null">
-        #{icon,jdbcType=VARCHAR},
       </if>
       <if test="openId != null">
         #{openId,jdbcType=VARCHAR},
       </if>
       <if test="unionId != null">
         #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -278,17 +285,20 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.memberLevelId != null">
+        member_level_id = #{record.memberLevelId,jdbcType=BIGINT},
+      </if>
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
       </if>
-      <if test="record.city != null">
-        city = #{record.city,jdbcType=VARCHAR},
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
       </if>
       <if test="record.nickname != null">
         nickname = #{record.nickname,jdbcType=VARCHAR},
       </if>
-      <if test="record.memberLevelId != null">
-        member_level_id = #{record.memberLevelId,jdbcType=BIGINT},
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
@@ -296,8 +306,8 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.password != null">
-        password = #{record.password,jdbcType=VARCHAR},
+      <if test="record.icon != null">
+        icon = #{record.icon,jdbcType=VARCHAR},
       </if>
       <if test="record.gender != null">
         gender = #{record.gender,jdbcType=INTEGER},
@@ -305,8 +315,8 @@
       <if test="record.birthday != null">
         birthday = #{record.birthday,jdbcType=DATE},
       </if>
-      <if test="record.luckeyCount != null">
-        luckey_count = #{record.luckeyCount,jdbcType=INTEGER},
+      <if test="record.city != null">
+        city = #{record.city,jdbcType=VARCHAR},
       </if>
       <if test="record.job != null">
         job = #{record.job,jdbcType=VARCHAR},
@@ -323,20 +333,20 @@
       <if test="record.growth != null">
         growth = #{record.growth,jdbcType=INTEGER},
       </if>
-      <if test="record.phone != null">
-        phone = #{record.phone,jdbcType=VARCHAR},
+      <if test="record.luckeyCount != null">
+        luckey_count = #{record.luckeyCount,jdbcType=INTEGER},
       </if>
       <if test="record.historyIntegration != null">
         history_integration = #{record.historyIntegration,jdbcType=INTEGER},
-      </if>
-      <if test="record.icon != null">
-        icon = #{record.icon,jdbcType=VARCHAR},
       </if>
       <if test="record.openId != null">
         open_id = #{record.openId,jdbcType=VARCHAR},
       </if>
       <if test="record.unionId != null">
         union_id = #{record.unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -346,26 +356,27 @@
   <update id="updateByExample" parameterType="map">
     update ums_member
     set id = #{record.id,jdbcType=BIGINT},
-      username = #{record.username,jdbcType=VARCHAR},
-      city = #{record.city,jdbcType=VARCHAR},
-      nickname = #{record.nickname,jdbcType=VARCHAR},
       member_level_id = #{record.memberLevelId,jdbcType=BIGINT},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      nickname = #{record.nickname,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      password = #{record.password,jdbcType=VARCHAR},
+      icon = #{record.icon,jdbcType=VARCHAR},
       gender = #{record.gender,jdbcType=INTEGER},
       birthday = #{record.birthday,jdbcType=DATE},
-      luckey_count = #{record.luckeyCount,jdbcType=INTEGER},
+      city = #{record.city,jdbcType=VARCHAR},
       job = #{record.job,jdbcType=VARCHAR},
       personalized_signature = #{record.personalizedSignature,jdbcType=VARCHAR},
       source_type = #{record.sourceType,jdbcType=INTEGER},
       integration = #{record.integration,jdbcType=INTEGER},
       growth = #{record.growth,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
+      luckey_count = #{record.luckeyCount,jdbcType=INTEGER},
       history_integration = #{record.historyIntegration,jdbcType=INTEGER},
-      icon = #{record.icon,jdbcType=VARCHAR},
       open_id = #{record.openId,jdbcType=VARCHAR},
-      union_id = #{record.unionId,jdbcType=VARCHAR}
+      union_id = #{record.unionId,jdbcType=VARCHAR},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -373,17 +384,20 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.UmsMember">
     update ums_member
     <set>
+      <if test="memberLevelId != null">
+        member_level_id = #{memberLevelId,jdbcType=BIGINT},
+      </if>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="city != null">
-        city = #{city,jdbcType=VARCHAR},
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="nickname != null">
         nickname = #{nickname,jdbcType=VARCHAR},
       </if>
-      <if test="memberLevelId != null">
-        member_level_id = #{memberLevelId,jdbcType=BIGINT},
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -391,8 +405,8 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
       </if>
       <if test="gender != null">
         gender = #{gender,jdbcType=INTEGER},
@@ -400,8 +414,8 @@
       <if test="birthday != null">
         birthday = #{birthday,jdbcType=DATE},
       </if>
-      <if test="luckeyCount != null">
-        luckey_count = #{luckeyCount,jdbcType=INTEGER},
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
       </if>
       <if test="job != null">
         job = #{job,jdbcType=VARCHAR},
@@ -418,14 +432,11 @@
       <if test="growth != null">
         growth = #{growth,jdbcType=INTEGER},
       </if>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
+      <if test="luckeyCount != null">
+        luckey_count = #{luckeyCount,jdbcType=INTEGER},
       </if>
       <if test="historyIntegration != null">
         history_integration = #{historyIntegration,jdbcType=INTEGER},
-      </if>
-      <if test="icon != null">
-        icon = #{icon,jdbcType=VARCHAR},
       </if>
       <if test="openId != null">
         open_id = #{openId,jdbcType=VARCHAR},
@@ -433,31 +444,35 @@
       <if test="unionId != null">
         union_id = #{unionId,jdbcType=VARCHAR},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.UmsMember">
     update ums_member
-    set username = #{username,jdbcType=VARCHAR},
-      city = #{city,jdbcType=VARCHAR},
+    set member_level_id = #{memberLevelId,jdbcType=BIGINT},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
-      member_level_id = #{memberLevelId,jdbcType=BIGINT},
+      phone = #{phone,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      password = #{password,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=INTEGER},
       birthday = #{birthday,jdbcType=DATE},
-      luckey_count = #{luckeyCount,jdbcType=INTEGER},
+      city = #{city,jdbcType=VARCHAR},
       job = #{job,jdbcType=VARCHAR},
       personalized_signature = #{personalizedSignature,jdbcType=VARCHAR},
       source_type = #{sourceType,jdbcType=INTEGER},
       integration = #{integration,jdbcType=INTEGER},
       growth = #{growth,jdbcType=INTEGER},
-      phone = #{phone,jdbcType=VARCHAR},
+      luckey_count = #{luckeyCount,jdbcType=INTEGER},
       history_integration = #{historyIntegration,jdbcType=INTEGER},
-      icon = #{icon,jdbcType=VARCHAR},
       open_id = #{openId,jdbcType=VARCHAR},
-      union_id = #{unionId,jdbcType=VARCHAR}
+      union_id = #{unionId,jdbcType=VARCHAR},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

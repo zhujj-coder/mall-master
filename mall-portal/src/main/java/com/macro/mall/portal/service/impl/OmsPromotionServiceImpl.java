@@ -163,9 +163,11 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
             BeanUtils.copyProperties(item,cartPromotionItem);
             cartPromotionItem.setPromotionMessage("无优惠");
             cartPromotionItem.setReduceAmount(new BigDecimal(0));
-            PmsSkuStock skuStock = getOriginalPrice(promotionProduct,item.getProductSkuId());
-            if(skuStock!=null){
-                cartPromotionItem.setRealStock(skuStock.getStock()-skuStock.getLockStock());
+            if(item.getProductSkuId()!=null){
+                PmsSkuStock skuStock = getOriginalPrice(promotionProduct,item.getProductSkuId());
+                if(skuStock!=null){
+                    cartPromotionItem.setRealStock(skuStock.getStock()-skuStock.getLockStock());
+                }
             }
             cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
             cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());

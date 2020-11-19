@@ -79,7 +79,7 @@ public class SmsHomeAdvertiseServiceImpl implements SmsHomeAdvertiseService {
         PageHelper.startPage(pageNum, pageSize);
         SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
         SmsHomeAdvertiseExample.Criteria criteria = example.createCriteria();
-        criteria.andAdminIdNotEqualTo(currentAdmin.getId());
+        criteria.andAdminIdEqualTo(currentAdmin.getId());
         if (!StringUtils.isEmpty(name)) {
             criteria.andNameLike("%" + name + "%");
         }

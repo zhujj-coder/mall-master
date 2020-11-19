@@ -4,7 +4,9 @@ import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.model.OmsCartItem;
 import com.macro.mall.portal.domain.CartProduct;
 import com.macro.mall.portal.domain.CartPromotionItem;
+import com.macro.mall.portal.domain.PmsPortalProductDetail;
 import com.macro.mall.portal.service.OmsCartItemService;
+import com.macro.mall.portal.service.PmsPortalProductService;
 import com.macro.mall.portal.service.UmsMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,11 +29,14 @@ public class OmsCartItemController {
     private OmsCartItemService cartItemService;
     @Autowired
     private UmsMemberService memberService;
-
+    @Autowired
+    private PmsPortalProductService productService;
     @ApiOperation("添加商品到购物车")
     @RequestMapping(value = "/add/{adminId}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult add(@RequestBody OmsCartItem cartItem,@PathVariable Long adminId) {
+        PmsPortalProductDetail detail = productService.detail(cartItem.getProductId(), adminId);
+        cartItem.setPrice(detail.getProduct().getPrice());
         int count = cartItemService.add(cartItem,adminId);
         if (count > 0) {
             return CommonResult.success(count);
@@ -59,9 +65,17 @@ public class OmsCartItemController {
     @ResponseBody
     public CommonResult updateQuantity(@RequestParam Long id,
                                        @RequestParam Integer quantity,@PathVariable Long adminId) {
-        int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity,adminId);
-        if (count > 0) {
+        // 删除
+        if(quantity<=0){
+            List<Long> list =new ArrayList<>();
+            list.add(id);
+            int count =  cartItemService.delete(memberService.getCurrentMember().getId(), list,adminId);
             return CommonResult.success(count);
+        }else{
+            int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity,adminId);
+            if (count > 0) {
+                return CommonResult.success(count);
+            }
         }
         return CommonResult.failed();
     }

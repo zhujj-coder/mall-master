@@ -4,6 +4,8 @@ import com.macro.mall.dto.*;
 import com.macro.mall.model.OmsOrder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,4 +59,14 @@ public interface OmsOrderService {
     int updateNote(Long id, String note, Integer status);
 
     int updateStatus(Long id, Integer status);
+
+    /**
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    OmsOrderSummary getOrderSummary(LocalDateTime startTime, LocalDateTime endTime);
+
+    OmsOrderStatusCount getOrderStatusCount();
 }

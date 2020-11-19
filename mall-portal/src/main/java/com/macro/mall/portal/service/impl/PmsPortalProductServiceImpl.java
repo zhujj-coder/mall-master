@@ -11,7 +11,9 @@ import com.macro.mall.model.*;
 import com.macro.mall.portal.dao.PortalProductDao;
 import com.macro.mall.portal.domain.PmsPortalProductDetail;
 import com.macro.mall.portal.domain.PmsProductCategoryNode;
+import com.macro.mall.portal.service.OmsCartItemService;
 import com.macro.mall.portal.service.PmsPortalProductService;
+import com.macro.mall.portal.service.UmsMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,10 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
     private PmsProductFullReductionMapper productFullReductionMapper;
     @Autowired
     private PortalProductDao portalProductDao;
-
+    @Autowired
+    private UmsMemberService memberService;
+    @Autowired
+    private OmsCartItemService cartItemService;
     @Override
     public List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum, Integer pageSize, Integer sort,Long adminId) {
         PageHelper.startPage(pageNum, pageSize);
@@ -75,6 +80,15 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         }
         List<PmsProduct> pmsProducts = productMapper.selectByExample(example);
         log.info("pmsProducts[{}]",pmsProducts);
+//        join 购物车
+        List<OmsCartItem> cartItemList = cartItemService.list(memberService.getCurrentMember().getId(),adminId);
+        pmsProducts.forEach(item->{
+            cartItemList.forEach(item2->{
+                if(item.getId().equals(item2.getProductId())){
+                    item.setNum(item2.getQuantity());
+                }
+            });
+        });
         return pmsProducts;
     }
 

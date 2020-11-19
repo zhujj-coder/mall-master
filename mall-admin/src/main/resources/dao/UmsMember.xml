@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.dao.UmsMemberDao">
+    <resultMap id="umsMemberCountMap" type="com.macro.mall.dto.UmsMemberCount">
+    </resultMap>
+    <select id="getMemberCount" resultMap="umsMemberCountMap">
+        select count(1) totalCount,count(if(create_time between FROM_UNIXTIME(UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))) and now(),true ,null)) todayCount,count(if(create_time between
+                                                                                                                                                                         FROM_UNIXTIME(UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)) and FROM_UNIXTIME(UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))),true ,null)) yesterdayCount,
+               count(if(create_time between date_add(curdate(), interval - day(curdate()) + 1 day) and now(),true ,null)) monthCount from ums_member where admin_id=#{adminId}
+    </select>
+</mapper>

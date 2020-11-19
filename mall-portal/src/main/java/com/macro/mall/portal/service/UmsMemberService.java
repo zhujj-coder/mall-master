@@ -27,7 +27,13 @@ public interface UmsMemberService {
     @Transactional
     void register(String username, String password, String telephone, String authCode);
 
-    void registerByWX(String openId,String unionId);
+    /**
+     *
+     * @param openId
+     * @param unionId
+     * @param adminId
+     */
+    void registerByWX(String openId, String unionId, Long adminId);
 
     /**
      * 生成验证码
@@ -63,7 +69,7 @@ public interface UmsMemberService {
      */
     String login(String username, String password);
 
-    String loginWx(String username);
+    String loginWx(String openId);
 
     /**
      * 刷新token

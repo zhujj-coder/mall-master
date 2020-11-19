@@ -3,13 +3,17 @@ package com.macro.mall.controller;
 import cn.hutool.core.collection.CollUtil;
 import com.macro.mall.common.api.CommonPage;
 import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.common.util.DateUtil;
 import com.macro.mall.common.util.RequestUtil;
+import com.macro.mall.dao.UmsMemberDao;
 import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.model.UmsAdminPo;
 import com.macro.mall.model.UmsRole;
+import com.macro.mall.service.OmsOrderService;
+import com.macro.mall.service.PmsProductService;
 import com.macro.mall.service.UmsAdminService;
 import com.macro.mall.service.UmsRoleService;
 import io.swagger.annotations.Api;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +49,12 @@ public class UmsAdminController {
     private UmsAdminService adminService;
     @Autowired
     private UmsRoleService roleService;
+    @Autowired
+    private OmsOrderService orderService;
+    @Autowired
+    private PmsProductService productService;
+    @Autowired
+    private UmsMemberDao umsMemberDao;
 
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -134,7 +145,18 @@ public class UmsAdminController {
         }
         return CommonResult.success(data);
     }
-
+    @RequestMapping(value = "/staticInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult staticInfo() {
+        Map<String, Object> data = new HashMap<>();
+//        订单信息 待处理事务 商品总览 用户总览
+        data.put("todaySummary",orderService.getOrderSummary(DateUtil.getToadyMin(), LocalDateTime.now()));
+        data.put("yesterdaySummary",orderService.getOrderSummary(DateUtil.getYesterdayMin(),DateUtil.getToadyMin()));
+        data.put("stateCount",orderService.getOrderStatusCount());
+        data.put("publishStatus",productService.getPublishStatus());
+        data.put("memberCount",umsMemberDao.getMemberCount(adminService.getCurrentAdmin().getId()));
+        return CommonResult.success(data);
+    }
     @ApiOperation(value = "登出功能")
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody

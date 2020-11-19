@@ -17,7 +17,8 @@
         <collection property="prefrenceAreaProductRelationList" column="{productId=id}" select="selectPrefrenceAreaProductRelationByProductId"/>
 
     </resultMap>
-
+    <resultMap id="publishMap" type="com.macro.mall.dto.ProductPublishStatusCount">
+    </resultMap>
     <select id="getUpdateInfo" resultMap="updateInfoMap">
         SELECT *,
             pc.parent_id cateParentId,
@@ -41,5 +42,7 @@
     <select id="selectPrefrenceAreaProductRelationByProductId" resultMap="com.macro.mall.mapper.CmsPrefrenceAreaProductRelationMapper.BaseResultMap">
         select * from cms_prefrence_area_product_relation where product_id=#{productId}
     </select>
-
+    <select id="getPublishStatus" resultMap="publishMap">
+        select count(1) countTotal,count(if(publish_status=0,true ,null)) countOff,count(if(publish_status=1,true ,null)) countPublish from pms_product where admin_id=#{adminId} and delete_status=0
+    </select>
 </mapper>

@@ -127,6 +127,8 @@ public class PmsProduct implements Serializable {
 
     @ApiModelProperty(value = "移动端网页详情")
     private String detailMobileHtml;
+//    购物车商品数量
+    private int num;
 
     private static final long serialVersionUID = 1L;
 }

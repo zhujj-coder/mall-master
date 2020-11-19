@@ -40,3 +40,7 @@ alter table sms_home_advertise add index IDX_ADMIN_ID(admin_id);
 
 alter table ums_admin add column app_id varchar(64) comment 'appId';
 alter table ums_admin add column app_secret varchar(64) comment 'appSecret';
+
+
+alter table ums_member add column admin_id bigint(20) comment '商户用户ID';
+alter table ums_member add index IDX_ADMIN_ID(admin_id);

@@ -119,7 +119,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setPassword(null);
     }
     @Override
-    public void registerByWX(String openId,String unionId) {
+    public void registerByWX(String openId,String unionId,Long adminId) {
         //没有该用户进行添加操作
         UmsMember umsMember = new UmsMember();
         umsMember.setOpenId(openId);
@@ -127,6 +127,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setUnionId(unionId);
         umsMember.setCreateTime(new Date());
         umsMember.setStatus(1);
+        umsMember.setAdminId(adminId);
         //获取默认会员等级并设置
         UmsMemberLevelExample levelExample = new UmsMemberLevelExample();
         levelExample.createCriteria().andDefaultStatusEqualTo(1);

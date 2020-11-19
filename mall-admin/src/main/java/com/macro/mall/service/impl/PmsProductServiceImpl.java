@@ -6,6 +6,7 @@ import com.macro.mall.dao.*;
 import com.macro.mall.dto.PmsProductParam;
 import com.macro.mall.dto.PmsProductQueryParam;
 import com.macro.mall.dto.PmsProductResult;
+import com.macro.mall.dto.ProductPublishStatusCount;
 import com.macro.mall.mapper.*;
 import com.macro.mall.model.*;
 import com.macro.mall.service.PmsProductService;
@@ -341,5 +342,9 @@ public class PmsProductServiceImpl implements PmsProductService {
             throw new RuntimeException(e.getMessage());
         }
     }
-
+    @Override
+    public ProductPublishStatusCount getPublishStatus(){
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        return productDao.getPublishStatus(currentAdmin.getId());
+    }
 }
