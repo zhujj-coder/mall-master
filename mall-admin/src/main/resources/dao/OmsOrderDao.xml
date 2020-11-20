@@ -102,7 +102,7 @@
         ORDER BY oi.id ASC,oh.create_time DESC
     </select>
     <select id="getOrderSummary" resultMap="omsOrderSummaryMap">
-        select count(1) count,sum(pay_amount) payAmount from oms_order where admin_id=#{adminId} and status in (1,2,3,4) and create_time between #{startTime} and #{endTime};
+        select count(1) count,sum(pay_amount) payAmount from oms_order where admin_id=#{adminId} and status in (1,2,3) and create_time between #{startTime} and #{endTime};
     </select>
     <select id="getOrderStatusCount" resultMap="omsStateCountMap">
         select count(if(status=0,true ,null)) count0,count(if(status=1,true ,null)) count1,
