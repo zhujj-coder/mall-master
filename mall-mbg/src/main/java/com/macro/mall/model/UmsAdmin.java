@@ -32,11 +32,26 @@ public class UmsAdmin implements Serializable {
     @ApiModelProperty(value = "帐号启用状态：0->禁用；1->启用")
     private Integer status;
 
-    @ApiModelProperty(value = "app_id")
+    @ApiModelProperty(value = "appId")
     private String appId;
 
-    @ApiModelProperty(value = "app_secret")
+    @ApiModelProperty(value = "appSecret")
     private String appSecret;
+
+    @ApiModelProperty(value = "通知内容")
+    private String noticeContent;
+
+    @ApiModelProperty(value = "通知方式：1 每天 2 指定时间")
+    private String noticeType;
+
+    @ApiModelProperty(value = "hh:mm 或 yyyy-MM-DD hh:mm")
+    private String noticeStart;
+
+    @ApiModelProperty(value = "时间段")
+    private String noticeEnd;
+
+    @ApiModelProperty(value = "是否开启通知0 关闭 1 开启")
+    private Integer noticeOn;
 
     private static final long serialVersionUID = 1L;
 
@@ -134,5 +149,45 @@ public class UmsAdmin implements Serializable {
 
     public void setAppSecret(String appSecret) {
         this.appSecret = appSecret;
+    }
+
+    public String getNoticeContent() {
+        return noticeContent;
+    }
+
+    public void setNoticeContent(String noticeContent) {
+        this.noticeContent = noticeContent;
+    }
+
+    public String getNoticeType() {
+        return noticeType;
+    }
+
+    public void setNoticeType(String noticeType) {
+        this.noticeType = noticeType;
+    }
+
+    public String getNoticeStart() {
+        return noticeStart;
+    }
+
+    public void setNoticeStart(String noticeStart) {
+        this.noticeStart = noticeStart;
+    }
+
+    public String getNoticeEnd() {
+        return noticeEnd;
+    }
+
+    public void setNoticeEnd(String noticeEnd) {
+        this.noticeEnd = noticeEnd;
+    }
+
+    public Integer getNoticeOn() {
+        return noticeOn;
+    }
+
+    public void setNoticeOn(Integer noticeOn) {
+        this.noticeOn = noticeOn;
     }
 }

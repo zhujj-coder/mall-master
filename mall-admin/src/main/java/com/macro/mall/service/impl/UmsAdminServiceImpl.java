@@ -367,4 +367,16 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         AdminUserDetails details = (AdminUserDetails) auth.getPrincipal();
         return details.getUmsAdmin();
     }
+    @Override
+    public void updateNotice(UmsAdmin umsAdmin) {
+        UmsAdmin umsAdminCurrent = this.getCurrentAdmin();
+        UmsAdmin umsAdminNew = new UmsAdmin();
+        umsAdminNew.setId(umsAdminCurrent.getId());
+        umsAdminNew.setNoticeOn(umsAdmin.getNoticeOn());
+        umsAdminNew.setNoticeContent(umsAdmin.getNoticeContent());
+        umsAdminNew.setNoticeType(umsAdmin.getNoticeType());
+        umsAdminNew.setNoticeStart(umsAdmin.getNoticeStart());
+        umsAdminNew.setNoticeEnd(umsAdmin.getNoticeEnd());
+        adminMapper.updateByPrimaryKeySelective(umsAdminNew);
+    }
 }

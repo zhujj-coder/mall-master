@@ -12,6 +12,7 @@ import com.macro.mall.portal.service.UmsMemberService;
 import com.mysql.cj.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 @Api(tags = "WX 相关对外接口")
 @RestController
 @RequestMapping("/wx")
+@Slf4j
 public class WXController {
 
     @Autowired
@@ -122,8 +125,41 @@ public class WXController {
         tokenMap.put("openId", openId);
         tokenMap.put("userid", openId);
 
+//        公告
+        String notice =getNotice(adminId);
+        try {
+            tokenMap.put("notice", notice);
+        }catch (Exception e){
+            log.error("",e);
+        }
         return CommonResult.success(tokenMap);
     }
+
+    private String getNotice(Long adminId) {
+        String notice ="";
+        UmsAdmin admin = umsAdminMapper.selectByPrimaryKey(adminId);
+        if(admin!=null){
+            if(admin.getNoticeOn()==0){
+                return notice;
+            }
+            String[] split = admin.getNoticeStart().split(":");
+            LocalDateTime  now = LocalDateTime.now();
+            if(now.getHour()<Integer.valueOf(split[0])){
+                return notice;
+            }else if(now.getHour()==Integer.valueOf(split[0])&&now.getMinute()<Integer.valueOf(split[1])){
+                return notice;
+            }
+            String[] splitEnd = admin.getNoticeEnd().split(":");
+            if(now.getHour()>Integer.valueOf(splitEnd[0])){
+                return notice;
+            }else if(now.getHour()==Integer.valueOf(splitEnd[0])&&now.getMinute()>Integer.valueOf(splitEnd[1])){
+                return notice;
+            }
+            notice=admin.getNoticeContent();
+        }
+        return notice;
+    }
+
     /* 请求发起支付目录prepay */
     @RequestMapping("/prepay")
     public CommonResult prepay(@RequestParam Long orderId){

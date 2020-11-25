@@ -99,4 +99,6 @@ public interface UmsAdminService {
      * @return
      */
     UmsAdmin getCurrentAdmin();
+
+    void updateNotice(UmsAdmin umsAdmin);
 }

@@ -138,6 +138,12 @@ public class UmsAdminController {
         data.put("menus", roleService.getMenuList(umsAdmin.getId()));
         data.put("icon", umsAdmin.getIcon());
         data.put("admin_id", umsAdmin.getId());
+//        公告
+        data.put("noticeContent", umsAdmin.getNoticeContent());
+        data.put("noticeType", umsAdmin.getNoticeType());
+        data.put("noticeStart", umsAdmin.getNoticeStart());
+        data.put("noticeEnd", umsAdmin.getNoticeEnd());
+        data.put("noticeOn", umsAdmin.getNoticeOn());
         List<UmsRole> roleList = adminService.getRoleList(umsAdmin.getId());
         if(CollUtil.isNotEmpty(roleList)){
             List<String> roles = roleList.stream().map(UmsRole::getName).collect(Collectors.toList());
@@ -145,6 +151,24 @@ public class UmsAdminController {
         }
         return CommonResult.success(data);
     }
+
+    @ApiOperation(value = "获取当前登录用户信息")
+    @RequestMapping(value = "/getNotice")
+    @ResponseBody
+    public CommonResult getNotice() {
+        UmsAdmin umsAdmin0 = adminService.getCurrentAdmin();
+
+        UmsAdmin umsAdmin = adminService.getItem(umsAdmin0.getId());
+        Map<String, Object> data = new HashMap<>();
+//        公告
+        data.put("noticeContent", umsAdmin.getNoticeContent());
+        data.put("noticeType", umsAdmin.getNoticeType());
+        data.put("noticeStart", umsAdmin.getNoticeStart());
+        data.put("noticeEnd", umsAdmin.getNoticeEnd());
+        data.put("noticeOn", umsAdmin.getNoticeOn());
+        return CommonResult.success(data);
+    }
+
     @RequestMapping(value = "/staticInfo", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult staticInfo() {
@@ -156,6 +180,12 @@ public class UmsAdminController {
         data.put("publishStatus",productService.getPublishStatus());
         data.put("memberCount",umsMemberDao.getMemberCount(adminService.getCurrentAdmin().getId()));
         return CommonResult.success(data);
+    }
+    @RequestMapping(value = "/updateNotice", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateNotice(@RequestBody UmsAdmin umsAdmin) {
+        adminService.updateNotice(umsAdmin);
+        return CommonResult.success(null);
     }
     @ApiOperation(value = "登出功能")
     @RequestMapping(value = "/logout", method = RequestMethod.POST)

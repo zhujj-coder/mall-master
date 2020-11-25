@@ -30,7 +30,8 @@ public class AdminUserDetails implements UserDetails {
                 .collect(Collectors.toList());
     }
 
-    public UmsAdmin getUmsAdmin() {
+    public UmsAdmin getUmsAdmin()
+    {
         return umsAdmin;
     }
 

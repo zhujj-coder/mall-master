@@ -41,6 +41,16 @@ alter table sms_home_advertise add index IDX_ADMIN_ID(admin_id);
 alter table ums_admin add column app_id varchar(64) comment 'appId';
 alter table ums_admin add column app_secret varchar(64) comment 'appSecret';
 
+alter table ums_admin add column notice_on int default 0 comment '是否开启通知0 关闭 1 开启';
+alter table ums_admin add column notice_content varchar(128) comment '通知内容';
+alter table ums_admin add column notice_type varchar(2) comment '通知方式：1 每天 2 指定时间';
+alter table ums_admin add column notice_start varchar(128) comment 'hh:mm 或 yyyy-MM-DD hh:mm';
+alter table ums_admin add column notice_end varchar(128) comment '时间段';
+alter table ums_admin DROP column notice_on;
+
 
 alter table ums_member add column admin_id bigint(20) comment '商户用户ID';
 alter table ums_member add index IDX_ADMIN_ID(admin_id);
+
+
+
