@@ -1244,6 +1244,146 @@ public class UmsAdminExample {
             addCriterion("notice_on not between", value1, value2, "noticeOn");
             return (Criteria) this;
         }
+
+        public Criteria andMchIdIsNull() {
+            addCriterion("mch_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdIsNotNull() {
+            addCriterion("mch_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdEqualTo(String value) {
+            addCriterion("mch_id =", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdNotEqualTo(String value) {
+            addCriterion("mch_id <>", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdGreaterThan(String value) {
+            addCriterion("mch_id >", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdGreaterThanOrEqualTo(String value) {
+            addCriterion("mch_id >=", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdLessThan(String value) {
+            addCriterion("mch_id <", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdLessThanOrEqualTo(String value) {
+            addCriterion("mch_id <=", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdLike(String value) {
+            addCriterion("mch_id like", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdNotLike(String value) {
+            addCriterion("mch_id not like", value, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdIn(List<String> values) {
+            addCriterion("mch_id in", values, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdNotIn(List<String> values) {
+            addCriterion("mch_id not in", values, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdBetween(String value1, String value2) {
+            addCriterion("mch_id between", value1, value2, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchIdNotBetween(String value1, String value2) {
+            addCriterion("mch_id not between", value1, value2, "mchId");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyIsNull() {
+            addCriterion("mch_key is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyIsNotNull() {
+            addCriterion("mch_key is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyEqualTo(String value) {
+            addCriterion("mch_key =", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyNotEqualTo(String value) {
+            addCriterion("mch_key <>", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyGreaterThan(String value) {
+            addCriterion("mch_key >", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyGreaterThanOrEqualTo(String value) {
+            addCriterion("mch_key >=", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyLessThan(String value) {
+            addCriterion("mch_key <", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyLessThanOrEqualTo(String value) {
+            addCriterion("mch_key <=", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyLike(String value) {
+            addCriterion("mch_key like", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyNotLike(String value) {
+            addCriterion("mch_key not like", value, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyIn(List<String> values) {
+            addCriterion("mch_key in", values, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyNotIn(List<String> values) {
+            addCriterion("mch_key not in", values, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyBetween(String value1, String value2) {
+            addCriterion("mch_key between", value1, value2, "mchKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andMchKeyNotBetween(String value1, String value2) {
+            addCriterion("mch_key not between", value1, value2, "mchKey");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

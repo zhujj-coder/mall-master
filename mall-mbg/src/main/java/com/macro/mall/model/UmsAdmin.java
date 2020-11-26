@@ -53,6 +53,12 @@ public class UmsAdmin implements Serializable {
     @ApiModelProperty(value = "是否开启通知0 关闭 1 开启")
     private Integer noticeOn;
 
+    @ApiModelProperty(value = "商户ID")
+    private String mchId;
+
+    @ApiModelProperty(value = "商户秘钥")
+    private String mchKey;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -189,5 +195,21 @@ public class UmsAdmin implements Serializable {
 
     public void setNoticeOn(Integer noticeOn) {
         this.noticeOn = noticeOn;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
+    }
+
+    public String getMchKey() {
+        return mchKey;
+    }
+
+    public void setMchKey(String mchKey) {
+        this.mchKey = mchKey;
     }
 }

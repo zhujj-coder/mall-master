@@ -80,7 +80,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Override
     public UmsAdmin getAdminByUsername(String username) {
         UmsAdmin admin = adminCacheService.getAdmin(username);
-        if(admin!=null) return  admin;
+        if(admin!=null) {
+            return  admin;
+        }
         UmsAdminExample example = new UmsAdminExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<UmsAdmin> adminList = adminMapper.selectByExample(example);
@@ -176,7 +178,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
      */
     private void insertLoginLog(String username) {
         UmsAdmin admin = getAdminByUsername(username);
-        if(admin==null) return;
+        if(admin==null){
+            return;
+        }
         UmsAdminLoginLog loginLog = new UmsAdminLoginLog();
         loginLog.setAdminId(admin.getId());
         loginLog.setCreateTime(new Date());
@@ -242,16 +246,18 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         return count;
     }
     @Override
-    public int updateWithMch(Long id, UmsAdminPo adminPo) {
-        UmsAdmin admin = new UmsAdmin();
-        BeanUtils.copyProperties(adminPo,admin);
-
+    public int updateWithMch(Long id, UmsAdmin admin) {
+//        UmsAdmin admin = new UmsAdmin();
+//        BeanUtils.copyProperties(admin,admin);
+        if(id==null||id==0){
+            id=this.getCurrentAdmin().getId();
+        }
 //更新 all-in-one 商户信息
         JSONObject jsonObject =new JSONObject();
-        jsonObject.put("appId",adminPo.getAppId());
-        jsonObject.put("mchId",adminPo.getMchId());
-        jsonObject.put("mchKey",adminPo.getMchKey());
-        jsonObject.put("bizId",adminPo.getId());
+        jsonObject.put("appId",admin.getAppId());
+        jsonObject.put("mchId",admin.getMchId());
+        jsonObject.put("mchKey",admin.getMchKey());
+        jsonObject.put("bizId",id);
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
@@ -266,6 +272,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
         rawAdmin.setAppId(admin.getAppId());
         rawAdmin.setAppSecret(admin.getAppSecret());
+        rawAdmin.setMchId(admin.getMchId());
+        rawAdmin.setMchKey(admin.getMchKey());
         int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
         adminCacheService.delAdmin(id);
         return count;

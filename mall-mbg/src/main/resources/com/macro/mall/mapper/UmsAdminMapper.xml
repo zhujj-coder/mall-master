@@ -19,6 +19,8 @@
     <result column="notice_start" jdbcType="VARCHAR" property="noticeStart" />
     <result column="notice_end" jdbcType="VARCHAR" property="noticeEnd" />
     <result column="notice_on" jdbcType="INTEGER" property="noticeOn" />
+    <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
+    <result column="mch_key" jdbcType="VARCHAR" property="mchKey" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +82,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, username, password, icon, email, nick_name, note, create_time, login_time, status, 
-    app_id, app_secret, notice_content, notice_type, notice_start, notice_end, notice_on
+    app_id, app_secret, notice_content, notice_type, notice_start, notice_end, notice_on, 
+    mch_id, mch_key
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsAdminExample" resultMap="BaseResultMap">
     select
@@ -121,13 +124,15 @@
       create_time, login_time, status, 
       app_id, app_secret, notice_content, 
       notice_type, notice_start, notice_end, 
-      notice_on)
+      notice_on, mch_id, mch_key
+      )
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
       #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{noticeContent,jdbcType=VARCHAR}, 
       #{noticeType,jdbcType=VARCHAR}, #{noticeStart,jdbcType=VARCHAR}, #{noticeEnd,jdbcType=VARCHAR}, 
-      #{noticeOn,jdbcType=INTEGER})
+      #{noticeOn,jdbcType=INTEGER}, #{mchId,jdbcType=VARCHAR}, #{mchKey,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsAdmin">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -183,6 +188,12 @@
       <if test="noticeOn != null">
         notice_on,
       </if>
+      <if test="mchId != null">
+        mch_id,
+      </if>
+      <if test="mchKey != null">
+        mch_key,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -232,6 +243,12 @@
       </if>
       <if test="noticeOn != null">
         #{noticeOn,jdbcType=INTEGER},
+      </if>
+      <if test="mchId != null">
+        #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="mchKey != null">
+        #{mchKey,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -295,6 +312,12 @@
       <if test="record.noticeOn != null">
         notice_on = #{record.noticeOn,jdbcType=INTEGER},
       </if>
+      <if test="record.mchId != null">
+        mch_id = #{record.mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mchKey != null">
+        mch_key = #{record.mchKey,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -318,7 +341,9 @@
       notice_type = #{record.noticeType,jdbcType=VARCHAR},
       notice_start = #{record.noticeStart,jdbcType=VARCHAR},
       notice_end = #{record.noticeEnd,jdbcType=VARCHAR},
-      notice_on = #{record.noticeOn,jdbcType=INTEGER}
+      notice_on = #{record.noticeOn,jdbcType=INTEGER},
+      mch_id = #{record.mchId,jdbcType=VARCHAR},
+      mch_key = #{record.mchKey,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -374,6 +399,12 @@
       <if test="noticeOn != null">
         notice_on = #{noticeOn,jdbcType=INTEGER},
       </if>
+      <if test="mchId != null">
+        mch_id = #{mchId,jdbcType=VARCHAR},
+      </if>
+      <if test="mchKey != null">
+        mch_key = #{mchKey,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -394,7 +425,9 @@
       notice_type = #{noticeType,jdbcType=VARCHAR},
       notice_start = #{noticeStart,jdbcType=VARCHAR},
       notice_end = #{noticeEnd,jdbcType=VARCHAR},
-      notice_on = #{noticeOn,jdbcType=INTEGER}
+      notice_on = #{noticeOn,jdbcType=INTEGER},
+      mch_id = #{mchId,jdbcType=VARCHAR},
+      mch_key = #{mchKey,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

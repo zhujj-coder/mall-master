@@ -10,7 +10,6 @@ import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.model.UmsAdmin;
-import com.macro.mall.model.UmsAdminPo;
 import com.macro.mall.model.UmsRole;
 import com.macro.mall.service.OmsOrderService;
 import com.macro.mall.service.PmsProductService;
@@ -166,6 +165,11 @@ public class UmsAdminController {
         data.put("noticeStart", umsAdmin.getNoticeStart());
         data.put("noticeEnd", umsAdmin.getNoticeEnd());
         data.put("noticeOn", umsAdmin.getNoticeOn());
+//       微信相关
+        data.put("appId", umsAdmin.getAppId());
+        data.put("appSecret", umsAdmin.getAppSecret());
+        data.put("mchId", umsAdmin.getMchId());
+        data.put("mchKey", umsAdmin.getMchKey());
         return CommonResult.success(data);
     }
 
@@ -215,7 +219,7 @@ public class UmsAdminController {
     @ApiOperation("修改指定用户信息")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult update(@PathVariable Long id, @RequestBody UmsAdminPo admin) {
+    public CommonResult update(@PathVariable(required = false) Long id, @RequestBody UmsAdmin admin) {
         int count = adminService.updateWithMch(id, admin);
         if (count > 0) {
             return CommonResult.success(count);

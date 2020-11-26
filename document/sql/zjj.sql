@@ -46,11 +46,15 @@ alter table ums_admin add column notice_content varchar(128) comment '通知内�
 alter table ums_admin add column notice_type varchar(2) comment '通知方式：1 每天 2 指定时间';
 alter table ums_admin add column notice_start varchar(128) comment 'hh:mm 或 yyyy-MM-DD hh:mm';
 alter table ums_admin add column notice_end varchar(128) comment '时间段';
-alter table ums_admin DROP column notice_on;
+alter table ums_admin add column mch_id varchar(128) comment '商户ID';
+alter table ums_admin add column mch_key varchar(128) comment '商户秘钥';
 
 
 alter table ums_member add column admin_id bigint(20) comment '商户用户ID';
 alter table ums_member add index IDX_ADMIN_ID(admin_id);
+
+
+
 
 
 

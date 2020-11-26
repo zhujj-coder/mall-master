@@ -3,7 +3,6 @@ package com.macro.mall.service;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.model.UmsAdmin;
-import com.macro.mall.model.UmsAdminPo;
 import com.macro.mall.model.UmsResource;
 import com.macro.mall.model.UmsRole;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +58,7 @@ public interface UmsAdminService {
      */
     int update(Long id, UmsAdmin admin);
 
-    int updateWithMch(Long id, UmsAdminPo admin);
+    int updateWithMch(Long id, UmsAdmin admin);
 
     int updatePassword(Long id, UmsAdmin admin);
 
