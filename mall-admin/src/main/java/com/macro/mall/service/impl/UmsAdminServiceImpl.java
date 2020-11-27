@@ -101,6 +101,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         BeanUtils.copyProperties(umsAdminParam, umsAdmin);
         umsAdmin.setCreateTime(new Date());
         umsAdmin.setStatus(1);
+        umsAdmin.setIcon("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80");
         //查询是否有相同用户名的用户
         UmsAdminExample example = new UmsAdminExample();
         example.createCriteria().andUsernameEqualTo(umsAdmin.getUsername());
@@ -249,9 +250,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     public int updateWithMch(Long id, UmsAdmin admin) {
 //        UmsAdmin admin = new UmsAdmin();
 //        BeanUtils.copyProperties(admin,admin);
-        if(id==null||id==0){
+//        if(id==null||id==0){
             id=this.getCurrentAdmin().getId();
-        }
+//        }
 //更新 all-in-one 商户信息
         JSONObject jsonObject =new JSONObject();
         jsonObject.put("appId",admin.getAppId());
