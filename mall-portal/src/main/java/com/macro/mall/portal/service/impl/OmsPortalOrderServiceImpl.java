@@ -160,13 +160,14 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         handleRealAmount(orderItemList);
         //进行库存锁定
         lockStock(cartPromotionItemList);
-        //根据商品合计、运费、活动优惠、优惠券、积分计算应付金额
+        //根据商品合计、运费、活动优惠、优惠券、积分计算应付金额  add 备注
         OmsOrder order = new OmsOrder();
         order.setDiscountAmount(new BigDecimal(0));
         order.setTotalAmount(calcTotalAmount(orderItemList));
         order.setFreightAmount(new BigDecimal(0));
         order.setPromotionAmount(calcPromotionAmount(orderItemList));
         order.setPromotionInfo(getOrderPromotionInfo(orderItemList));
+        order.setNote(orderParam.getMessage());
         if (orderParam.getCouponId() == null) {
             order.setCouponAmount(new BigDecimal(0));
         } else {

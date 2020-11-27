@@ -25,4 +25,6 @@ public class OrderParam {
     private List<Long> cartIds;
     @ApiModelProperty(value = "商户用户ID")
     private Long adminId;
+    @ApiModelProperty(value = "备注")
+    private String message;
 }

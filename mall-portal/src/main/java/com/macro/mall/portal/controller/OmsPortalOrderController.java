@@ -38,7 +38,7 @@ public class OmsPortalOrderController {
     @ApiOperation("根据购物车信息生成订单")
     @RequestMapping(value = "/generateOrder/{adminId}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult generateOrder(@RequestBody OrderParam orderParam,@PathVariable
+    public CommonResult generateOrder(@RequestBody  OrderParam orderParam,@PathVariable
             Long adminId) {
         Map<String, Object> result = portalOrderService.generateOrder(orderParam,adminId);
         return CommonResult.success(result, "下单成功");
