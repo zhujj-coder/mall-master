@@ -160,6 +160,7 @@ public class UmsAdminController {
         UmsAdmin umsAdmin = adminService.getItem(umsAdmin0.getId());
         Map<String, Object> data = new HashMap<>();
 //        公告
+        data.put("id", umsAdmin.getId());
         data.put("noticeContent", umsAdmin.getNoticeContent());
         data.put("noticeType", umsAdmin.getNoticeType());
         data.put("noticeStart", umsAdmin.getNoticeStart());
