@@ -80,9 +80,9 @@ public class OmsPortalOrderController {
     }
 
     @ApiOperation("根据ID获取订单详情")
-    @RequestMapping(value = "/detail/{orderId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail/{adminId}/{orderId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<OmsOrderDetail> detail(@PathVariable Long orderId) {
+    public CommonResult<OmsOrderDetail> detail(@PathVariable Long adminId,@PathVariable Long orderId) {
         OmsOrderDetail orderDetail = portalOrderService.detail(orderId);
         return CommonResult.success(orderDetail);
     }
