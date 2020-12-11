@@ -34,7 +34,7 @@ alter table sms_home_recommend_subject add column admin_id bigint(20) comment '�
 alter table sms_home_recommend_subject add index IDX_ADMIN_ID(admin_id);
 alter table sms_home_advertise add column admin_id bigint(20) comment '商户用户ID';
 alter table sms_home_advertise add index IDX_ADMIN_ID(admin_id);
-
+alter table ums_integration_consume_setting add column admin_id bigint(20) comment '商户用户ID';
 
 # appId app_secret
 

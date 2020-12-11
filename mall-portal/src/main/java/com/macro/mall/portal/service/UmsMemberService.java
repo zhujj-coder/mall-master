@@ -57,6 +57,8 @@ public interface UmsMemberService {
     void updateIntegration(Long id,Integer integration);
 
 
+    void updateIntegrationAll(Long id, Integer integration, Integer history);
+
     /**
      * 获取用户信息
      */

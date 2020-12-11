@@ -79,8 +79,22 @@ public class ConfirmOrderResult {
         private BigDecimal freightAmount;
         //活动优惠
         private BigDecimal promotionAmount;
+        //使用积分数量
+        private int useIntegration;
+        //积分金额
+        private BigDecimal integrationAmount;
+//        是否允许使用积分
+        private boolean allowUseIntegrationAmount;
         //应付金额
         private BigDecimal payAmount;
+
+        public boolean isAllowUseIntegrationAmount() {
+            return allowUseIntegrationAmount;
+        }
+
+        public void setAllowUseIntegrationAmount(boolean allowUseIntegrationAmount) {
+            this.allowUseIntegrationAmount = allowUseIntegrationAmount;
+        }
 
         public BigDecimal getTotalAmount() {
             return totalAmount;
@@ -112,6 +126,22 @@ public class ConfirmOrderResult {
 
         public void setPayAmount(BigDecimal payAmount) {
             this.payAmount = payAmount;
+        }
+
+        public int getUseIntegration() {
+            return useIntegration;
+        }
+
+        public void setUseIntegration(int useIntegration) {
+            this.useIntegration = useIntegration;
+        }
+
+        public BigDecimal getIntegrationAmount() {
+            return integrationAmount;
+        }
+
+        public void setIntegrationAmount(BigDecimal integrationAmount) {
+            this.integrationAmount = integrationAmount;
         }
     }
 }

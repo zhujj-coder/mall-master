@@ -4,9 +4,11 @@ import com.macro.mall.common.api.CommonPage;
 import com.macro.mall.model.OmsOrder;
 import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.OmsOrderDetail;
+import com.macro.mall.portal.domain.OrderDirectPayOrderParam;
 import com.macro.mall.portal.domain.OrderParam;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,8 @@ public interface OmsPortalOrderService {
      */
     @Transactional
     Map<String, Object> generateOrder(OrderParam orderParam, Long adminId);
+
+    Map<String, Object> generateDirectPayOrder(OrderDirectPayOrderParam orderParam, Long adminId);
 
     /**
      * 支付成功后的回调
@@ -73,4 +77,6 @@ public interface OmsPortalOrderService {
     void deleteOrder(Long orderId);
 
     OmsOrder applyReturn(Long orderId);
+
+    ConfirmOrderResult.CalcAmount calcCartAmount(BigDecimal totalAmount, Integer integration, Long adminId);
 }

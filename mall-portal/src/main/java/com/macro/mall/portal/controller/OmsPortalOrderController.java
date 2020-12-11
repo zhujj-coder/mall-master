@@ -4,6 +4,7 @@ import com.macro.mall.common.api.CommonPage;
 import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.OmsOrderDetail;
+import com.macro.mall.portal.domain.OrderDirectPayOrderParam;
 import com.macro.mall.portal.domain.OrderParam;
 import com.macro.mall.portal.service.OmsPortalOrderService;
 import io.swagger.annotations.Api;
@@ -43,7 +44,14 @@ public class OmsPortalOrderController {
         Map<String, Object> result = portalOrderService.generateOrder(orderParam,adminId);
         return CommonResult.success(result, "下单成功");
     }
-
+    @ApiOperation("直接支付生成订单")
+    @RequestMapping(value = "/generateDirectPayOrder/{adminId}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult generateDirectPayOrder(@RequestBody OrderDirectPayOrderParam orderParam, @PathVariable
+            Long adminId) {
+        Map<String, Object> result = portalOrderService.generateDirectPayOrder(orderParam,adminId);
+        return CommonResult.success(result, "下单成功");
+    }
     @RequestMapping(value = "/paySuccess")
     @ResponseBody
     public CommonResult paySuccess(@RequestParam Long orderId,@RequestParam Integer payType) {

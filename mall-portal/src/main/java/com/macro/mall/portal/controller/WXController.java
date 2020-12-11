@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.mapper.UmsAdminMapper;
 import com.macro.mall.model.UmsAdmin;
+import com.macro.mall.model.UmsMember;
+import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.LoginInfo;
 import com.macro.mall.portal.domain.OmsOrderDetail;
 import com.macro.mall.portal.service.OmsPortalOrderService;
@@ -118,12 +120,13 @@ public class WXController {
             memberService.registerByWX(openId,sessionData.getString("unionid"),adminId);
             token = memberService.loginWx(openId);
         }
-
+        UmsMember byOpenId = memberService.getByOpenId(openId);
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
         tokenMap.put("openId", openId);
         tokenMap.put("userid", openId);
+        tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
 
 //        公告
         String notice =getNotice(adminId);
@@ -134,7 +137,31 @@ public class WXController {
         }
         return CommonResult.success(tokenMap);
     }
+    @ApiOperation(value = "获取用户积分等信息")
+    @RequestMapping("/getUserInfo/{adminId}")
+    public CommonResult getUserInfo() {
+        /* 获取appId 和secret*/
+        UmsMember currentMember = memberService.getCurrentMember();
+        UmsMember byOpenId = memberService.getByOpenId(currentMember.getOpenId());
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
 
+        return CommonResult.success(tokenMap);
+    }
+    @ApiOperation(value = "获取用户积分等信息")
+    @RequestMapping("/calMoney/{adminId}")
+    public CommonResult calMoney(String value,@PathVariable Long adminId) {
+        /* 获取appId 和secret*/
+        UmsMember currentMember = memberService.getCurrentMember();
+        UmsMember byOpenId = memberService.getByOpenId(currentMember.getOpenId());
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
+        ConfirmOrderResult.CalcAmount calcAmount = orderService.calcCartAmount(new BigDecimal(value),byOpenId.getIntegration() , adminId);
+        tokenMap.put("useIntegration",calcAmount.getUseIntegration()+"");
+        tokenMap.put("integrationAmount",calcAmount.getIntegrationAmount().toString());
+        tokenMap.put("payAmount",calcAmount.getPayAmount().toString());
+        return CommonResult.success(tokenMap);
+    }
     private String getNotice(Long adminId) {
         String notice ="";
         UmsAdmin admin = umsAdminMapper.selectByPrimaryKey(adminId);

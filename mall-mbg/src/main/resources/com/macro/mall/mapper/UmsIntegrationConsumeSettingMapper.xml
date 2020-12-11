@@ -7,6 +7,7 @@
     <result column="max_percent_per_order" jdbcType="INTEGER" property="maxPercentPerOrder" />
     <result column="use_unit" jdbcType="INTEGER" property="useUnit" />
     <result column="coupon_status" jdbcType="INTEGER" property="couponStatus" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, deduction_per_amount, max_percent_per_order, use_unit, coupon_status
+    id, deduction_per_amount, max_percent_per_order, use_unit, coupon_status, admin_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsIntegrationConsumeSettingExample" resultMap="BaseResultMap">
     select
@@ -104,9 +105,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into ums_integration_consume_setting (deduction_per_amount, max_percent_per_order, 
-      use_unit, coupon_status)
+      use_unit, coupon_status, admin_id
+      )
     values (#{deductionPerAmount,jdbcType=INTEGER}, #{maxPercentPerOrder,jdbcType=INTEGER}, 
-      #{useUnit,jdbcType=INTEGER}, #{couponStatus,jdbcType=INTEGER})
+      #{useUnit,jdbcType=INTEGER}, #{couponStatus,jdbcType=INTEGER}, #{adminId,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsIntegrationConsumeSetting">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -126,6 +129,9 @@
       <if test="couponStatus != null">
         coupon_status,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="deductionPerAmount != null">
@@ -139,6 +145,9 @@
       </if>
       <if test="couponStatus != null">
         #{couponStatus,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -166,6 +175,9 @@
       <if test="record.couponStatus != null">
         coupon_status = #{record.couponStatus,jdbcType=INTEGER},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -177,7 +189,8 @@
       deduction_per_amount = #{record.deductionPerAmount,jdbcType=INTEGER},
       max_percent_per_order = #{record.maxPercentPerOrder,jdbcType=INTEGER},
       use_unit = #{record.useUnit,jdbcType=INTEGER},
-      coupon_status = #{record.couponStatus,jdbcType=INTEGER}
+      coupon_status = #{record.couponStatus,jdbcType=INTEGER},
+      admin_id = #{record.adminId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,6 +210,9 @@
       <if test="couponStatus != null">
         coupon_status = #{couponStatus,jdbcType=INTEGER},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -205,7 +221,8 @@
     set deduction_per_amount = #{deductionPerAmount,jdbcType=INTEGER},
       max_percent_per_order = #{maxPercentPerOrder,jdbcType=INTEGER},
       use_unit = #{useUnit,jdbcType=INTEGER},
-      coupon_status = #{couponStatus,jdbcType=INTEGER}
+      coupon_status = #{couponStatus,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

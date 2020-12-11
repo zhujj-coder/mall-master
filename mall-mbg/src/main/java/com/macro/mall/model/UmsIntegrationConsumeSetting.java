@@ -15,8 +15,11 @@ public class UmsIntegrationConsumeSetting implements Serializable {
     @ApiModelProperty(value = "每次使用积分最小单位100")
     private Integer useUnit;
 
-    @ApiModelProperty(value = "是否可以和优惠券同用；0->不可以；1->可以")
+    @ApiModelProperty(value = "是否可以和优惠券同用；0->不可以；1->可以2->禁止使用积分")
     private Integer couponStatus;
+
+    @ApiModelProperty(value = "商户用户ID")
+    private Long adminId;
 
     private static final long serialVersionUID = 1L;
 
@@ -60,19 +63,11 @@ public class UmsIntegrationConsumeSetting implements Serializable {
         this.couponStatus = couponStatus;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", deductionPerAmount=").append(deductionPerAmount);
-        sb.append(", maxPercentPerOrder=").append(maxPercentPerOrder);
-        sb.append(", useUnit=").append(useUnit);
-        sb.append(", couponStatus=").append(couponStatus);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 }
