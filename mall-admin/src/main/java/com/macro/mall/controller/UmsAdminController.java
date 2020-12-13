@@ -9,7 +9,9 @@ import com.macro.mall.dao.UmsMemberDao;
 import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
+import com.macro.mall.mapper.UmsIntegrationConsumeSettingMapper;
 import com.macro.mall.model.UmsAdmin;
+import com.macro.mall.model.UmsIntegrationConsumeSetting;
 import com.macro.mall.model.UmsRole;
 import com.macro.mall.service.OmsOrderService;
 import com.macro.mall.service.PmsProductService;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jnlp.IntegrationService;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -54,7 +57,8 @@ public class UmsAdminController {
     private PmsProductService productService;
     @Autowired
     private UmsMemberDao umsMemberDao;
-
+    @Autowired
+    private UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
@@ -78,6 +82,14 @@ public class UmsAdminController {
         if (umsAdmin == null) {
             return CommonResult.failed();
         }
+//      插入积分抵扣表
+        UmsIntegrationConsumeSetting record =new UmsIntegrationConsumeSetting();
+        record.setAdminId(umsAdmin.getId());
+        record.setUseUnit(100);
+        record.setCouponStatus(1);
+        record.setDeductionPerAmount(10);
+        record.setMaxPercentPerOrder(50);
+        integrationConsumeSettingMapper.insert(record);
 //        默认分配商品管理员角色（roleIds:1）
         List<Long> list  = new ArrayList<>();
         list.add(1L);
