@@ -210,14 +210,21 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //订单类型：0->正常订单；1->秒杀订单
         order.setOrderType(0);
         //收货人信息：姓名、电话、邮编、地址
-        UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(orderParam.getMemberReceiveAddressId());
-        order.setReceiverName(address.getName());
-        order.setReceiverPhone(address.getPhoneNumber());
-        order.setReceiverPostCode(address.getPostCode());
-        order.setReceiverProvince(address.getProvince());
-        order.setReceiverCity(address.getCity());
-        order.setReceiverRegion(address.getRegion());
-        order.setReceiverDetailAddress(address.getDetailAddress());
+        if(orderParam.getMemberReceiveAddressId()!=null&&orderParam.getMemberReceiveAddressId()>0){
+            UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(orderParam.getMemberReceiveAddressId());
+            order.setReceiverName(address.getName());
+            order.setReceiverPhone(address.getPhoneNumber());
+            order.setReceiverPostCode(address.getPostCode());
+            order.setReceiverProvince(address.getProvince());
+            order.setReceiverCity(address.getCity());
+            order.setReceiverRegion(address.getRegion());
+            order.setReceiverDetailAddress(address.getDetailAddress());
+        }else{
+            order.setReceiverDetailAddress(orderParam.getDetailAddress());
+            order.setReceiverName(orderParam.getDetailAddress());
+            order.setReceiverPhone("");
+        }
+
         //0->未确认；1->已确认
         order.setConfirmStatus(0);
         order.setDeleteStatus(0);

@@ -15,6 +15,8 @@ import java.util.List;
 public class OrderParam {
     @ApiModelProperty("收货地址ID")
     private Long memberReceiveAddressId;
+    @ApiModelProperty("位置")
+    private String  detailAddress;
     @ApiModelProperty("优惠券ID")
     private Long couponId;
     @ApiModelProperty("使用的积分数")
