@@ -12,6 +12,7 @@ import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.mapper.UmsIntegrationConsumeSettingMapper;
 import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.model.UmsIntegrationConsumeSetting;
+import com.macro.mall.model.UmsIntegrationConsumeSettingExample;
 import com.macro.mall.model.UmsRole;
 import com.macro.mall.service.OmsOrderService;
 import com.macro.mall.service.PmsProductService;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jnlp.IntegrationService;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -67,6 +67,14 @@ public class UmsAdminController {
         if (umsAdmin == null) {
             return CommonResult.failed();
         }
+        //      插入积分抵扣表
+        UmsIntegrationConsumeSetting record =new UmsIntegrationConsumeSetting();
+        record.setAdminId(umsAdmin.getId());
+        record.setUseUnit(100);
+        record.setCouponStatus(1);
+        record.setDeductionPerAmount(10);
+        record.setMaxPercentPerOrder(50);
+        integrationConsumeSettingMapper.insert(record);
 //        默认分配商品管理员角色（roleIds:1）
         List<Long> list  = new ArrayList<>();
         list.add(1L);
@@ -183,6 +191,13 @@ public class UmsAdminController {
         data.put("appSecret", umsAdmin.getAppSecret());
         data.put("mchId", umsAdmin.getMchId());
         data.put("mchKey", umsAdmin.getMchKey());
+//        积分相关
+        UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
+        example.or().andAdminIdEqualTo(umsAdmin.getId());
+        List<UmsIntegrationConsumeSetting> umsIntegrationConsumeSettings = integrationConsumeSettingMapper.selectByExample(example);
+        data.put("deductionPerAmount",umsIntegrationConsumeSettings.get(0).getDeductionPerAmount());
+        data.put("maxPercentPerOrder",umsIntegrationConsumeSettings.get(0).getMaxPercentPerOrder());
+        data.put("couponStatus",umsIntegrationConsumeSettings.get(0).getCouponStatus());
         return CommonResult.success(data);
     }
 
@@ -202,6 +217,19 @@ public class UmsAdminController {
     @ResponseBody
     public CommonResult updateNotice(@RequestBody UmsAdmin umsAdmin) {
         adminService.updateNotice(umsAdmin);
+        return CommonResult.success(null);
+    }
+    @RequestMapping(value = "/updateIntegration", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateIntegration(@RequestBody UmsIntegrationConsumeSetting record) {
+        UmsAdmin umsAdmin = adminService.getCurrentAdmin();
+        UmsIntegrationConsumeSetting recordNew = new UmsIntegrationConsumeSetting();
+        recordNew.setMaxPercentPerOrder(record.getMaxPercentPerOrder());
+        recordNew.setDeductionPerAmount(record.getDeductionPerAmount());
+        recordNew.setCouponStatus(record.getCouponStatus());
+        UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
+        example.or().andAdminIdEqualTo(umsAdmin.getId());
+        integrationConsumeSettingMapper.updateByExampleSelective(recordNew,example);
         return CommonResult.success(null);
     }
     @ApiOperation(value = "登出功能")
