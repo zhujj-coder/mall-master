@@ -198,6 +198,7 @@ public class UmsAdminController {
         data.put("deductionPerAmount",umsIntegrationConsumeSettings.get(0).getDeductionPerAmount());
         data.put("maxPercentPerOrder",umsIntegrationConsumeSettings.get(0).getMaxPercentPerOrder());
         data.put("couponStatus",umsIntegrationConsumeSettings.get(0).getCouponStatus());
+        data.put("imageUrl",umsIntegrationConsumeSettings.get(0).getImageUrl());
         return CommonResult.success(data);
     }
 
@@ -227,6 +228,7 @@ public class UmsAdminController {
         recordNew.setMaxPercentPerOrder(record.getMaxPercentPerOrder());
         recordNew.setDeductionPerAmount(record.getDeductionPerAmount());
         recordNew.setCouponStatus(record.getCouponStatus());
+        recordNew.setImageUrl(record.getImageUrl());
         UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
         example.or().andAdminIdEqualTo(umsAdmin.getId());
         integrationConsumeSettingMapper.updateByExampleSelective(recordNew,example);

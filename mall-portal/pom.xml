@@ -46,6 +46,13 @@
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
         </dependency>
+        <dependency>
+            <groupId>printer</groupId>
+            <artifactId>printer</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/xpyun-opensdk.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -57,6 +64,14 @@
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.macro.mall.portal.MallPortalApplication</mainClass>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
             </plugin>
         </plugins>
     </build>

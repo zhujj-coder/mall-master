@@ -87,6 +87,15 @@ public class ConfirmOrderResult {
         private boolean allowUseIntegrationAmount;
         //应付金额
         private BigDecimal payAmount;
+        private String imageUrl;
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
 
         public boolean isAllowUseIntegrationAmount() {
             return allowUseIntegrationAmount;

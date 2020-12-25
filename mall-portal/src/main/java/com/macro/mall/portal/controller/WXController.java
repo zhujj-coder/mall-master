@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.mapper.UmsAdminMapper;
+import com.macro.mall.mapper.UmsIntegrationConsumeSettingMapper;
 import com.macro.mall.model.UmsAdmin;
+import com.macro.mall.model.UmsIntegrationConsumeSetting;
+import com.macro.mall.model.UmsIntegrationConsumeSettingExample;
 import com.macro.mall.model.UmsMember;
 import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.LoginInfo;
@@ -25,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +62,8 @@ public class WXController {
     private OmsPortalOrderService orderService;
     @Resource
     private UmsAdminMapper umsAdminMapper;
+    @Autowired
+    private UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
 
     /**
      * 显示登录
@@ -139,13 +145,22 @@ public class WXController {
     }
     @ApiOperation(value = "获取用户积分等信息")
     @RequestMapping("/getUserInfo/{adminId}")
-    public CommonResult getUserInfo() {
+    public CommonResult getUserInfo(@PathVariable Long adminId) {
         /* 获取appId 和secret*/
         UmsMember currentMember = memberService.getCurrentMember();
         UmsMember byOpenId = memberService.getByOpenId(currentMember.getOpenId());
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
-
+        UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
+        example.or().andAdminIdEqualTo(adminId);
+        List<UmsIntegrationConsumeSetting> umsIntegrationConsumeSettings = integrationConsumeSettingMapper.selectByExample(example);
+        UmsIntegrationConsumeSetting integrationConsumeSetting = umsIntegrationConsumeSettings.get(0);
+        tokenMap.put("imageUrl", integrationConsumeSetting.getImageUrl());
+        if(integrationConsumeSetting.getCouponStatus()!=2) {
+            tokenMap.put("isAllowUseIntegrationAmount","true");
+        }else{
+            tokenMap.put("isAllowUseIntegrationAmount","false");
+        }
         return CommonResult.success(tokenMap);
     }
     @ApiOperation(value = "获取用户积分等信息")
@@ -157,8 +172,14 @@ public class WXController {
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
         ConfirmOrderResult.CalcAmount calcAmount = orderService.calcCartAmount(new BigDecimal(value),byOpenId.getIntegration() , adminId);
-        tokenMap.put("useIntegration",calcAmount.getUseIntegration()+"");
-        tokenMap.put("integrationAmount",calcAmount.getIntegrationAmount().toString());
+        if(calcAmount.isAllowUseIntegrationAmount()) {
+            tokenMap.put("useIntegration", calcAmount.getUseIntegration() + "");
+            tokenMap.put("integrationAmount", calcAmount.getIntegrationAmount().toString());
+            tokenMap.put("isAllowUseIntegrationAmount","true");
+        }else{
+            tokenMap.put("isAllowUseIntegrationAmount","false");
+        }
+
         tokenMap.put("payAmount",calcAmount.getPayAmount().toString());
         return CommonResult.success(tokenMap);
     }

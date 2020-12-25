@@ -21,6 +21,9 @@ public class UmsIntegrationConsumeSetting implements Serializable {
     @ApiModelProperty(value = "商户用户ID")
     private Long adminId;
 
+    @ApiModelProperty(value = "支付头像URL")
+    private String imageUrl;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -69,5 +72,13 @@ public class UmsIntegrationConsumeSetting implements Serializable {
 
     public void setAdminId(Long adminId) {
         this.adminId = adminId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

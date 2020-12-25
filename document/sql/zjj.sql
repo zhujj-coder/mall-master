@@ -35,6 +35,7 @@ alter table sms_home_recommend_subject add index IDX_ADMIN_ID(admin_id);
 alter table sms_home_advertise add column admin_id bigint(20) comment '商户用户ID';
 alter table sms_home_advertise add index IDX_ADMIN_ID(admin_id);
 alter table ums_integration_consume_setting add column admin_id bigint(20) comment '商户用户ID';
+alter table ums_integration_consume_setting add column image_url varchar(128) default '' comment '支付头像URL';
 
 # appId app_secret
 
@@ -52,6 +53,24 @@ alter table ums_admin add column mch_key varchar(128) comment '商户秘钥';
 
 alter table ums_member add column admin_id bigint(20) comment '商户用户ID';
 alter table ums_member add index IDX_ADMIN_ID(admin_id);
+
+drop table  ums_printer;
+create table ums_printer(
+  id bigint auto_increment
+    primary key,
+  admin_id bigint not null,
+  printer_name varchar(64) comment '打印机名称',
+  printer_sn varchar(128)  comment '打印机sn',
+  printer_voice_type  int(1) default '1' comment '0真人语音（大） 1真人语音（中） 2真人语音（小） 3 嘀嘀声 4 静音',
+  printer_status  int(1) default '1' comment '0 表示离线1 表示在线正常2 表示在线异常',
+  title varchar(128) comment '统一打印标题',
+  printer_qr_title varchar(256) comment '二维码地址',
+  printer_qr_url varchar(256) comment '二维码地址',
+  cardNo varchar(256) comment '手机号',
+  copies int(2) default 1 comment '打印份数',
+  index IDX_ADMIN_ID(admin_id)
+)comment '商户打印机表';
+alter table ums_printer add column  printer_qr_title varchar(256) comment '二维码地址';
 
 
 

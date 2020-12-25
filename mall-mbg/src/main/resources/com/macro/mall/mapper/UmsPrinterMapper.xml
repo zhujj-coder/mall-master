@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.mapper.UmsPrinterMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.model.UmsPrinter">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+    <result column="printer_name" jdbcType="VARCHAR" property="printerName" />
+    <result column="printer_sn" jdbcType="VARCHAR" property="printerSn" />
+    <result column="printer_voice_type" jdbcType="INTEGER" property="printerVoiceType" />
+    <result column="printer_status" jdbcType="INTEGER" property="printerStatus" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="printer_qr_url" jdbcType="VARCHAR" property="printerQrUrl" />
+    <result column="cardNo" jdbcType="VARCHAR" property="cardno" />
+    <result column="copies" jdbcType="INTEGER" property="copies" />
+    <result column="printer_qr_title" jdbcType="VARCHAR" property="printerQrTitle" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, admin_id, printer_name, printer_sn, printer_voice_type, printer_status, title, 
+    printer_qr_url, cardNo, copies, printer_qr_title
+  </sql>
+  <select id="selectByExample" parameterType="com.macro.mall.model.UmsPrinterExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ums_printer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ums_printer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from ums_printer
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.macro.mall.model.UmsPrinterExample">
+    delete from ums_printer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.macro.mall.model.UmsPrinter">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ums_printer (admin_id, printer_name, printer_sn, 
+      printer_voice_type, printer_status, title, 
+      printer_qr_url, cardNo, copies, 
+      printer_qr_title)
+    values (#{adminId,jdbcType=BIGINT}, #{printerName,jdbcType=VARCHAR}, #{printerSn,jdbcType=VARCHAR}, 
+      #{printerVoiceType,jdbcType=INTEGER}, #{printerStatus,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{printerQrUrl,jdbcType=VARCHAR}, #{cardno,jdbcType=VARCHAR}, #{copies,jdbcType=INTEGER}, 
+      #{printerQrTitle,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.macro.mall.model.UmsPrinter">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ums_printer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="printerName != null">
+        printer_name,
+      </if>
+      <if test="printerSn != null">
+        printer_sn,
+      </if>
+      <if test="printerVoiceType != null">
+        printer_voice_type,
+      </if>
+      <if test="printerStatus != null">
+        printer_status,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="printerQrUrl != null">
+        printer_qr_url,
+      </if>
+      <if test="cardno != null">
+        cardNo,
+      </if>
+      <if test="copies != null">
+        copies,
+      </if>
+      <if test="printerQrTitle != null">
+        printer_qr_title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adminId != null">
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="printerName != null">
+        #{printerName,jdbcType=VARCHAR},
+      </if>
+      <if test="printerSn != null">
+        #{printerSn,jdbcType=VARCHAR},
+      </if>
+      <if test="printerVoiceType != null">
+        #{printerVoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="printerStatus != null">
+        #{printerStatus,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="printerQrUrl != null">
+        #{printerQrUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardno != null">
+        #{cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="copies != null">
+        #{copies,jdbcType=INTEGER},
+      </if>
+      <if test="printerQrTitle != null">
+        #{printerQrTitle,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.macro.mall.model.UmsPrinterExample" resultType="java.lang.Long">
+    select count(*) from ums_printer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ums_printer
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=BIGINT},
+      </if>
+      <if test="record.printerName != null">
+        printer_name = #{record.printerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.printerSn != null">
+        printer_sn = #{record.printerSn,jdbcType=VARCHAR},
+      </if>
+      <if test="record.printerVoiceType != null">
+        printer_voice_type = #{record.printerVoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="record.printerStatus != null">
+        printer_status = #{record.printerStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.printerQrUrl != null">
+        printer_qr_url = #{record.printerQrUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardno != null">
+        cardNo = #{record.cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.copies != null">
+        copies = #{record.copies,jdbcType=INTEGER},
+      </if>
+      <if test="record.printerQrTitle != null">
+        printer_qr_title = #{record.printerQrTitle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ums_printer
+    set id = #{record.id,jdbcType=BIGINT},
+      admin_id = #{record.adminId,jdbcType=BIGINT},
+      printer_name = #{record.printerName,jdbcType=VARCHAR},
+      printer_sn = #{record.printerSn,jdbcType=VARCHAR},
+      printer_voice_type = #{record.printerVoiceType,jdbcType=INTEGER},
+      printer_status = #{record.printerStatus,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      printer_qr_url = #{record.printerQrUrl,jdbcType=VARCHAR},
+      cardNo = #{record.cardno,jdbcType=VARCHAR},
+      copies = #{record.copies,jdbcType=INTEGER},
+      printer_qr_title = #{record.printerQrTitle,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.UmsPrinter">
+    update ums_printer
+    <set>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="printerName != null">
+        printer_name = #{printerName,jdbcType=VARCHAR},
+      </if>
+      <if test="printerSn != null">
+        printer_sn = #{printerSn,jdbcType=VARCHAR},
+      </if>
+      <if test="printerVoiceType != null">
+        printer_voice_type = #{printerVoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="printerStatus != null">
+        printer_status = #{printerStatus,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="printerQrUrl != null">
+        printer_qr_url = #{printerQrUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="cardno != null">
+        cardNo = #{cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="copies != null">
+        copies = #{copies,jdbcType=INTEGER},
+      </if>
+      <if test="printerQrTitle != null">
+        printer_qr_title = #{printerQrTitle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.UmsPrinter">
+    update ums_printer
+    set admin_id = #{adminId,jdbcType=BIGINT},
+      printer_name = #{printerName,jdbcType=VARCHAR},
+      printer_sn = #{printerSn,jdbcType=VARCHAR},
+      printer_voice_type = #{printerVoiceType,jdbcType=INTEGER},
+      printer_status = #{printerStatus,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      printer_qr_url = #{printerQrUrl,jdbcType=VARCHAR},
+      cardNo = #{cardno,jdbcType=VARCHAR},
+      copies = #{copies,jdbcType=INTEGER},
+      printer_qr_title = #{printerQrTitle,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
