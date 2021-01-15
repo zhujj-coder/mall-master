@@ -77,8 +77,9 @@ public class UmsPrinterController {
     @ResponseBody
     public CommonResult<CommonPage<UmsPrinter>> list(
                                                            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                                           @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        List<UmsPrinter> advertiseList = umsPrinterService.list( pageSize, pageNum);
+                                                           @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                                           @RequestParam(value = "printerFactory", defaultValue = "1") Integer printerFactory) {
+        List<UmsPrinter> advertiseList = umsPrinterService.list( pageSize, pageNum,printerFactory);
         return CommonResult.success(CommonPage.restPage(advertiseList));
     }
 }

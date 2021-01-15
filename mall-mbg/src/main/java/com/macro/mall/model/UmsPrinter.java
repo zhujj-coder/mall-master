@@ -35,6 +35,12 @@ public class UmsPrinter implements Serializable {
     @ApiModelProperty(value = "二维码地址")
     private String printerQrTitle;
 
+    @ApiModelProperty(value = "1:芯烨 2：飞鹅")
+    private Integer printerFactory;
+
+    @ApiModelProperty(value = "打印机识别号，飞鹅有")
+    private String printerKey;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -123,5 +129,21 @@ public class UmsPrinter implements Serializable {
 
     public void setPrinterQrTitle(String printerQrTitle) {
         this.printerQrTitle = printerQrTitle;
+    }
+
+    public Integer getPrinterFactory() {
+        return printerFactory;
+    }
+
+    public void setPrinterFactory(Integer printerFactory) {
+        this.printerFactory = printerFactory;
+    }
+
+    public String getPrinterKey() {
+        return printerKey;
+    }
+
+    public void setPrinterKey(String printerKey) {
+        this.printerKey = printerKey;
     }
 }

@@ -823,6 +823,136 @@ public class UmsPrinterExample {
             addCriterion("printer_qr_title not between", value1, value2, "printerQrTitle");
             return (Criteria) this;
         }
+
+        public Criteria andPrinterFactoryIsNull() {
+            addCriterion("printer_factory is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryIsNotNull() {
+            addCriterion("printer_factory is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryEqualTo(Integer value) {
+            addCriterion("printer_factory =", value, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryNotEqualTo(Integer value) {
+            addCriterion("printer_factory <>", value, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryGreaterThan(Integer value) {
+            addCriterion("printer_factory >", value, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryGreaterThanOrEqualTo(Integer value) {
+            addCriterion("printer_factory >=", value, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryLessThan(Integer value) {
+            addCriterion("printer_factory <", value, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryLessThanOrEqualTo(Integer value) {
+            addCriterion("printer_factory <=", value, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryIn(List<Integer> values) {
+            addCriterion("printer_factory in", values, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryNotIn(List<Integer> values) {
+            addCriterion("printer_factory not in", values, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryBetween(Integer value1, Integer value2) {
+            addCriterion("printer_factory between", value1, value2, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterFactoryNotBetween(Integer value1, Integer value2) {
+            addCriterion("printer_factory not between", value1, value2, "printerFactory");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyIsNull() {
+            addCriterion("printer_key is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyIsNotNull() {
+            addCriterion("printer_key is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyEqualTo(String value) {
+            addCriterion("printer_key =", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyNotEqualTo(String value) {
+            addCriterion("printer_key <>", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyGreaterThan(String value) {
+            addCriterion("printer_key >", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyGreaterThanOrEqualTo(String value) {
+            addCriterion("printer_key >=", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyLessThan(String value) {
+            addCriterion("printer_key <", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyLessThanOrEqualTo(String value) {
+            addCriterion("printer_key <=", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyLike(String value) {
+            addCriterion("printer_key like", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyNotLike(String value) {
+            addCriterion("printer_key not like", value, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyIn(List<String> values) {
+            addCriterion("printer_key in", values, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyNotIn(List<String> values) {
+            addCriterion("printer_key not in", values, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyBetween(String value1, String value2) {
+            addCriterion("printer_key between", value1, value2, "printerKey");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrinterKeyNotBetween(String value1, String value2) {
+            addCriterion("printer_key not between", value1, value2, "printerKey");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -81,6 +81,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private UmsPrinterMapper umsPrinterMapper;
     @Autowired
     private OmsOrderItemMapper omsOrderItemMapper;
+    @Autowired
+    private FeiEService feiEService;
     final private String USER ="zjjhot@163.com";
     final private String UserKEY ="d8dc615805a24fbb908f524110be83b5";
     @Override
@@ -450,30 +452,44 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         example.or().andAdminIdEqualTo(omsOrder.getAdminId());
         List<UmsPrinter> umsPrinters = umsPrinterMapper.selectByExample(example);
         umsPrinters.forEach(item->{
-            try {
-                PrintService printService = new PrintService();
-                PrintRequest restRequest = new PrintRequest();
-                initRequest(restRequest);
-                restRequest.setSn(item.getPrinterSn());
+            if(item.getPrinterFactory()==1){
+                xinyePrint(omsOrder, item);
+            }else if(item.getPrinterFactory()==2){
+                feiEService.printMsg(omsOrder,item);
+            }else{
+                log.info("打印机[{}]厂商[{}]型有误！",item.getPrinterSn(),item.getPrinterFactory());
+            }
+
+        });
+
+    }
+
+
+    private void xinyePrint(OmsOrder omsOrder, UmsPrinter item) {
+        try {
+            PrintService printService = new PrintService();
+            PrintRequest restRequest = new PrintRequest();
+            initRequest(restRequest);
+            restRequest.setSn(item.getPrinterSn());
 //        打印模式：
 //        值为 0 或不指定则会检查打印机是否在线，如果不在线 则不生成打印订单，直接返回设备不在线状态码；如果在线则生成打印订单，并返回打印订单号。
 //        值为 1不检查打印机是否在线，直接生成打印订单，并返回打印订单号。如果打印机不在线，订单将缓存在打印队列中，打印机正常在线时会自动打印。
-                restRequest.setMode(2);
+            restRequest.setMode(2);
 //        支付方式：
 //        取值范围41~55：
 //        支付宝 41、微信 42、云支付 43、银联刷卡 44、银联支付 45、会员卡消费 46、会员卡充值 47、翼支付 48、成功收款 49、嘉联支付 50、壹钱包 51、京东支付 52、快钱支付 53、威支付 54、享钱支付 55
 //        仅用于支持金额播报的芯烨云打印机。
-                restRequest.setPayType(41);
+            restRequest.setPayType(41);
 //        支付与否：
 //        取值范围59~61：
 //        退款 59 到账 60 消费 61。
 //        仅用于支持金额播报的芯烨云打印机。
-                restRequest.setPayType(61);
+            restRequest.setPayType(61);
 //        支付金额：
 //        最多允许保留2位小数。
 //        仅用于支持金额播报的芯烨云打印机。
-                restRequest.setMoney(omsOrder.getPayAmount().doubleValue());
-                restRequest.setCopies(item.getCopies());
+            restRequest.setMoney(omsOrder.getPayAmount().doubleValue());
+            restRequest.setCopies(item.getCopies());
 //               <C><IMG160></IMG>
 //<CB>**#8 美团**
 //<L><N>--------------------------------
@@ -502,76 +518,74 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 //<L><QR>https://www.xpyun.net</QR>
 //<R><N>条形码打印测试
 //<R><BARCODE>5842160392535156</BARCODE>
-                String content ="<C><IMG160></IMG>\n" +
-                        "<CB>** 微信支付**\n" +
-                        "<L><N>--------------------------------\n" +
-                        "<CB>--在线已支付--\n" +
-                        "<HB>TITLE\n" +
-                        "<L><N>下单时间:CREATE_TIME\n" +
-                        "订单编号:ORDER_SN\n" +
-                        "**************商品**************\n" +
+            String content ="<C><IMG160></IMG>\n" +
+                    "<CB>** 微信支付**\n" +
+                    "<L><N>--------------------------------\n" +
+                    "<CB>--在线已支付--\n" +
+                    "<HB>TITLE\n" +
+                    "<L><N>下单时间:CREATE_TIME\n" +
+                    "订单编号:ORDER_SN\n" +
+                    "**************商品**************\n" +
 //                        "<C><HB>---1号口袋---\n" +
-                        "<L><N>PRODUCT_ITEM" +
-                        "--------------------------------\n" +
+                    "<L><N>PRODUCT_ITEM" +
+                    "--------------------------------\n" +
 //                        "配送费:￥4\n" +
-                        "--------------------------------\n" +
-                        "<B>小计:￥TOTAL_AMOUNT\n" +
-                        "DISCOUNT\n" +
-                        "<L><N>********************************\n" +
-                        "<B>实付:￥PAY_AMOUNT\n" +
-                        "\n" +
-                        "<N>RECEIVER_ADDRESS\n" +
-                        "RECEIVER_NAME:RECEIVER_MOBILE\n" +
-                        "订单备注：REMARK;\n" +
-                        "<C><HB>** 完**\n" ;
+                    "--------------------------------\n" +
+                    "<B>小计:￥TOTAL_AMOUNT\n" +
+                    "DISCOUNT\n" +
+                    "<L><N>********************************\n" +
+                    "<B>实付:￥PAY_AMOUNT\n" +
+                    "\n" +
+                    "<N>RECEIVER_ADDRESS\n" +
+                    "RECEIVER_NAME:RECEIVER_MOBILE\n" +
+                    "订单备注：REMARK;\n" +
+                    "<C><HB>** 完**\n" ;
 //                TODO
 //                        "<L><N>QR_TITLE\n" +
 //                        "<L><QR>QR_URL</QR>\n" ;
 //                        "<R><N>条形码打印测试\n" +
 //                        "<R><BARCODE>5842160392535156</BARCODE>"
-                DateTimeFormatter dateTimeFormatter =DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分");
-                ZoneId zoneId = ZoneId.systemDefault();
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(omsOrder.getCreateTime().toInstant(), zoneId);
-                String replace1 = content.replace("TITLE", item.getTitle())
-                        .replace("CREATE_TIME", dateTimeFormatter.format(localDateTime))
-                        .replace("ORDER_SN", omsOrder.getOrderSn())
-                        .replace("PAY_AMOUNT", omsOrder.getPayAmount().toString())
-                        .replace("TOTAL_AMOUNT", omsOrder.getTotalAmount().toString())
-                        .replace("RECEIVER_ADDRESS", omsOrder.getReceiverProvince() + omsOrder.getReceiverCity()
-                                + omsOrder.getReceiverRegion())
-                        .replace("RECEIVER_NAME", omsOrder.getReceiverName())
-                        .replace("RECEIVER_MOBILE", omsOrder.getReceiverPhone())
-                        .replace("DISCOUNT","积分抵扣￥:-"+(omsOrder.getIntegrationAmount()==null?"0":omsOrder.getIntegrationAmount().toString()))
-                        .replace("REMARK",omsOrder.getNote());
-                StringBuilder sb = new StringBuilder();
-                OmsOrderItemExample exampleItem = new OmsOrderItemExample();
-                exampleItem.or().andOrderSnEqualTo(omsOrder.getOrderSn());
-                List<OmsOrderItem> omsOrderItems = omsOrderItemMapper.selectByExample(exampleItem);
+            DateTimeFormatter dateTimeFormatter =DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分");
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(omsOrder.getCreateTime().toInstant(), zoneId);
+            String replace1 = content.replace("TITLE", item.getTitle())
+                    .replace("CREATE_TIME", dateTimeFormatter.format(localDateTime))
+                    .replace("ORDER_SN", omsOrder.getOrderSn())
+                    .replace("PAY_AMOUNT", omsOrder.getPayAmount().toString())
+                    .replace("TOTAL_AMOUNT", omsOrder.getTotalAmount().toString())
+                    .replace("RECEIVER_ADDRESS", omsOrder.getReceiverProvince() + omsOrder.getReceiverCity()
+                            + omsOrder.getReceiverRegion())
+                    .replace("RECEIVER_NAME", omsOrder.getReceiverName())
+                    .replace("RECEIVER_MOBILE", omsOrder.getReceiverPhone())
+                    .replace("DISCOUNT","积分抵扣￥:-"+(omsOrder.getIntegrationAmount()==null?"0":omsOrder.getIntegrationAmount().toString()))
+                    .replace("REMARK",omsOrder.getNote());
+            StringBuilder sb = new StringBuilder();
+            OmsOrderItemExample exampleItem = new OmsOrderItemExample();
+            exampleItem.or().andOrderSnEqualTo(omsOrder.getOrderSn());
+            List<OmsOrderItem> omsOrderItems = omsOrderItemMapper.selectByExample(exampleItem);
 
-                omsOrderItems.forEach(item2->{
-                    sb.append(item2.getProductName())
-                            .append("  x")
-                            .append(item2.getProductQuantity())
-                            .append("  ￥")
-                            .append(item2.getProductPrice().toString())
-                            .append("\n");
-                });
-                String replace2 = replace1.replace("PRODUCT_ITEM", sb.toString());
+            omsOrderItems.forEach(item2->{
+                sb.append(item2.getProductName())
+                        .append("  x")
+                        .append(item2.getProductQuantity())
+                        .append("  ￥")
+                        .append(item2.getProductPrice().toString())
+                        .append("\n");
+            });
+            String replace2 = replace1.replace("PRODUCT_ITEM", sb.toString());
 //                判断是否有二维码
-                if(item.getPrinterQrUrl()!=null&&item.getPrinterQrUrl().length()>0){
-                    replace2+="<L><N>"+item.getPrinterQrTitle()+"\n"+
-                            "<L><QR>"+item.getPrinterQrUrl()+"</QR>\n";
-                }
-                restRequest.setContent(replace2);
-                log.info("请求[{}]",restRequest);
-                ObjectRestResponse<String> printerResultObjectRestResponse = printService.print(restRequest);
-                log.info("返回[{}]",printerResultObjectRestResponse);
-                handResponse(printerResultObjectRestResponse);
-            }catch (Exception e){
-                log.error("!!!!!!!!!!!!!!!!!订单打印异常!!!!!!!!!!!!!!!!!",e);
+            if(item.getPrinterQrUrl()!=null&&item.getPrinterQrUrl().length()>0){
+                replace2+="<L><N>"+item.getPrinterQrTitle()+"\n"+
+                        "<L><QR>"+item.getPrinterQrUrl()+"</QR>\n";
             }
-        });
-
+            restRequest.setContent(replace2);
+            log.info("请求[{}]",restRequest);
+            ObjectRestResponse<String> printerResultObjectRestResponse = printService.print(restRequest);
+            log.info("返回[{}]",printerResultObjectRestResponse);
+            handResponse(printerResultObjectRestResponse);
+        }catch (Exception e){
+            log.error("!!!!!!!!!!!!!!!!!订单打印异常!!!!!!!!!!!!!!!!!",e);
+        }
     }
 
     private void handResponse(ObjectRestResponse printerResultObjectRestResponse) {

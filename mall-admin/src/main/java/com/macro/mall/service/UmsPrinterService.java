@@ -37,5 +37,5 @@ public interface UmsPrinterService {
     /**
      * 分页查询广告
      */
-    List<UmsPrinter> list(Integer pageSize, Integer pageNum);
+    List<UmsPrinter> list(Integer pageSize, Integer pageNum, Integer printerFactory);
 }

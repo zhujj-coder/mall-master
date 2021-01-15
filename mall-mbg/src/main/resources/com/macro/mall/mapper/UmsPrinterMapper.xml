@@ -13,6 +13,8 @@
     <result column="cardNo" jdbcType="VARCHAR" property="cardno" />
     <result column="copies" jdbcType="INTEGER" property="copies" />
     <result column="printer_qr_title" jdbcType="VARCHAR" property="printerQrTitle" />
+    <result column="printer_factory" jdbcType="INTEGER" property="printerFactory" />
+    <result column="printer_key" jdbcType="VARCHAR" property="printerKey" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, admin_id, printer_name, printer_sn, printer_voice_type, printer_status, title, 
-    printer_qr_url, cardNo, copies, printer_qr_title
+    printer_qr_url, cardNo, copies, printer_qr_title, printer_factory, printer_key
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsPrinterExample" resultMap="BaseResultMap">
     select
@@ -113,11 +115,13 @@
     insert into ums_printer (admin_id, printer_name, printer_sn, 
       printer_voice_type, printer_status, title, 
       printer_qr_url, cardNo, copies, 
-      printer_qr_title)
+      printer_qr_title, printer_factory, printer_key
+      )
     values (#{adminId,jdbcType=BIGINT}, #{printerName,jdbcType=VARCHAR}, #{printerSn,jdbcType=VARCHAR}, 
       #{printerVoiceType,jdbcType=INTEGER}, #{printerStatus,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{printerQrUrl,jdbcType=VARCHAR}, #{cardno,jdbcType=VARCHAR}, #{copies,jdbcType=INTEGER}, 
-      #{printerQrTitle,jdbcType=VARCHAR})
+      #{printerQrTitle,jdbcType=VARCHAR}, #{printerFactory,jdbcType=INTEGER}, #{printerKey,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsPrinter">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -155,6 +159,12 @@
       <if test="printerQrTitle != null">
         printer_qr_title,
       </if>
+      <if test="printerFactory != null">
+        printer_factory,
+      </if>
+      <if test="printerKey != null">
+        printer_key,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="adminId != null">
@@ -186,6 +196,12 @@
       </if>
       <if test="printerQrTitle != null">
         #{printerQrTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="printerFactory != null">
+        #{printerFactory,jdbcType=INTEGER},
+      </if>
+      <if test="printerKey != null">
+        #{printerKey,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -231,6 +247,12 @@
       <if test="record.printerQrTitle != null">
         printer_qr_title = #{record.printerQrTitle,jdbcType=VARCHAR},
       </if>
+      <if test="record.printerFactory != null">
+        printer_factory = #{record.printerFactory,jdbcType=INTEGER},
+      </if>
+      <if test="record.printerKey != null">
+        printer_key = #{record.printerKey,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +270,9 @@
       printer_qr_url = #{record.printerQrUrl,jdbcType=VARCHAR},
       cardNo = #{record.cardno,jdbcType=VARCHAR},
       copies = #{record.copies,jdbcType=INTEGER},
-      printer_qr_title = #{record.printerQrTitle,jdbcType=VARCHAR}
+      printer_qr_title = #{record.printerQrTitle,jdbcType=VARCHAR},
+      printer_factory = #{record.printerFactory,jdbcType=INTEGER},
+      printer_key = #{record.printerKey,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +310,12 @@
       <if test="printerQrTitle != null">
         printer_qr_title = #{printerQrTitle,jdbcType=VARCHAR},
       </if>
+      <if test="printerFactory != null">
+        printer_factory = #{printerFactory,jdbcType=INTEGER},
+      </if>
+      <if test="printerKey != null">
+        printer_key = #{printerKey,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -300,7 +330,9 @@
       printer_qr_url = #{printerQrUrl,jdbcType=VARCHAR},
       cardNo = #{cardno,jdbcType=VARCHAR},
       copies = #{copies,jdbcType=INTEGER},
-      printer_qr_title = #{printerQrTitle,jdbcType=VARCHAR}
+      printer_qr_title = #{printerQrTitle,jdbcType=VARCHAR},
+      printer_factory = #{printerFactory,jdbcType=INTEGER},
+      printer_key = #{printerKey,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
