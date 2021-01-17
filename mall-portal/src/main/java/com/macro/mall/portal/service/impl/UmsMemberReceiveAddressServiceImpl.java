@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,13 +21,29 @@ import java.util.List;
 public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddressService {
     @Autowired
     private UmsMemberService memberService;
-    @Autowired
+    @Resource
     private UmsMemberReceiveAddressMapper addressMapper;
     @Override
     public int add(UmsMemberReceiveAddress address) {
         UmsMember currentMember = memberService.getCurrentMember();
         address.setMemberId(currentMember.getId());
+        if(address.getDefaultStatus()==1){
+//            修改其它收货地址不是默认收货地址
+
+            updateDefault();
+        }
         return addressMapper.insert(address);
+    }
+
+    private void updateDefault() {
+        UmsMember currentMember = memberService.getCurrentMember();
+        UmsMemberReceiveAddress record= new UmsMemberReceiveAddress();
+        record.setDefaultStatus(0);
+        UmsMemberReceiveAddressExample updateExample = new UmsMemberReceiveAddressExample();
+        updateExample.createCriteria()
+                .andMemberIdEqualTo(currentMember.getId())
+                .andDefaultStatusEqualTo(1);
+        addressMapper.updateByExampleSelective(record,updateExample);
     }
 
     @Override
@@ -45,13 +62,7 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
         example.createCriteria().andMemberIdEqualTo(currentMember.getId()).andIdEqualTo(id);
         if(address.getDefaultStatus()==1){
             //先将原来的默认地址去除
-            UmsMemberReceiveAddress record= new UmsMemberReceiveAddress();
-            record.setDefaultStatus(0);
-            UmsMemberReceiveAddressExample updateExample = new UmsMemberReceiveAddressExample();
-            updateExample.createCriteria()
-                    .andMemberIdEqualTo(currentMember.getId())
-                    .andDefaultStatusEqualTo(1);
-            addressMapper.updateByExampleSelective(record,updateExample);
+            updateDefault();
         }
         return addressMapper.updateByExampleSelective(address,example);
     }
