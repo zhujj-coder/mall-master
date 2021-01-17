@@ -1,5 +1,6 @@
 package com.macro.mall.service;
 
+import com.macro.mall.dto.GetLocationSrcParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.model.UmsAdmin;
@@ -100,4 +101,7 @@ public interface UmsAdminService {
     UmsAdmin getCurrentAdmin();
 
     void updateNotice(UmsAdmin umsAdmin);
+
+
+    String getLocationSrc(GetLocationSrcParam param);
 }

@@ -6,6 +6,7 @@ import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.common.util.DateUtil;
 import com.macro.mall.common.util.RequestUtil;
 import com.macro.mall.dao.UmsMemberDao;
+import com.macro.mall.dto.GetLocationSrcParam;
 import com.macro.mall.dto.UmsAdminLoginParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
@@ -330,6 +331,13 @@ public class UmsAdminController {
     public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long adminId) {
         List<UmsRole> roleList = adminService.getRoleList(adminId);
         return CommonResult.success(roleList);
+    }
+    @ApiOperation("获取指定用户的角色")
+    @RequestMapping(value = "/getLocationSrc", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<String> getLocationSrc(@Validated @RequestBody GetLocationSrcParam param) {
+        String locationSrc = adminService.getLocationSrc(param);
+        return CommonResult.success(locationSrc);
     }
 
 }

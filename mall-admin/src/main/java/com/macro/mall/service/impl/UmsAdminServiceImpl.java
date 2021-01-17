@@ -4,12 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.util.StringUtil;
 import com.macro.mall.bo.AdminUserDetails;
 import com.macro.mall.common.enums.ExceptionEnum;
 import com.macro.mall.common.exception.Asserts;
 import com.macro.mall.common.exception.MyException;
 import com.macro.mall.common.util.RequestUtil;
 import com.macro.mall.dao.UmsAdminRoleRelationDao;
+import com.macro.mall.dto.GetLocationSrcParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
 import com.macro.mall.mapper.UmsAdminLoginLogMapper;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,15 +40,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * UmsAdminService实现类
@@ -388,4 +393,41 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         umsAdminNew.setNoticeEnd(umsAdmin.getNoticeEnd());
         adminMapper.updateByPrimaryKeySelective(umsAdminNew);
     }
+
+    @Override
+    public String getLocationSrc(@RequestBody  GetLocationSrcParam param) {
+        UmsAdmin currentAdmin = getCurrentAdmin();
+        String appId = currentAdmin.getAppId();
+        String appSecret = currentAdmin.getAppSecret();
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("weapp_id",appId);
+//        jsonObject.put("weapp_secret",appSecret);
+//        String url1 ="pages/index/index?q={addr:PARAMS}";
+//        jsonObject.put("weapp_url",url1.replace("PARAMS",param.getLocation()));
+//        JSONObject jsonObject1 = restTemplate.postForObject("https://cli.im/Home/Weapp/create", jsonObject, JSONObject.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        //定义请求参数类型，这里用json所以是MediaType.APPLICATION_JSON
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        //RestTemplate带参传的时候要用HttpEntity<?>对象传递
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+        map.add("weapp_id",appId);
+        map.add("weapp_secret",appSecret);
+        String url1 ="pages/index/index?q={addr:PARAMS}";
+        map.add("weapp_url",url1.replace("PARAMS", URLEncoder.encode(param.getLocation())));
+        HttpEntity<MultiValueMap<String, String>> request =new HttpEntity<>(map, headers);
+
+        ResponseEntity<String> entity = restTemplate.postForEntity("https://cli.im/Home/Weapp/create", request, String.class);
+        //获取3方接口返回的数据通过entity.getBody();它返回的是一个字符串；
+        String body = entity.getBody();
+        //然后把str转换成JSON再通过getJSONObject()方法获取到里面的result对象，因为我想要的数据都在result里面
+        //下面的strToJson只是一个str转JSON的一个共用方法；
+        JSONObject json = JSONObject.parseObject(body);
+
+        if(json.getInteger("status")==1){
+            return json.getString("data");
+        }
+        throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),json.getString("msg"));
+    }
+
 }
