@@ -35,3 +35,10 @@ common:
 sms:
   id: "AKID0oKfouBUvBTvBDbVLxLblxySo2N0AXR4"
   key: "XN3VSAfw2vb3IRM2uBCzAJDraDf5GxTm"
+wx:
+  pre_auth_code_url: https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=COMPONENT_ACCESS_TOKEN
+  api_component_token_url: https://api.weixin.qq.com/cgi-bin/component/api_component_token
+  component_appid: wx4236aecd85ecef8e
+  component_appsecret: 162db3c7f01ca324f5c0e82cc65fe1d2
+  component_encodingAesKey: Qwer1234Qwer1234Qwer1234Qwer1234Qwer1234Qwe
+  component_token: Qwer#@!1234

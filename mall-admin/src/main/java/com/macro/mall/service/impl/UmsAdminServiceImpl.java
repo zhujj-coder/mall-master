@@ -98,7 +98,19 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         }
         return null;
     }
-
+    @Override
+    public UmsAdmin getAdminByAppId(String appId) {
+        UmsAdmin admin;
+        UmsAdminExample example = new UmsAdminExample();
+        example.createCriteria().andAppIdEqualTo(appId);
+        List<UmsAdmin> adminList = adminMapper.selectByExample(example);
+        if (adminList != null && adminList.size() > 0) {
+            admin = adminList.get(0);
+            adminCacheService.setAdmin(admin);
+            return admin;
+        }
+        return null;
+    }
     @Override
     public UmsAdmin register(UmsAdminParam umsAdminParam) {
 //        验证码
@@ -289,6 +301,15 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         admin.setId(id);
         UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
         rawAdmin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
+        adminCacheService.delAdmin(id);
+        return count;
+    }
+    @Override
+    public int updateAuthorizerRefreshToken(Long id, UmsAdmin admin) {
+        admin.setId(id);
+        UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
+        rawAdmin.setAuthorizerRefreshToken(admin.getAuthorizerRefreshToken());
         int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
         adminCacheService.delAdmin(id);
         return count;

@@ -73,6 +73,7 @@ create table ums_printer(
 alter table ums_printer add column  printer_qr_title varchar(256) comment '二维码地址';
 alter table ums_printer add column  printer_factory int not null comment '1:芯烨 2：飞鹅';
 alter table ums_printer add column  printer_key varchar(128)  comment '打印机识别号，飞鹅有';
+alter table ums_admin add column  authorizer_refresh_token  varchar(128) default '' comment '刷新令牌';
 
 
 

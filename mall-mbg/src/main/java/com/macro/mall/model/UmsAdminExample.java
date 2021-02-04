@@ -1384,6 +1384,76 @@ public class UmsAdminExample {
             addCriterion("mch_key not between", value1, value2, "mchKey");
             return (Criteria) this;
         }
+
+        public Criteria andAuthorizerRefreshTokenIsNull() {
+            addCriterion("authorizer_refresh_token is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenIsNotNull() {
+            addCriterion("authorizer_refresh_token is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenEqualTo(String value) {
+            addCriterion("authorizer_refresh_token =", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenNotEqualTo(String value) {
+            addCriterion("authorizer_refresh_token <>", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenGreaterThan(String value) {
+            addCriterion("authorizer_refresh_token >", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenGreaterThanOrEqualTo(String value) {
+            addCriterion("authorizer_refresh_token >=", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenLessThan(String value) {
+            addCriterion("authorizer_refresh_token <", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenLessThanOrEqualTo(String value) {
+            addCriterion("authorizer_refresh_token <=", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenLike(String value) {
+            addCriterion("authorizer_refresh_token like", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenNotLike(String value) {
+            addCriterion("authorizer_refresh_token not like", value, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenIn(List<String> values) {
+            addCriterion("authorizer_refresh_token in", values, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenNotIn(List<String> values) {
+            addCriterion("authorizer_refresh_token not in", values, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenBetween(String value1, String value2) {
+            addCriterion("authorizer_refresh_token between", value1, value2, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizerRefreshTokenNotBetween(String value1, String value2) {
+            addCriterion("authorizer_refresh_token not between", value1, value2, "authorizerRefreshToken");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

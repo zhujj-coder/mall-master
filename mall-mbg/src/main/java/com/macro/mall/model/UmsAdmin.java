@@ -59,6 +59,9 @@ public class UmsAdmin implements Serializable {
     @ApiModelProperty(value = "商户秘钥")
     private String mchKey;
 
+    @ApiModelProperty(value = "刷新令牌")
+    private String authorizerRefreshToken;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -211,5 +214,13 @@ public class UmsAdmin implements Serializable {
 
     public void setMchKey(String mchKey) {
         this.mchKey = mchKey;
+    }
+
+    public String getAuthorizerRefreshToken() {
+        return authorizerRefreshToken;
+    }
+
+    public void setAuthorizerRefreshToken(String authorizerRefreshToken) {
+        this.authorizerRefreshToken = authorizerRefreshToken;
     }
 }

@@ -21,6 +21,8 @@ public interface UmsAdminService {
      */
     UmsAdmin getAdminByUsername(String username);
 
+    UmsAdmin getAdminByAppId(String appId);
+
     /**
      * 注册功能
      */
@@ -62,6 +64,8 @@ public interface UmsAdminService {
     int updateWithMch(Long id, UmsAdmin admin);
 
     int updatePassword(Long id, UmsAdmin admin);
+
+    int updateAuthorizerRefreshToken(Long id, UmsAdmin admin);
 
     /**
      * 删除指定用户

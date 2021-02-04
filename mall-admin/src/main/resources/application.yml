@@ -53,6 +53,7 @@ secure:
       - /admin/getCode
       - /admin/checkCode
       - /aliyun/oss/callback
+      - /wx/**
 
 aliyun:
   oss:

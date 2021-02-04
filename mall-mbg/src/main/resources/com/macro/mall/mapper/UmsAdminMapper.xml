@@ -21,6 +21,7 @@
     <result column="notice_on" jdbcType="INTEGER" property="noticeOn" />
     <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
     <result column="mch_key" jdbcType="VARCHAR" property="mchKey" />
+    <result column="authorizer_refresh_token" jdbcType="VARCHAR" property="authorizerRefreshToken" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -83,7 +84,7 @@
   <sql id="Base_Column_List">
     id, username, password, icon, email, nick_name, note, create_time, login_time, status, 
     app_id, app_secret, notice_content, notice_type, notice_start, notice_end, notice_on, 
-    mch_id, mch_key
+    mch_id, mch_key, authorizer_refresh_token
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsAdminExample" resultMap="BaseResultMap">
     select
@@ -124,15 +125,15 @@
       create_time, login_time, status, 
       app_id, app_secret, notice_content, 
       notice_type, notice_start, notice_end, 
-      notice_on, mch_id, mch_key
-      )
+      notice_on, mch_id, mch_key, 
+      authorizer_refresh_token)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
       #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{noticeContent,jdbcType=VARCHAR}, 
       #{noticeType,jdbcType=VARCHAR}, #{noticeStart,jdbcType=VARCHAR}, #{noticeEnd,jdbcType=VARCHAR}, 
-      #{noticeOn,jdbcType=INTEGER}, #{mchId,jdbcType=VARCHAR}, #{mchKey,jdbcType=VARCHAR}
-      )
+      #{noticeOn,jdbcType=INTEGER}, #{mchId,jdbcType=VARCHAR}, #{mchKey,jdbcType=VARCHAR}, 
+      #{authorizerRefreshToken,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsAdmin">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -194,6 +195,9 @@
       <if test="mchKey != null">
         mch_key,
       </if>
+      <if test="authorizerRefreshToken != null">
+        authorizer_refresh_token,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -249,6 +253,9 @@
       </if>
       <if test="mchKey != null">
         #{mchKey,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizerRefreshToken != null">
+        #{authorizerRefreshToken,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -318,6 +325,9 @@
       <if test="record.mchKey != null">
         mch_key = #{record.mchKey,jdbcType=VARCHAR},
       </if>
+      <if test="record.authorizerRefreshToken != null">
+        authorizer_refresh_token = #{record.authorizerRefreshToken,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -343,7 +353,8 @@
       notice_end = #{record.noticeEnd,jdbcType=VARCHAR},
       notice_on = #{record.noticeOn,jdbcType=INTEGER},
       mch_id = #{record.mchId,jdbcType=VARCHAR},
-      mch_key = #{record.mchKey,jdbcType=VARCHAR}
+      mch_key = #{record.mchKey,jdbcType=VARCHAR},
+      authorizer_refresh_token = #{record.authorizerRefreshToken,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -405,6 +416,9 @@
       <if test="mchKey != null">
         mch_key = #{mchKey,jdbcType=VARCHAR},
       </if>
+      <if test="authorizerRefreshToken != null">
+        authorizer_refresh_token = #{authorizerRefreshToken,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -427,7 +441,8 @@
       notice_end = #{noticeEnd,jdbcType=VARCHAR},
       notice_on = #{noticeOn,jdbcType=INTEGER},
       mch_id = #{mchId,jdbcType=VARCHAR},
-      mch_key = #{mchKey,jdbcType=VARCHAR}
+      mch_key = #{mchKey,jdbcType=VARCHAR},
+      authorizer_refresh_token = #{authorizerRefreshToken,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

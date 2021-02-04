@@ -73,8 +73,9 @@ public enum ExceptionEnum {
     RETURN_REPEATED(40300,"请勿重复退款！"),
 //    调用打印机
     PRINTER_ERROR(40400,"调用打印机异常！"),
-    PRINTER_TYPE_ERROR(40401,"打印机类型有误！");
-
+    PRINTER_TYPE_ERROR(40401,"打印机类型有误！"),
+    //    调用打印机
+    WX_ERROR(40500,"获取微信授权码异常！");
     private Integer code;
     private String msg;
 
