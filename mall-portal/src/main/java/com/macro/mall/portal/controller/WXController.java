@@ -3,6 +3,8 @@ package com.macro.mall.portal.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.common.enums.ExceptionEnum;
+import com.macro.mall.common.exception.MyException;
 import com.macro.mall.mapper.UmsAdminMapper;
 import com.macro.mall.mapper.UmsIntegrationConsumeSettingMapper;
 import com.macro.mall.model.UmsAdmin;
@@ -199,6 +201,9 @@ public class WXController {
     @ApiOperation(value = "更新用户取货码")
     @RequestMapping("/updateTakeCode/{adminId}")
     public CommonResult updateTakeCode(@PathVariable Long adminId,String takeCode) {
+        if(takeCode==null||takeCode.length()!=4){
+            throw new MyException(ExceptionEnum.TAKE_CODE_ERROR);
+        }
         /* 获取appId 和secret*/
         UmsMember currentMember = memberService.getCurrentMember();
         memberService.updateTakeCode(currentMember.getId(),takeCode);

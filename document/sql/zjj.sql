@@ -51,7 +51,7 @@ alter table ums_admin add column mch_id varchar(128) comment '商户ID';
 alter table ums_admin add column mch_key varchar(128) comment '商户秘钥';
 
 
-alter table ums_member add column take_code varchar(64) comment '取货码';
+alter table ums_member add column take_code varchar(64) not null default '' comment '取货码';
 alter table ums_member add column admin_id bigint(20) comment '商户用户ID';
 alter table ums_member add index IDX_ADMIN_ID(admin_id);
 

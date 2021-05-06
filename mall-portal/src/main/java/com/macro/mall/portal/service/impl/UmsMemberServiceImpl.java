@@ -127,6 +127,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setUnionId(unionId);
         umsMember.setCreateTime(new Date());
         umsMember.setStatus(1);
+        umsMember.setTakeCode("");
         umsMember.setAdminId(adminId);
         umsMember.setIntegration(0);
         //获取默认会员等级并设置

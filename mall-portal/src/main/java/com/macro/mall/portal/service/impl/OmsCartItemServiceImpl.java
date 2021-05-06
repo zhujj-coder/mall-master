@@ -44,13 +44,12 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     @Autowired
     private OmsPortalOrderService omsPortalOrderService;
     @Override
-    public int add(OmsCartItem cartItem,Long adminId) {
+    public int add(OmsCartItem cartItem) {
         int count;
         UmsMember currentMember =memberService.getCurrentMember();
         cartItem.setMemberId(currentMember.getId());
         cartItem.setMemberNickname(currentMember.getNickname());
         cartItem.setDeleteStatus(0);
-        cartItem.setAdminId(adminId);
 //        校验:买过不能买
         List<OmsOrderItem> list = omsPortalOrderService.queryByCartItem(cartItem);
         if(list!=null&&list.size()>0){
@@ -163,7 +162,8 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         updateCart.setDeleteStatus(1);
         cartItemMapper.updateByPrimaryKeySelective(updateCart);
         cartItem.setId(null);
-        add(cartItem,adminId);
+        cartItem.setAdminId(adminId);
+        add(cartItem);
         return 1;
     }
 

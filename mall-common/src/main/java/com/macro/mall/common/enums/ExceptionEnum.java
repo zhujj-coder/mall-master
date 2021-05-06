@@ -78,7 +78,8 @@ public enum ExceptionEnum {
     WX_ERROR(40500,"调用微信异常！"),
     FLASH_BUY_LIMIT(40600,"限购数量达到上限！"),
     FLASH_BUY_FINISH(40601,"您已秒杀过！"),
-    FLASH_STOCK_EMPTY(40602,"库存不足，已被抢光！");
+    FLASH_STOCK_EMPTY(40602,"库存不足，已被抢光！"),
+    TAKE_CODE_ERROR(40700,"取货码长度必须为4！");
     private Integer code;
     private String msg;
 

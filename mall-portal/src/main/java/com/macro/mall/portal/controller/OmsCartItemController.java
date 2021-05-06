@@ -39,9 +39,10 @@ public class OmsCartItemController {
     @RequestMapping(value = "/add/{adminId}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult add(@RequestBody OmsCartItem cartItem,@PathVariable Long adminId) {
+        cartItem.setAdminId(adminId);
         //校验秒杀库存
         homeService.checkCartItem(cartItem);
-        int count = cartItemService.add(cartItem,adminId);
+        int count = cartItemService.add(cartItem);
         if (count > 0) {
             return CommonResult.success(count);
         }
