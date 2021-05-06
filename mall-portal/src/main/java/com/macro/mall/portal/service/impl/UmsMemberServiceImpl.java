@@ -186,6 +186,15 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     }
 
     @Override
+    public void updateTakeCode(Long id, String takeCode) {
+        UmsMember record=new UmsMember();
+        record.setId(id);
+        record.setTakeCode(takeCode);
+        memberMapper.updateByPrimaryKeySelective(record);
+        memberCacheService.delMember(id);
+    }
+
+    @Override
     public void updateIntegrationAll(Long id, Integer integration,Integer history) {
         UmsMember record=new UmsMember();
         record.setId(id);

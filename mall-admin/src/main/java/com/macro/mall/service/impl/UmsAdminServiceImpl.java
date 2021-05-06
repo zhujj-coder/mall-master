@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.util.StringUtil;
 import com.macro.mall.bo.AdminUserDetails;
 import com.macro.mall.common.enums.ExceptionEnum;
 import com.macro.mall.common.exception.Asserts;
@@ -29,7 +28,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -40,8 +38,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
@@ -50,7 +46,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * UmsAdminService实现类
@@ -82,6 +80,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     private UmsAdminCacheService adminCacheService;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private ThirdPlatformWxService thirdPlatformWxService;
     @Override
     public UmsAdmin getAdminByUsername(String username) {
         UmsAdmin admin = adminCacheService.getAdmin(username);
@@ -110,6 +110,10 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             return admin;
         }
         return null;
+    }
+    @Override
+    public UmsAdmin getAdminId(Long id) {
+        return adminMapper.selectByPrimaryKey(id);
     }
     @Override
     public UmsAdmin register(UmsAdminParam umsAdminParam) {
@@ -155,6 +159,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         }
     }
     private void checkCode(UmsAdminParam umsAdminParam) {
+        if(umsAdminParam.getCode().length()<4){
+            throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),"验证码长度必须为4位！");
+        }
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
@@ -264,6 +271,13 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         return count;
     }
     @Override
+    public int updateUmsAdmin(Long id, UmsAdmin admin) {
+        admin.setId(id);
+        int count = adminMapper.updateByPrimaryKeySelective(admin);
+        adminCacheService.delAdmin(id);
+        return count;
+    }
+    @Override
     public int updateWithMch(Long id, UmsAdmin admin) {
 //        UmsAdmin admin = new UmsAdmin();
 //        BeanUtils.copyProperties(admin,admin);
@@ -271,6 +285,20 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             id=this.getCurrentAdmin().getId();
 //        }
 //更新 all-in-one 商户信息
+        updateRemote(id, admin);
+//        更新本地库
+        admin.setId(id);
+        UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
+        rawAdmin.setAppId(admin.getAppId());
+        rawAdmin.setAppSecret(admin.getAppSecret());
+        rawAdmin.setMchId(admin.getMchId());
+        rawAdmin.setMchKey(admin.getMchKey());
+        int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
+        adminCacheService.delAdmin(id);
+        return count;
+    }
+
+    private void updateRemote(Long id, UmsAdmin admin) {
         JSONObject jsonObject =new JSONObject();
         jsonObject.put("appId",admin.getAppId());
         jsonObject.put("mchId",admin.getMchId());
@@ -285,17 +313,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         if(!"200".equals(code)){
             throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),resData.getString("message"));
         }
-//        更新本地库
-        admin.setId(id);
-        UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
-        rawAdmin.setAppId(admin.getAppId());
-        rawAdmin.setAppSecret(admin.getAppSecret());
-        rawAdmin.setMchId(admin.getMchId());
-        rawAdmin.setMchKey(admin.getMchKey());
-        int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
-        adminCacheService.delAdmin(id);
-        return count;
     }
+
     @Override
     public int updatePassword(Long id, UmsAdmin admin) {
         admin.setId(id);
@@ -309,8 +328,10 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     public int updateAuthorizerRefreshToken(Long id, UmsAdmin admin) {
         admin.setId(id);
         UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(id);
+        rawAdmin.setAppId(admin.getAppId());
         rawAdmin.setAuthorizerRefreshToken(admin.getAuthorizerRefreshToken());
         int count = adminMapper.updateByPrimaryKeySelective(rawAdmin);
+        this.updateRemote(id,rawAdmin);
         adminCacheService.delAdmin(id);
         return count;
     }
@@ -414,41 +435,49 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         umsAdminNew.setNoticeEnd(umsAdmin.getNoticeEnd());
         adminMapper.updateByPrimaryKeySelective(umsAdminNew);
     }
+   @Override
+    public void updateConcat(UmsAdmin umsAdmin) {
+        UmsAdmin umsAdminCurrent = this.getCurrentAdmin();
+        UmsAdmin umsAdminNew = new UmsAdmin();
+        umsAdminNew.setId(umsAdminCurrent.getId());
+        umsAdminNew.setContactMobile(umsAdmin.getContactMobile());
+        umsAdminNew.setContactAddress(umsAdmin.getContactAddress());
+        adminMapper.updateByPrimaryKeySelective(umsAdminNew);
+    }
 
     @Override
     public String getLocationSrc(@RequestBody  GetLocationSrcParam param) {
-        UmsAdmin currentAdmin = getCurrentAdmin();
-        String appId = currentAdmin.getAppId();
-        String appSecret = currentAdmin.getAppSecret();
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("weapp_id",appId);
-//        jsonObject.put("weapp_secret",appSecret);
-//        String url1 ="pages/index/index?q={addr:PARAMS}";
-//        jsonObject.put("weapp_url",url1.replace("PARAMS",param.getLocation()));
-//        JSONObject jsonObject1 = restTemplate.postForObject("https://cli.im/Home/Weapp/create", jsonObject, JSONObject.class);
-
-        HttpHeaders headers = new HttpHeaders();
-        //定义请求参数类型，这里用json所以是MediaType.APPLICATION_JSON
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        //RestTemplate带参传的时候要用HttpEntity<?>对象传递
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-        map.add("weapp_id",appId);
-        map.add("weapp_secret",appSecret);
-        String url1 ="pages/index/index?q={addr:PARAMS}";
-        map.add("weapp_url",url1.replace("PARAMS", URLEncoder.encode(param.getLocation())));
-        HttpEntity<MultiValueMap<String, String>> request =new HttpEntity<>(map, headers);
-
-        ResponseEntity<String> entity = restTemplate.postForEntity("https://cli.im/Home/Weapp/create", request, String.class);
-        //获取3方接口返回的数据通过entity.getBody();它返回的是一个字符串；
-        String body = entity.getBody();
-        //然后把str转换成JSON再通过getJSONObject()方法获取到里面的result对象，因为我想要的数据都在result里面
-        //下面的strToJson只是一个str转JSON的一个共用方法；
-        JSONObject json = JSONObject.parseObject(body);
-
-        if(json.getInteger("status")==1){
-            return json.getString("data");
+        String path;
+        if(param!=null&&param.getLocation()!=null&&param.getLocation().length()>0){
+            String url1 ="pages/index/index?q={addr:PARAMS}";
+            path = url1.replace("PARAMS", URLEncoder.encode(param.getLocation()));
+        }else{
+            path = "pages/index/index";
+            UmsAdmin currentAdmin = getCurrentAdmin();
+            if(currentAdmin.getWxacodeUrl()!=null&&currentAdmin.getWxacodeUrl().length()>0){
+                return currentAdmin.getWxacodeUrl();
+            }else{
+                String getwxacode = thirdPlatformWxService.getwxacode(path);
+                UmsAdmin umsAdmin = new UmsAdmin();
+                umsAdmin.setWxacodeUrl(getwxacode);
+                this.updateUmsAdmin(currentAdmin.getId(),umsAdmin);
+                return getwxacode;
+            }
         }
-        throw new MyException(ExceptionEnum.UNKNOWN_ERROR.getCode(),json.getString("msg"));
+        return thirdPlatformWxService.getwxacode(path);
     }
-
+    @Override
+    public String getPaySrc() {
+        String path = "pages/ucenter/pay/pay";
+        UmsAdmin currentAdmin = getCurrentAdmin();
+        if(currentAdmin.getWxacodePayUrl()!=null&&currentAdmin.getWxacodePayUrl().length()>0){
+            return currentAdmin.getWxacodePayUrl();
+        }else{
+            String getwxacode = thirdPlatformWxService.getwxacode(path);
+            UmsAdmin umsAdmin = new UmsAdmin();
+            umsAdmin.setWxacodePayUrl(getwxacode);
+            this.updateUmsAdmin(currentAdmin.getId(),umsAdmin);
+            return getwxacode;
+        }
+    }
 }

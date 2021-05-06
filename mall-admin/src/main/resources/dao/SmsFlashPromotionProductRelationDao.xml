@@ -10,6 +10,7 @@
             r.flash_promotion_price,
             r.flash_promotion_count,
             r.flash_promotion_limit,
+            r.flash_promotion_stock,
             r.flash_promotion_id,
             r.flash_promotion_session_id,
             r.product_id,

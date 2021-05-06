@@ -1,18 +1,23 @@
 package com.macro.mall.portal.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.macro.mall.common.enums.ExceptionEnum;
+import com.macro.mall.common.exception.MyException;
 import com.macro.mall.mapper.*;
 import com.macro.mall.model.*;
 import com.macro.mall.portal.dao.HomeDao;
 import com.macro.mall.portal.domain.FlashPromotionProduct;
 import com.macro.mall.portal.domain.HomeContentResult;
 import com.macro.mall.portal.domain.HomeFlashPromotion;
+import com.macro.mall.portal.domain.PmsPortalProductDetail;
 import com.macro.mall.portal.service.HomeService;
+import com.macro.mall.portal.service.PmsPortalProductService;
 import com.macro.mall.portal.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +41,8 @@ public class HomeServiceImpl implements HomeService {
     private PmsProductCategoryMapper productCategoryMapper;
     @Autowired
     private CmsSubjectMapper subjectMapper;
+    @Autowired
+    private PmsPortalProductService productService;
 
     @Override
     public HomeContentResult content(Long adminId) {
@@ -102,36 +109,48 @@ public class HomeServiceImpl implements HomeService {
         return homeDao.getNewProductList(offset, pageSize,adminId);
     }
 
-    private HomeFlashPromotion getHomeFlashPromotion(Long adminId) {
+    @Override
+    public HomeFlashPromotion getHomeFlashPromotion(Long adminId) {
         HomeFlashPromotion homeFlashPromotion = new HomeFlashPromotion();
         //获取当前秒杀活动
         Date now = new Date();
-        SmsFlashPromotion flashPromotion = getFlashPromotion(now);
+        SmsFlashPromotion flashPromotion = getFlashPromotion(now,adminId);
         if (flashPromotion != null) {
             //获取当前秒杀场次
-            SmsFlashPromotionSession flashPromotionSession = getFlashPromotionSession(now);
+            SmsFlashPromotionSession flashPromotionSession = getFlashPromotionSession(now,adminId);
             if (flashPromotionSession != null) {
                 homeFlashPromotion.setStartTime(flashPromotionSession.getStartTime());
                 homeFlashPromotion.setEndTime(flashPromotionSession.getEndTime());
+                homeFlashPromotion.setLeftTime(flashPromotionSession.getEndTime().getTime()-DateUtil.getTime(now).getTime());
                 //获取下一个秒杀场次
-                SmsFlashPromotionSession nextSession = getNextFlashPromotionSession(homeFlashPromotion.getStartTime());
+                SmsFlashPromotionSession nextSession = getNextFlashPromotionSession(homeFlashPromotion.getStartTime(),adminId);
                 if(nextSession!=null){
-                    homeFlashPromotion.setNextStartTime(nextSession.getStartTime());
-                    homeFlashPromotion.setNextEndTime(nextSession.getEndTime());
+                    homeFlashPromotion.setNextStartTimeStr(nextSession.getStartTime().getHours()+"时"+nextSession.getStartTime().getMinutes()+"分");
+                    homeFlashPromotion.setNextEndTimeStr(nextSession.getEndTime().getHours()+"时"+nextSession.getEndTime().getMinutes()+"分");
                 }
                 //获取秒杀商品
                 List<FlashPromotionProduct> flashProductList = homeDao.getFlashProductList(flashPromotion.getId(), flashPromotionSession.getId(),adminId);
+                flashProductList.forEach(item->{
+                    item.setSellPercentage((item.getFlashPromotionCount()-item.getFlashPromotionStock())*100/item.getFlashPromotionCount());
+                });
                 homeFlashPromotion.setProductList(flashProductList);
+            }else{
+                SmsFlashPromotionSession nextSession = getNextFlashPromotionSession(Calendar.getInstance().getTime(),adminId);
+                if(nextSession!=null){
+                    homeFlashPromotion.setNextStartTimeStr(nextSession.getStartTime().getHours()+"时"+nextSession.getStartTime().getMinutes()+"分");
+                    homeFlashPromotion.setNextEndTimeStr(nextSession.getEndTime().getHours()+"时"+nextSession.getEndTime().getMinutes()+"分");
+                }
             }
         }
         return homeFlashPromotion;
     }
 
     //获取下一个场次信息
-    private SmsFlashPromotionSession getNextFlashPromotionSession(Date date) {
+    private SmsFlashPromotionSession getNextFlashPromotionSession(Date date,Long adminId) {
         SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
         sessionExample.createCriteria()
-                .andStartTimeGreaterThan(date);
+                .andStartTimeGreaterThan(date)
+                .andAdminIdEqualTo(adminId);
         sessionExample.setOrderByClause("start_time asc");
         List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
         if (!CollectionUtils.isEmpty(promotionSessionList)) {
@@ -149,13 +168,14 @@ public class HomeServiceImpl implements HomeService {
     }
 
     //根据时间获取秒杀活动
-    private SmsFlashPromotion getFlashPromotion(Date date) {
+    private SmsFlashPromotion getFlashPromotion(Date date,Long adminId) {
         Date currDate = DateUtil.getDate(date);
         SmsFlashPromotionExample example = new SmsFlashPromotionExample();
         example.createCriteria()
                 .andStatusEqualTo(1)
                 .andStartDateLessThanOrEqualTo(currDate)
-                .andEndDateGreaterThanOrEqualTo(currDate);
+                .andEndDateGreaterThanOrEqualTo(currDate)
+                .andAdminIdEqualTo(adminId);
         List<SmsFlashPromotion> flashPromotionList = flashPromotionMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(flashPromotionList)) {
             return flashPromotionList.get(0);
@@ -164,16 +184,33 @@ public class HomeServiceImpl implements HomeService {
     }
 
     //根据时间获取秒杀场次
-    private SmsFlashPromotionSession getFlashPromotionSession(Date date) {
-        Date currTime = DateUtil.getTime(date);
+    private SmsFlashPromotionSession getFlashPromotionSession(Date date,Long adminId) {
+//        Date currTime = DateUtil.getTime(date);
         SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
         sessionExample.createCriteria()
-                .andStartTimeLessThanOrEqualTo(currTime)
-                .andEndTimeGreaterThanOrEqualTo(currTime);
+                .andStartTimeLessThanOrEqualTo(date)
+                .andEndTimeGreaterThanOrEqualTo(date)
+                .andAdminIdEqualTo(adminId);
         List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
         if (!CollectionUtils.isEmpty(promotionSessionList)) {
             return promotionSessionList.get(0);
         }
         return null;
+    }
+    @Override
+    public void checkCartItem(OmsCartItem cartItem){
+        PmsPortalProductDetail detail = productService.detail(cartItem.getProductId(), cartItem.getAdminId());
+        cartItem.setPrice(detail.getProduct().getPrice());
+        FlashPromotionProduct flashPromotionProduct = detail.getFlashPromotionProduct();
+
+        if(flashPromotionProduct!=null){
+            //        库存不足 秒杀完了 来晚了
+            if(flashPromotionProduct.getFlashPromotionStock()-cartItem.getQuantity()<0){
+                throw new MyException(ExceptionEnum.FLASH_STOCK_EMPTY);
+            }
+            cartItem.setPrice(flashPromotionProduct.getFlashPromotionPrice());
+            cartItem.setBuyLimit(flashPromotionProduct.getFlashPromotionLimit());
+            cartItem.setFlashRelationId(flashPromotionProduct.getFlashRelationId());
+        }
     }
 }

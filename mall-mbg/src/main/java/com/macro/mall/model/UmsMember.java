@@ -69,6 +69,9 @@ public class UmsMember implements Serializable {
     @ApiModelProperty(value = "商户用户ID")
     private Long adminId;
 
+    @ApiModelProperty(value = "取货码")
+    private String takeCode;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -245,5 +248,13 @@ public class UmsMember implements Serializable {
 
     public void setAdminId(Long adminId) {
         this.adminId = adminId;
+    }
+
+    public String getTakeCode() {
+        return takeCode;
+    }
+
+    public void setTakeCode(String takeCode) {
+        this.takeCode = takeCode;
     }
 }

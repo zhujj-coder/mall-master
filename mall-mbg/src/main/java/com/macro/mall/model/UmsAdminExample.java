@@ -1454,6 +1454,476 @@ public class UmsAdminExample {
             addCriterion("authorizer_refresh_token not between", value1, value2, "authorizerRefreshToken");
             return (Criteria) this;
         }
+
+        public Criteria andPublishStatusIsNull() {
+            addCriterion("publish_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusIsNotNull() {
+            addCriterion("publish_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusEqualTo(Integer value) {
+            addCriterion("publish_status =", value, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusNotEqualTo(Integer value) {
+            addCriterion("publish_status <>", value, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusGreaterThan(Integer value) {
+            addCriterion("publish_status >", value, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("publish_status >=", value, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusLessThan(Integer value) {
+            addCriterion("publish_status <", value, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("publish_status <=", value, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusIn(List<Integer> values) {
+            addCriterion("publish_status in", values, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusNotIn(List<Integer> values) {
+            addCriterion("publish_status not in", values, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusBetween(Integer value1, Integer value2) {
+            addCriterion("publish_status between", value1, value2, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublishStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("publish_status not between", value1, value2, "publishStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlIsNull() {
+            addCriterion("wxacode_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlIsNotNull() {
+            addCriterion("wxacode_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlEqualTo(String value) {
+            addCriterion("wxacode_url =", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlNotEqualTo(String value) {
+            addCriterion("wxacode_url <>", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlGreaterThan(String value) {
+            addCriterion("wxacode_url >", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("wxacode_url >=", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlLessThan(String value) {
+            addCriterion("wxacode_url <", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlLessThanOrEqualTo(String value) {
+            addCriterion("wxacode_url <=", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlLike(String value) {
+            addCriterion("wxacode_url like", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlNotLike(String value) {
+            addCriterion("wxacode_url not like", value, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlIn(List<String> values) {
+            addCriterion("wxacode_url in", values, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlNotIn(List<String> values) {
+            addCriterion("wxacode_url not in", values, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlBetween(String value1, String value2) {
+            addCriterion("wxacode_url between", value1, value2, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodeUrlNotBetween(String value1, String value2) {
+            addCriterion("wxacode_url not between", value1, value2, "wxacodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlIsNull() {
+            addCriterion("wxacode_pay_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlIsNotNull() {
+            addCriterion("wxacode_pay_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlEqualTo(String value) {
+            addCriterion("wxacode_pay_url =", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlNotEqualTo(String value) {
+            addCriterion("wxacode_pay_url <>", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlGreaterThan(String value) {
+            addCriterion("wxacode_pay_url >", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("wxacode_pay_url >=", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlLessThan(String value) {
+            addCriterion("wxacode_pay_url <", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlLessThanOrEqualTo(String value) {
+            addCriterion("wxacode_pay_url <=", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlLike(String value) {
+            addCriterion("wxacode_pay_url like", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlNotLike(String value) {
+            addCriterion("wxacode_pay_url not like", value, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlIn(List<String> values) {
+            addCriterion("wxacode_pay_url in", values, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlNotIn(List<String> values) {
+            addCriterion("wxacode_pay_url not in", values, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlBetween(String value1, String value2) {
+            addCriterion("wxacode_pay_url between", value1, value2, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxacodePayUrlNotBetween(String value1, String value2) {
+            addCriterion("wxacode_pay_url not between", value1, value2, "wxacodePayUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateIsNull() {
+            addCriterion("vip_end_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateIsNotNull() {
+            addCriterion("vip_end_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateEqualTo(Date value) {
+            addCriterion("vip_end_date =", value, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateNotEqualTo(Date value) {
+            addCriterion("vip_end_date <>", value, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateGreaterThan(Date value) {
+            addCriterion("vip_end_date >", value, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("vip_end_date >=", value, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateLessThan(Date value) {
+            addCriterion("vip_end_date <", value, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateLessThanOrEqualTo(Date value) {
+            addCriterion("vip_end_date <=", value, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateIn(List<Date> values) {
+            addCriterion("vip_end_date in", values, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateNotIn(List<Date> values) {
+            addCriterion("vip_end_date not in", values, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateBetween(Date value1, Date value2) {
+            addCriterion("vip_end_date between", value1, value2, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andVipEndDateNotBetween(Date value1, Date value2) {
+            addCriterion("vip_end_date not between", value1, value2, "vipEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileIsNull() {
+            addCriterion("contact_mobile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileIsNotNull() {
+            addCriterion("contact_mobile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileEqualTo(String value) {
+            addCriterion("contact_mobile =", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileNotEqualTo(String value) {
+            addCriterion("contact_mobile <>", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileGreaterThan(String value) {
+            addCriterion("contact_mobile >", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileGreaterThanOrEqualTo(String value) {
+            addCriterion("contact_mobile >=", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileLessThan(String value) {
+            addCriterion("contact_mobile <", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileLessThanOrEqualTo(String value) {
+            addCriterion("contact_mobile <=", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileLike(String value) {
+            addCriterion("contact_mobile like", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileNotLike(String value) {
+            addCriterion("contact_mobile not like", value, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileIn(List<String> values) {
+            addCriterion("contact_mobile in", values, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileNotIn(List<String> values) {
+            addCriterion("contact_mobile not in", values, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileBetween(String value1, String value2) {
+            addCriterion("contact_mobile between", value1, value2, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactMobileNotBetween(String value1, String value2) {
+            addCriterion("contact_mobile not between", value1, value2, "contactMobile");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressIsNull() {
+            addCriterion("contact_address is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressIsNotNull() {
+            addCriterion("contact_address is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressEqualTo(String value) {
+            addCriterion("contact_address =", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressNotEqualTo(String value) {
+            addCriterion("contact_address <>", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressGreaterThan(String value) {
+            addCriterion("contact_address >", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressGreaterThanOrEqualTo(String value) {
+            addCriterion("contact_address >=", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressLessThan(String value) {
+            addCriterion("contact_address <", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressLessThanOrEqualTo(String value) {
+            addCriterion("contact_address <=", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressLike(String value) {
+            addCriterion("contact_address like", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressNotLike(String value) {
+            addCriterion("contact_address not like", value, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressIn(List<String> values) {
+            addCriterion("contact_address in", values, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressNotIn(List<String> values) {
+            addCriterion("contact_address not in", values, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressBetween(String value1, String value2) {
+            addCriterion("contact_address between", value1, value2, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andContactAddressNotBetween(String value1, String value2) {
+            addCriterion("contact_address not between", value1, value2, "contactAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdIsNull() {
+            addCriterion("wx_template_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdIsNotNull() {
+            addCriterion("wx_template_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdEqualTo(String value) {
+            addCriterion("wx_template_id =", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdNotEqualTo(String value) {
+            addCriterion("wx_template_id <>", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdGreaterThan(String value) {
+            addCriterion("wx_template_id >", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdGreaterThanOrEqualTo(String value) {
+            addCriterion("wx_template_id >=", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdLessThan(String value) {
+            addCriterion("wx_template_id <", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdLessThanOrEqualTo(String value) {
+            addCriterion("wx_template_id <=", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdLike(String value) {
+            addCriterion("wx_template_id like", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdNotLike(String value) {
+            addCriterion("wx_template_id not like", value, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdIn(List<String> values) {
+            addCriterion("wx_template_id in", values, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdNotIn(List<String> values) {
+            addCriterion("wx_template_id not in", values, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdBetween(String value1, String value2) {
+            addCriterion("wx_template_id between", value1, value2, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWxTemplateIdNotBetween(String value1, String value2) {
+            addCriterion("wx_template_id not between", value1, value2, "wxTemplateId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

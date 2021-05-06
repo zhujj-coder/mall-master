@@ -21,6 +21,8 @@
     <result column="product_sn" jdbcType="VARCHAR" property="productSn" />
     <result column="product_attr" jdbcType="VARCHAR" property="productAttr" />
     <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+    <result column="buy_limit" jdbcType="INTEGER" property="buyLimit" />
+    <result column="flash_relation_id" jdbcType="BIGINT" property="flashRelationId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -83,7 +85,8 @@
   <sql id="Base_Column_List">
     id, product_id, product_sku_id, member_id, quantity, price, product_pic, product_name, 
     product_sub_title, product_sku_code, member_nickname, create_date, modify_date, delete_status, 
-    product_category_id, product_brand, product_sn, product_attr, admin_id
+    product_category_id, product_brand, product_sn, product_attr, admin_id, buy_limit, 
+    flash_relation_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.OmsCartItemExample" resultMap="BaseResultMap">
     select
@@ -124,15 +127,15 @@
       product_name, product_sub_title, product_sku_code, 
       member_nickname, create_date, modify_date, 
       delete_status, product_category_id, product_brand, 
-      product_sn, product_attr, admin_id
-      )
+      product_sn, product_attr, admin_id, 
+      buy_limit, flash_relation_id)
     values (#{productId,jdbcType=BIGINT}, #{productSkuId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT}, 
       #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{productPic,jdbcType=VARCHAR}, 
       #{productName,jdbcType=VARCHAR}, #{productSubTitle,jdbcType=VARCHAR}, #{productSkuCode,jdbcType=VARCHAR}, 
       #{memberNickname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{deleteStatus,jdbcType=INTEGER}, #{productCategoryId,jdbcType=BIGINT}, #{productBrand,jdbcType=VARCHAR}, 
-      #{productSn,jdbcType=VARCHAR}, #{productAttr,jdbcType=VARCHAR}, #{adminId,jdbcType=BIGINT}
-      )
+      #{productSn,jdbcType=VARCHAR}, #{productAttr,jdbcType=VARCHAR}, #{adminId,jdbcType=BIGINT}, 
+      #{buyLimit,jdbcType=INTEGER}, #{flashRelationId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.OmsCartItem">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -194,6 +197,12 @@
       <if test="adminId != null">
         admin_id,
       </if>
+      <if test="buyLimit != null">
+        buy_limit,
+      </if>
+      <if test="flashRelationId != null">
+        flash_relation_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="productId != null">
@@ -249,6 +258,12 @@
       </if>
       <if test="adminId != null">
         #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="buyLimit != null">
+        #{buyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="flashRelationId != null">
+        #{flashRelationId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -318,6 +333,12 @@
       <if test="record.adminId != null">
         admin_id = #{record.adminId,jdbcType=BIGINT},
       </if>
+      <if test="record.buyLimit != null">
+        buy_limit = #{record.buyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="record.flashRelationId != null">
+        flash_relation_id = #{record.flashRelationId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -343,7 +364,9 @@
       product_brand = #{record.productBrand,jdbcType=VARCHAR},
       product_sn = #{record.productSn,jdbcType=VARCHAR},
       product_attr = #{record.productAttr,jdbcType=VARCHAR},
-      admin_id = #{record.adminId,jdbcType=BIGINT}
+      admin_id = #{record.adminId,jdbcType=BIGINT},
+      buy_limit = #{record.buyLimit,jdbcType=INTEGER},
+      flash_relation_id = #{record.flashRelationId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -405,6 +428,12 @@
       <if test="adminId != null">
         admin_id = #{adminId,jdbcType=BIGINT},
       </if>
+      <if test="buyLimit != null">
+        buy_limit = #{buyLimit,jdbcType=INTEGER},
+      </if>
+      <if test="flashRelationId != null">
+        flash_relation_id = #{flashRelationId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -427,7 +456,9 @@
       product_brand = #{productBrand,jdbcType=VARCHAR},
       product_sn = #{productSn,jdbcType=VARCHAR},
       product_attr = #{productAttr,jdbcType=VARCHAR},
-      admin_id = #{adminId,jdbcType=BIGINT}
+      admin_id = #{adminId,jdbcType=BIGINT},
+      buy_limit = #{buyLimit,jdbcType=INTEGER},
+      flash_relation_id = #{flashRelationId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

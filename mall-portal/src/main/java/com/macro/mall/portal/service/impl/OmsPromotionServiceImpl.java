@@ -38,7 +38,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
             Long productId = entry.getKey();
             PromotionProduct promotionProduct = getPromotionProductById(productId, promotionProductList);
             List<OmsCartItem> itemList = entry.getValue();
-            Integer promotionType = promotionProduct.getPromotionType();
+            Integer promotionType = promotionProduct.getPromotionType()==null?0: promotionProduct.getPromotionType();
             if (promotionType == 1) {
                 //单品促销
                 for (OmsCartItem item : itemList) {

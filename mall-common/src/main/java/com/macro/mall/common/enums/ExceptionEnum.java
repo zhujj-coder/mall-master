@@ -75,7 +75,10 @@ public enum ExceptionEnum {
     PRINTER_ERROR(40400,"调用打印机异常！"),
     PRINTER_TYPE_ERROR(40401,"打印机类型有误！"),
     //    调用打印机
-    WX_ERROR(40500,"获取微信授权码异常！");
+    WX_ERROR(40500,"调用微信异常！"),
+    FLASH_BUY_LIMIT(40600,"限购数量达到上限！"),
+    FLASH_BUY_FINISH(40601,"您已秒杀过！"),
+    FLASH_STOCK_EMPTY(40602,"库存不足，已被抢光！");
     private Integer code;
     private String msg;
 

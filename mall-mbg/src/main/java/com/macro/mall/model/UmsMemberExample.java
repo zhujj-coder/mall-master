@@ -1551,6 +1551,76 @@ public class UmsMemberExample {
             addCriterion("admin_id not between", value1, value2, "adminId");
             return (Criteria) this;
         }
+
+        public Criteria andTakeCodeIsNull() {
+            addCriterion("take_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeIsNotNull() {
+            addCriterion("take_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeEqualTo(String value) {
+            addCriterion("take_code =", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeNotEqualTo(String value) {
+            addCriterion("take_code <>", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeGreaterThan(String value) {
+            addCriterion("take_code >", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("take_code >=", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeLessThan(String value) {
+            addCriterion("take_code <", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeLessThanOrEqualTo(String value) {
+            addCriterion("take_code <=", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeLike(String value) {
+            addCriterion("take_code like", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeNotLike(String value) {
+            addCriterion("take_code not like", value, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeIn(List<String> values) {
+            addCriterion("take_code in", values, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeNotIn(List<String> values) {
+            addCriterion("take_code not in", values, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeBetween(String value1, String value2) {
+            addCriterion("take_code between", value1, value2, "takeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTakeCodeNotBetween(String value1, String value2) {
+            addCriterion("take_code not between", value1, value2, "takeCode");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

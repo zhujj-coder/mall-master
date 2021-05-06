@@ -1,5 +1,6 @@
 package com.macro.mall.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.macro.mall.dto.GetLocationSrcParam;
 import com.macro.mall.dto.UmsAdminParam;
 import com.macro.mall.dto.UpdateAdminPasswordParam;
@@ -22,6 +23,8 @@ public interface UmsAdminService {
     UmsAdmin getAdminByUsername(String username);
 
     UmsAdmin getAdminByAppId(String appId);
+
+    UmsAdmin getAdminId(Long id);
 
     /**
      * 注册功能
@@ -60,6 +63,8 @@ public interface UmsAdminService {
      * 修改指定用户信息
      */
     int update(Long id, UmsAdmin admin);
+
+    int updateUmsAdmin(Long id, UmsAdmin admin);
 
     int updateWithMch(Long id, UmsAdmin admin);
 
@@ -107,5 +112,9 @@ public interface UmsAdminService {
     void updateNotice(UmsAdmin umsAdmin);
 
 
+    void updateConcat(UmsAdmin umsAdmin);
+
     String getLocationSrc(GetLocationSrcParam param);
+
+    String getPaySrc();
 }

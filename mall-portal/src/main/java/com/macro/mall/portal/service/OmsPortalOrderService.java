@@ -1,7 +1,9 @@
 package com.macro.mall.portal.service;
 
 import com.macro.mall.common.api.CommonPage;
+import com.macro.mall.model.OmsCartItem;
 import com.macro.mall.model.OmsOrder;
+import com.macro.mall.model.OmsOrderItem;
 import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.OmsOrderDetail;
 import com.macro.mall.portal.domain.OrderDirectPayOrderParam;
@@ -36,6 +38,8 @@ public interface OmsPortalOrderService {
      */
     @Transactional
     Integer paySuccess(Long orderId, Integer payType);
+
+    void reduceStock(Long orderId);
 
     /**
      * 自动取消超时订单
@@ -79,4 +83,7 @@ public interface OmsPortalOrderService {
     OmsOrder applyReturn(Long orderId);
 
     ConfirmOrderResult.CalcAmount calcCartAmount(BigDecimal totalAmount, Integer integration, Long adminId);
+
+    List<OmsOrderItem> queryByCartItem(OmsCartItem cartItem);
+
 }

@@ -62,6 +62,27 @@ public class UmsAdmin implements Serializable {
     @ApiModelProperty(value = "刷新令牌")
     private String authorizerRefreshToken;
 
+    @ApiModelProperty(value = "是否已发布小程序:0未发布 1已发布")
+    private Integer publishStatus;
+
+    @ApiModelProperty(value = "小程序码，不带参数")
+    private String wxacodeUrl;
+
+    @ApiModelProperty(value = "小程序码，支付码")
+    private String wxacodePayUrl;
+
+    @ApiModelProperty(value = "会员到期日志")
+    private Date vipEndDate;
+
+    @ApiModelProperty(value = "取货手机号")
+    private String contactMobile;
+
+    @ApiModelProperty(value = "取货地址")
+    private String contactAddress;
+
+    @ApiModelProperty(value = "小程序消息模板id")
+    private String wxTemplateId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -222,5 +243,61 @@ public class UmsAdmin implements Serializable {
 
     public void setAuthorizerRefreshToken(String authorizerRefreshToken) {
         this.authorizerRefreshToken = authorizerRefreshToken;
+    }
+
+    public Integer getPublishStatus() {
+        return publishStatus;
+    }
+
+    public void setPublishStatus(Integer publishStatus) {
+        this.publishStatus = publishStatus;
+    }
+
+    public String getWxacodeUrl() {
+        return wxacodeUrl;
+    }
+
+    public void setWxacodeUrl(String wxacodeUrl) {
+        this.wxacodeUrl = wxacodeUrl;
+    }
+
+    public String getWxacodePayUrl() {
+        return wxacodePayUrl;
+    }
+
+    public void setWxacodePayUrl(String wxacodePayUrl) {
+        this.wxacodePayUrl = wxacodePayUrl;
+    }
+
+    public Date getVipEndDate() {
+        return vipEndDate;
+    }
+
+    public void setVipEndDate(Date vipEndDate) {
+        this.vipEndDate = vipEndDate;
+    }
+
+    public String getContactMobile() {
+        return contactMobile;
+    }
+
+    public void setContactMobile(String contactMobile) {
+        this.contactMobile = contactMobile;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
+    }
+
+    public String getWxTemplateId() {
+        return wxTemplateId;
+    }
+
+    public void setWxTemplateId(String wxTemplateId) {
+        this.wxTemplateId = wxTemplateId;
     }
 }

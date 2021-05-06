@@ -129,6 +129,8 @@ public class PmsProduct implements Serializable {
     private String detailMobileHtml;
 //    购物车商品数量
     private int num;
-
+//
+    private Integer flashPromotionStock;
+    private BigDecimal flashPromotionPrice;
     private static final long serialVersionUID = 1L;
 }

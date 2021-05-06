@@ -31,6 +31,8 @@ public interface PmsProductCategoryService {
      */
     List<PmsProductCategory> getList(Long parentId, Integer pageSize, Integer pageNum);
 
+    List<PmsProductCategory> getList(Long parentId, Integer pageSize, Integer pageNum, Long adminId);
+
     /**
      * 删除商品分类
      */

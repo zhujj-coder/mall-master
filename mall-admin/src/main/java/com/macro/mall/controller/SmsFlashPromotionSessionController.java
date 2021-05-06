@@ -4,6 +4,7 @@ import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.dto.SmsFlashPromotionSessionDetail;
 import com.macro.mall.model.SmsFlashPromotionSession;
 import com.macro.mall.service.SmsFlashPromotionSessionService;
+import com.macro.mall.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

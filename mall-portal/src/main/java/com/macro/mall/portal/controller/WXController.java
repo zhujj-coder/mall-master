@@ -14,7 +14,6 @@ import com.macro.mall.portal.domain.LoginInfo;
 import com.macro.mall.portal.domain.OmsOrderDetail;
 import com.macro.mall.portal.service.OmsPortalOrderService;
 import com.macro.mall.portal.service.UmsMemberService;
-import com.mysql.cj.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +49,8 @@ public class WXController {
 
     @Value("${wx.webAccessTokenhttps}")
     private String webAccessTokenhttps;
+    @Value("${wx.getaccountbasicinfo}")
+    private String getaccountbasicinfo;
     @Value("${wx.payUrl}")
     private String payUrl;
 
@@ -79,16 +80,16 @@ public class WXController {
                 umsAdmin.getAppSecret(),
                 loginInfo.getCode());//通过自定义工具类组合出小程序需要的登录凭证 code
 
-        String res = restTemplate.getForObject(requestUrl, String.class);
-        JSONObject sessionData = JSON.parseObject(res);
-        String openId=sessionData.getString("openid");
-        if (StringUtils.isNullOrEmpty(openId)) {
-            return CommonResult.failed("登录失败");
+        JSONObject res = restTemplate.getForObject(requestUrl, JSONObject.class);
+        String openId;
+        if(res.getInteger("code")==200){
+            openId=res.getString("data");
+        }else{
+            return CommonResult.failed(res.getString("message"));
         }
-
         String token = memberService.loginWx(openId);
         if (token == null) {
-            memberService.registerByWX(openId,sessionData.getString("unionid"),adminId);
+            memberService.registerByWX(openId,"",adminId);
             token = memberService.loginWx(openId);
         }
 
@@ -111,19 +112,19 @@ public class WXController {
         //获取openid
         String requestUrl = String.format(this.webAccessTokenhttps,
                 umsAdmin.getAppId(),// redis 中获取没有用接口拿
-                umsAdmin.getAppSecret(),
                 code);//通过自定义工具类组合出小程序需要的登录凭证 code
 
-        String res = restTemplate.getForObject(requestUrl, String.class);
-        JSONObject sessionData = JSON.parseObject(res);
-        String openId=sessionData.getString("openid");
-        if (StringUtils.isNullOrEmpty(openId)) {
-            return CommonResult.failed("登录失败");
+        JSONObject res = restTemplate.getForObject(requestUrl,JSONObject.class);
+        String openId;
+        if(res.getInteger("code")==200){
+            openId=res.getString("data");
+        }else{
+            return CommonResult.failed(res.getString("message"));
         }
 
         String token = memberService.loginWx(openId);
         if (token == null) {
-            memberService.registerByWX(openId,sessionData.getString("unionid"),adminId);
+            memberService.registerByWX(openId,"",adminId);
             token = memberService.loginWx(openId);
         }
         UmsMember byOpenId = memberService.getByOpenId(openId);
@@ -135,13 +136,35 @@ public class WXController {
         tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
 
 //        公告
-        String notice =getNotice(adminId);
         try {
+            String notice =getNotice(adminId);
             tokenMap.put("notice", notice);
         }catch (Exception e){
-            log.error("",e);
+            log.error("获取公告异常",e);
         }
+
         return CommonResult.success(tokenMap);
+    }
+
+    private void initContact(Map<String, String> tokenMap,Long adminId) {
+        UmsAdmin admin = umsAdminMapper.selectByPrimaryKey(adminId);
+        if(admin!=null){
+            tokenMap.put("contactMobile",admin.getContactMobile());
+            tokenMap.put("contactAddress",admin.getContactAddress());
+        }
+    }
+
+    @ApiOperation("获取小程序商户信息")
+    @RequestMapping("/getaccountbasicinfo/{adminId}")
+    public CommonResult getaccountbasicinfo(@PathVariable Long adminId){
+        String requestUrl = String.format(this.getaccountbasicinfo,adminId.toString());
+        JSONObject res = restTemplate.getForObject(requestUrl,JSONObject.class);
+        String openId;
+        if(res.getInteger("code")==200){
+            return CommonResult.success(JSONObject.parseObject(res.getString("data")));
+        }else{
+            return CommonResult.failed(res.getString("message"));
+        }
     }
     @ApiOperation(value = "获取用户积分等信息")
     @RequestMapping("/getUserInfo/{adminId}")
@@ -151,18 +174,37 @@ public class WXController {
         UmsMember byOpenId = memberService.getByOpenId(currentMember.getOpenId());
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("integration", byOpenId.getIntegration()==null?"0":byOpenId.getIntegration().toString());
+//        获取取货码
+        tokenMap.put("takeCode",byOpenId.getTakeCode());
         UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
         example.or().andAdminIdEqualTo(adminId);
         List<UmsIntegrationConsumeSetting> umsIntegrationConsumeSettings = integrationConsumeSettingMapper.selectByExample(example);
-        UmsIntegrationConsumeSetting integrationConsumeSetting = umsIntegrationConsumeSettings.get(0);
-        tokenMap.put("imageUrl", integrationConsumeSetting.getImageUrl());
-        if(integrationConsumeSetting.getCouponStatus()!=2) {
-            tokenMap.put("isAllowUseIntegrationAmount","true");
-        }else{
-            tokenMap.put("isAllowUseIntegrationAmount","false");
+        if(umsIntegrationConsumeSettings.size()>0){
+            UmsIntegrationConsumeSetting integrationConsumeSetting = umsIntegrationConsumeSettings.get(0);
+            tokenMap.put("imageUrl", integrationConsumeSetting.getImageUrl());
+            if(integrationConsumeSetting.getCouponStatus()!=2) {
+                tokenMap.put("isAllowUseIntegrationAmount","true");
+            }else{
+                tokenMap.put("isAllowUseIntegrationAmount","false");
+            }
+        }
+        //        获取团购联系方式
+        try {
+            initContact(tokenMap,adminId);
+        }catch (Exception e){
+            log.error("获取团购信息异常");
         }
         return CommonResult.success(tokenMap);
     }
+    @ApiOperation(value = "更新用户取货码")
+    @RequestMapping("/updateTakeCode/{adminId}")
+    public CommonResult updateTakeCode(@PathVariable Long adminId,String takeCode) {
+        /* 获取appId 和secret*/
+        UmsMember currentMember = memberService.getCurrentMember();
+        memberService.updateTakeCode(currentMember.getId(),takeCode);
+        return CommonResult.success(null);
+    }
+
     @ApiOperation(value = "获取用户积分等信息")
     @RequestMapping("/calMoney/{adminId}")
     public CommonResult calMoney(String value,@PathVariable Long adminId) {
@@ -187,7 +229,7 @@ public class WXController {
         String notice ="";
         UmsAdmin admin = umsAdminMapper.selectByPrimaryKey(adminId);
         if(admin!=null){
-            if(admin.getNoticeOn()==0){
+            if(admin.getNoticeStart()==null||admin.getNoticeOn()==null||admin.getNoticeOn()==0){
                 return notice;
             }
             String[] split = admin.getNoticeStart().split(":");
@@ -217,7 +259,7 @@ public class WXController {
         String requestUrl = String.format(this.payUrl,
                 detail.getAdminId().toString(),"商城购物",
                 detail.getPayAmount().multiply(new BigDecimal(100)).intValue()+"",
-                detail.getMemberUsername(),
+                detail.getMemberUsername() ,
                 orderId);//请求公共支付方法，获取前端所需要的的支付参数
         String res = restTemplate.getForObject(requestUrl, String.class);
         JSONObject sessionData = JSON.parseObject(res);

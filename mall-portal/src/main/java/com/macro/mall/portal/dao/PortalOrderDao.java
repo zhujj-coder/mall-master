@@ -17,9 +17,23 @@ public interface PortalOrderDao {
     OmsOrderDetail getDetail(@Param("orderId") Long orderId);
 
     /**
+     *
+     * @param
+     * @return
+     */
+    OmsOrderDetail getDetailByFlashId(@Param("memberId") Long memberId,@Param("flashRelationId") Long flashRelationId);
+
+    /**
      * 修改 pms_sku_stock表的锁定库存及真实库存
      */
     int updateSkuStock(@Param("itemList") List<OmsOrderItem> orderItemList);
+
+    /**
+     *  修改请购后的库存
+     * @param orderItemList
+     * @return
+     */
+    int updateFlashSkuStock(@Param("itemList") List<OmsOrderItem> orderItemList);
 
     /**
      * 获取超时订单

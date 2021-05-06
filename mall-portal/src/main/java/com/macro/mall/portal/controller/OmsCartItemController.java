@@ -1,10 +1,11 @@
 package com.macro.mall.portal.controller;
 
 import com.macro.mall.common.api.CommonResult;
+import com.macro.mall.common.enums.ExceptionEnum;
+import com.macro.mall.common.exception.MyException;
 import com.macro.mall.model.OmsCartItem;
-import com.macro.mall.portal.domain.CartProduct;
-import com.macro.mall.portal.domain.CartPromotionItem;
-import com.macro.mall.portal.domain.PmsPortalProductDetail;
+import com.macro.mall.portal.domain.*;
+import com.macro.mall.portal.service.HomeService;
 import com.macro.mall.portal.service.OmsCartItemService;
 import com.macro.mall.portal.service.PmsPortalProductService;
 import com.macro.mall.portal.service.UmsMemberService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 购物车管理Controller
@@ -31,12 +33,14 @@ public class OmsCartItemController {
     private UmsMemberService memberService;
     @Autowired
     private PmsPortalProductService productService;
+    @Autowired
+    private HomeService homeService;
     @ApiOperation("添加商品到购物车")
     @RequestMapping(value = "/add/{adminId}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult add(@RequestBody OmsCartItem cartItem,@PathVariable Long adminId) {
-        PmsPortalProductDetail detail = productService.detail(cartItem.getProductId(), adminId);
-        cartItem.setPrice(detail.getProduct().getPrice());
+        //校验秒杀库存
+        homeService.checkCartItem(cartItem);
         int count = cartItemService.add(cartItem,adminId);
         if (count > 0) {
             return CommonResult.success(count);
@@ -72,6 +76,14 @@ public class OmsCartItemController {
             int count =  cartItemService.delete(memberService.getCurrentMember().getId(), list,adminId);
             return CommonResult.success(count);
         }else{
+            /*
+              校验是否是抢购商品
+                抢购商品要限制数量
+             */
+            OmsCartItem byId = cartItemService.getById(id, adminId);
+            if(quantity>byId.getBuyLimit()){
+                throw new MyException(ExceptionEnum.FLASH_BUY_LIMIT);
+            }
             int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity,adminId);
             if (count > 0) {
                 return CommonResult.success(count);

@@ -12,6 +12,17 @@ import java.util.List;
 public class OmsOrderDetail extends OmsOrder {
     private List<OmsOrderItem> orderItemList;
 
+    private String createTimeStr ;
+
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
     public List<OmsOrderItem> getOrderItemList() {
         return orderItemList;
     }

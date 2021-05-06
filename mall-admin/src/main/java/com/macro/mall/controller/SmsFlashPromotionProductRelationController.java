@@ -39,6 +39,10 @@ public class SmsFlashPromotionProductRelationController {
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult update(@PathVariable Long id, @RequestBody SmsFlashPromotionProductRelation relation) {
+        SmsFlashPromotionProductRelation item = relationService.getItem(id);
+        if(item.getFlashPromotionStock()==null){
+            relation.setFlashPromotionStock(relation.getFlashPromotionCount());
+        }
         int count = relationService.update(id, relation);
         if (count > 0) {
             return CommonResult.success(count);

@@ -2,14 +2,18 @@ package com.macro.mall.portal.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSONArray;
+import com.macro.mall.common.enums.ExceptionEnum;
+import com.macro.mall.common.exception.MyException;
 import com.macro.mall.mapper.OmsCartItemMapper;
 import com.macro.mall.model.OmsCartItem;
 import com.macro.mall.model.OmsCartItemExample;
+import com.macro.mall.model.OmsOrderItem;
 import com.macro.mall.model.UmsMember;
 import com.macro.mall.portal.dao.PortalProductDao;
 import com.macro.mall.portal.domain.CartProduct;
 import com.macro.mall.portal.domain.CartPromotionItem;
 import com.macro.mall.portal.service.OmsCartItemService;
+import com.macro.mall.portal.service.OmsPortalOrderService;
 import com.macro.mall.portal.service.OmsPromotionService;
 import com.macro.mall.portal.service.UmsMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +41,8 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     private OmsPromotionService promotionService;
     @Autowired
     private UmsMemberService memberService;
-
+    @Autowired
+    private OmsPortalOrderService omsPortalOrderService;
     @Override
     public int add(OmsCartItem cartItem,Long adminId) {
         int count;
@@ -46,6 +51,12 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         cartItem.setMemberNickname(currentMember.getNickname());
         cartItem.setDeleteStatus(0);
         cartItem.setAdminId(adminId);
+//        校验:买过不能买
+        List<OmsOrderItem> list = omsPortalOrderService.queryByCartItem(cartItem);
+        if(list!=null&&list.size()>0){
+            throw  new MyException(ExceptionEnum.FLASH_BUY_FINISH);
+        }
+
         OmsCartItem existCartItem = getCartItem(cartItem);
         if (existCartItem == null) {
             cartItem.setCreateDate(new Date());
@@ -53,6 +64,10 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
             return cartItem.getId().intValue();
         } else {
             cartItem.setModifyDate(new Date());
+//            OmsCartItem byId = this.getById(existCartItem.getId(), adminId);
+            if(existCartItem.getQuantity()>=existCartItem.getBuyLimit()){
+                throw new MyException(ExceptionEnum.FLASH_BUY_LIMIT);
+            }
             existCartItem.setQuantity(existCartItem.getQuantity() + cartItem.getQuantity());
             count = cartItemMapper.updateByPrimaryKey(existCartItem);
             return  existCartItem.getId().intValue();
@@ -83,6 +98,18 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
         example.createCriteria().andDeleteStatusEqualTo(0).andMemberIdEqualTo(memberId)
             .andAdminIdEqualTo(adminId);
         return cartItemMapper.selectByExample(example);
+    }
+
+    @Override
+    public OmsCartItem getById(Long id, Long adminId) {
+        OmsCartItemExample example = new OmsCartItemExample();
+        example.createCriteria().andDeleteStatusEqualTo(0).andIdEqualTo(id)
+                .andAdminIdEqualTo(adminId);
+        List<OmsCartItem> omsCartItems = cartItemMapper.selectByExample(example);
+        if(omsCartItems.size()>0){
+            return omsCartItems.get(0);
+        }
+        return null;
     }
 
     @Override

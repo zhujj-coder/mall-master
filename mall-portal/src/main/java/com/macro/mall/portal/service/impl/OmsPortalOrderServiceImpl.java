@@ -19,18 +19,21 @@ import com.macro.mall.portal.service.*;
 import lombok.extern.slf4j.Slf4j;
 import net.xpyun.platform.opensdk.service.PrintService;
 import net.xpyun.platform.opensdk.util.HashSignUtil;
-import net.xpyun.platform.opensdk.vo.*;
+import net.xpyun.platform.opensdk.vo.ObjectRestResponse;
+import net.xpyun.platform.opensdk.vo.PrintRequest;
+import net.xpyun.platform.opensdk.vo.RestRequest;
+import net.xpyun.platform.opensdk.vo.VoiceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,6 +86,10 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private OmsOrderItemMapper omsOrderItemMapper;
     @Autowired
     private FeiEService feiEService;
+    @Autowired
+    private HomeService homeService;
+    @Autowired
+    private RestTemplate restTemplate;
     final private String USER ="zjjhot@163.com";
     final private String UserKEY ="d8dc615805a24fbb908f524110be83b5";
     @Override
@@ -92,6 +99,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         UmsMember currentMember = memberService.getCurrentMember();
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(),cartIds,adminId);
         result.setCartPromotionItemList(cartPromotionItemList);
+        //        校验并减少库存
+        checkStock(cartPromotionItemList);
         //获取用户收货地址列表
         List<UmsMemberReceiveAddress> memberReceiveAddressList = memberReceiveAddressService.list();
         result.setMemberReceiveAddressList(memberReceiveAddressList);
@@ -115,6 +124,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         ConfirmOrderResult.CalcAmount calcAmount = calcCartAmount(totalAmount,currentMember.getIntegration(),adminId);
         result.setCalcAmount(calcAmount);
         return result;
+    }
+
+    private void checkStock(List<CartPromotionItem> cartPromotionItemList) {
+        cartPromotionItemList.forEach(item->{
+            //校验库存是否不足
+            homeService.checkCartItem(item);
+        });
     }
 
     @Override
@@ -141,6 +157,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setPromotionName(cartPromotionItem.getPromotionMessage());
             orderItem.setGiftIntegration(cartPromotionItem.getIntegration());
             orderItem.setGiftGrowth(cartPromotionItem.getGrowth());
+            orderItem.setFlashRelationId(cartPromotionItem.getFlashRelationId());
             orderItemList.add(orderItem);
         }
         //判断购物车中商品是否都有库存
@@ -228,6 +245,12 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         order.setStatus(0);
         //订单类型：0->正常订单；1->秒杀订单
         order.setOrderType(0);
+
+//        自取或者配送 radio 1 自取 2 配送
+        if(orderParam.getOrderType()!=null){
+            order.setOrderType(Integer.valueOf(orderParam.getOrderType()));
+        }
+
         //收货人信息：姓名、电话、邮编、地址
         if(orderParam.getMemberReceiveAddressId()!=null&&orderParam.getMemberReceiveAddressId()>0){
             UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(orderParam.getMemberReceiveAddressId());
@@ -275,6 +298,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             orderItem.setOrderSn(order.getOrderSn());
         }
         orderItemDao.insertList(orderItemList);
+        //校验库存并修改库存
+        this.checkStock(cartPromotionItemList);
+        this.reduceStock(order.getId());
         //如使用优惠券更新优惠券使用状态
 //        if (orderParam.getCouponId() != null) {
 //            updateCouponStatus(orderParam.getCouponId(), currentMember.getId(), 1);
@@ -378,29 +404,81 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         order.setPayType(payType);
         orderMapper.updateByPrimaryKeySelective(order);
 
-        //恢复所有下单商品的锁定库存，扣减真实库存
-//        OmsOrderDetail orderDetail = portalOrderDao.getDetail(orderId);
-//        int count = portalOrderDao.updateSkuStock(orderDetail.getOrderItemList());
-        // 修改积分
+        // 查询订单
         OmsOrder omsOrder = orderMapper.selectByPrimaryKey(orderId);
         //        修改订单是否打印
-        if(omsOrder.getReceiverName()==null||omsOrder.getReceiverName().length()<=0){
-//语音播报
-            voiceOrder(omsOrder);
-        }else{
-//            打印订单
-            try{
-                printOrder(omsOrder);
-            }catch (Exception e){
-                log.error("!!!!!!!!!!!!!!!!!订单打印异常!!!!!!!!!!!!!!!!!",e);
+        executePrinter(omsOrder);
+//        发送消息给用户 取货码
+//        sendPickCode(omsOrder);
+        //      修改积分
+        updateIntegration(omsOrder);
+        return 1;
+    }
+
+    private void sendPickCode(OmsOrder omsOrder) {
+        try {
+            String receiverName = omsOrder.getReceiverName();
+            if(receiverName !=null&& receiverName.length()>0&&isNumeric(receiverName)){
+//                发送取货码
+                Long adminId = omsOrder.getAdminId();
+                String memberUsername = omsOrder.getMemberUsername();
+                String uniformSendUrl = "https://adminserver.jianjiakeji.com/wx/uniformSend?adminId=%s&memberUsername=%s&code=%s";
+                String requestUrl = String.format(uniformSendUrl, adminId,memberUsername,receiverName);
+                restTemplate.getForObject(requestUrl, String.class);
+            }
+        }catch (Exception e){
+            log.error("发送取餐码异常",e);
+        }
+    }
+    public static boolean isNumeric (String str) {
+        for (int i = str.length(); --i >=0;) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
             }
         }
+        return true;
+    }
+    @Override
+    public void reduceStock(Long orderId) {
+        try {
+            OmsOrderDetail orderDetail = portalOrderDao.getDetail(orderId);
+            log.info("orderDetail[{}]",orderDetail);
+            List<OmsOrderItem> collect = orderDetail.getOrderItemList().stream().filter(omsOrderItem ->
+                omsOrderItem.getFlashRelationId()!=null&&omsOrderItem.getFlashRelationId()!=0
+            ).collect(Collectors.toList());
+            if(collect.size()>0){
+                portalOrderDao.updateFlashSkuStock(collect);
+            }
+        }catch (Exception e){
+            log.error("修改库存异常",e);
+        }
+    }
 
+    private void executePrinter(OmsOrder omsOrder) {
+        try {
+            if(omsOrder.getReceiverName()==null||omsOrder.getReceiverName().length()<=0){
+                //语音播报
+                voiceOrder(omsOrder);
+            }else{
+//            打印订单
+                try{
+                    printOrder(omsOrder);
+                }catch (Exception e){
+                    log.error("!!!!!!!!!!!!!!!!!订单打印异常!!!!!!!!!!!!!!!!!",e);
+                }
+            }
+        }catch (Exception e){
+            log.error("执行打印动作异常",e);
+        }
+
+    }
+
+    private boolean updateIntegration(OmsOrder omsOrder) {
         UmsMember byOpenId = memberService.getByOpenId(omsOrder.getMemberUsername());
         int intergration = 0;
         int history = 0;
         if(byOpenId==null){
-            return 1;
+            return true;
         }else if(byOpenId.getIntegration()==null){
             intergration=omsOrder.getIntegration();
         }else{
@@ -412,7 +490,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             history=byOpenId.getHistoryIntegration()+omsOrder.getIntegration();
         }
         memberService.updateIntegrationAll(byOpenId.getId(),intergration,history);
-        return 1;
+        return false;
     }
 
     private void voiceOrder(OmsOrder omsOrder) {
@@ -775,6 +853,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         OmsOrderDetail orderDetail = new OmsOrderDetail();
         BeanUtil.copyProperties(omsOrder,orderDetail);
         orderDetail.setOrderItemList(orderItemList);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        orderDetail.setCreateTimeStr(sdf.format(orderDetail.getCreateTime()));
         return orderDetail;
     }
 
@@ -1135,7 +1215,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
         example.or().andAdminIdEqualTo(adminId);
         List<UmsIntegrationConsumeSetting> umsIntegrationConsumeSettings = integrationConsumeSettingMapper.selectByExample(example);
-        UmsIntegrationConsumeSetting integrationConsumeSetting = umsIntegrationConsumeSettings.get(0);
+        UmsIntegrationConsumeSetting integrationConsumeSetting = null;
+        if(umsIntegrationConsumeSettings.size()>0){
+            integrationConsumeSetting=umsIntegrationConsumeSettings.get(0);
+        }
+
         ConfirmOrderResult.CalcAmount calcAmount = new ConfirmOrderResult.CalcAmount();
         calcAmount.setFreightAmount(new BigDecimal(0));
 //        BigDecimal totalAmount = new BigDecimal("0");
@@ -1144,7 +1228,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
         //        开始计算积分
 
-        if(integrationConsumeSetting.getCouponStatus()!=2){
+        if(integrationConsumeSetting!=null&&integrationConsumeSetting.getCouponStatus()!=2){
             calcAmount.setAllowUseIntegrationAmount(true);
 //            最大允许使用金额
             BigDecimal maxAmout = totalAmount.divide(new BigDecimal(100)).multiply(new BigDecimal(integrationConsumeSetting.getMaxPercentPerOrder())).setScale(2, BigDecimal.ROUND_DOWN);
@@ -1168,6 +1252,16 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         calcAmount.setPayAmount(totalAmount.subtract(integrationAmout));
 
         return calcAmount;
+    }
+
+    @Override
+    public List<OmsOrderItem> queryByCartItem(OmsCartItem cartItem) {
+        OmsOrderDetail detailByFlashId = portalOrderDao.getDetailByFlashId(cartItem.getMemberId(), cartItem.getFlashRelationId());
+        log.info("detailByFlashId:[{}]",detailByFlashId);
+        if(detailByFlashId==null){
+            return null;
+        }
+        return detailByFlashId.getOrderItemList();
     }
 
 }

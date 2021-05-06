@@ -1325,6 +1325,126 @@ public class OmsCartItemExample {
             addCriterion("admin_id not between", value1, value2, "adminId");
             return (Criteria) this;
         }
+
+        public Criteria andBuyLimitIsNull() {
+            addCriterion("buy_limit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitIsNotNull() {
+            addCriterion("buy_limit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitEqualTo(Integer value) {
+            addCriterion("buy_limit =", value, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitNotEqualTo(Integer value) {
+            addCriterion("buy_limit <>", value, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitGreaterThan(Integer value) {
+            addCriterion("buy_limit >", value, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitGreaterThanOrEqualTo(Integer value) {
+            addCriterion("buy_limit >=", value, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitLessThan(Integer value) {
+            addCriterion("buy_limit <", value, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitLessThanOrEqualTo(Integer value) {
+            addCriterion("buy_limit <=", value, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitIn(List<Integer> values) {
+            addCriterion("buy_limit in", values, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitNotIn(List<Integer> values) {
+            addCriterion("buy_limit not in", values, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitBetween(Integer value1, Integer value2) {
+            addCriterion("buy_limit between", value1, value2, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andBuyLimitNotBetween(Integer value1, Integer value2) {
+            addCriterion("buy_limit not between", value1, value2, "buyLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdIsNull() {
+            addCriterion("flash_relation_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdIsNotNull() {
+            addCriterion("flash_relation_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdEqualTo(Long value) {
+            addCriterion("flash_relation_id =", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdNotEqualTo(Long value) {
+            addCriterion("flash_relation_id <>", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdGreaterThan(Long value) {
+            addCriterion("flash_relation_id >", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("flash_relation_id >=", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdLessThan(Long value) {
+            addCriterion("flash_relation_id <", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdLessThanOrEqualTo(Long value) {
+            addCriterion("flash_relation_id <=", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdIn(List<Long> values) {
+            addCriterion("flash_relation_id in", values, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdNotIn(List<Long> values) {
+            addCriterion("flash_relation_id not in", values, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdBetween(Long value1, Long value2) {
+            addCriterion("flash_relation_id between", value1, value2, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdNotBetween(Long value1, Long value2) {
+            addCriterion("flash_relation_id not between", value1, value2, "flashRelationId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

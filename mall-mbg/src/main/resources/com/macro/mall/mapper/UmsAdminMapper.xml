@@ -22,6 +22,13 @@
     <result column="mch_id" jdbcType="VARCHAR" property="mchId" />
     <result column="mch_key" jdbcType="VARCHAR" property="mchKey" />
     <result column="authorizer_refresh_token" jdbcType="VARCHAR" property="authorizerRefreshToken" />
+    <result column="publish_status" jdbcType="INTEGER" property="publishStatus" />
+    <result column="wxacode_url" jdbcType="VARCHAR" property="wxacodeUrl" />
+    <result column="wxacode_pay_url" jdbcType="VARCHAR" property="wxacodePayUrl" />
+    <result column="vip_end_date" jdbcType="TIMESTAMP" property="vipEndDate" />
+    <result column="contact_mobile" jdbcType="VARCHAR" property="contactMobile" />
+    <result column="contact_address" jdbcType="VARCHAR" property="contactAddress" />
+    <result column="wx_template_id" jdbcType="VARCHAR" property="wxTemplateId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -84,7 +91,8 @@
   <sql id="Base_Column_List">
     id, username, password, icon, email, nick_name, note, create_time, login_time, status, 
     app_id, app_secret, notice_content, notice_type, notice_start, notice_end, notice_on, 
-    mch_id, mch_key, authorizer_refresh_token
+    mch_id, mch_key, authorizer_refresh_token, publish_status, wxacode_url, wxacode_pay_url, 
+    vip_end_date, contact_mobile, contact_address, wx_template_id
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsAdminExample" resultMap="BaseResultMap">
     select
@@ -126,14 +134,20 @@
       app_id, app_secret, notice_content, 
       notice_type, notice_start, notice_end, 
       notice_on, mch_id, mch_key, 
-      authorizer_refresh_token)
+      authorizer_refresh_token, publish_status, 
+      wxacode_url, wxacode_pay_url, vip_end_date, 
+      contact_mobile, contact_address, wx_template_id
+      )
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
       #{appId,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{noticeContent,jdbcType=VARCHAR}, 
       #{noticeType,jdbcType=VARCHAR}, #{noticeStart,jdbcType=VARCHAR}, #{noticeEnd,jdbcType=VARCHAR}, 
       #{noticeOn,jdbcType=INTEGER}, #{mchId,jdbcType=VARCHAR}, #{mchKey,jdbcType=VARCHAR}, 
-      #{authorizerRefreshToken,jdbcType=VARCHAR})
+      #{authorizerRefreshToken,jdbcType=VARCHAR}, #{publishStatus,jdbcType=INTEGER}, 
+      #{wxacodeUrl,jdbcType=VARCHAR}, #{wxacodePayUrl,jdbcType=VARCHAR}, #{vipEndDate,jdbcType=TIMESTAMP}, 
+      #{contactMobile,jdbcType=VARCHAR}, #{contactAddress,jdbcType=VARCHAR}, #{wxTemplateId,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsAdmin">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -198,6 +212,27 @@
       <if test="authorizerRefreshToken != null">
         authorizer_refresh_token,
       </if>
+      <if test="publishStatus != null">
+        publish_status,
+      </if>
+      <if test="wxacodeUrl != null">
+        wxacode_url,
+      </if>
+      <if test="wxacodePayUrl != null">
+        wxacode_pay_url,
+      </if>
+      <if test="vipEndDate != null">
+        vip_end_date,
+      </if>
+      <if test="contactMobile != null">
+        contact_mobile,
+      </if>
+      <if test="contactAddress != null">
+        contact_address,
+      </if>
+      <if test="wxTemplateId != null">
+        wx_template_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -256,6 +291,27 @@
       </if>
       <if test="authorizerRefreshToken != null">
         #{authorizerRefreshToken,jdbcType=VARCHAR},
+      </if>
+      <if test="publishStatus != null">
+        #{publishStatus,jdbcType=INTEGER},
+      </if>
+      <if test="wxacodeUrl != null">
+        #{wxacodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="wxacodePayUrl != null">
+        #{wxacodePayUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="vipEndDate != null">
+        #{vipEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactMobile != null">
+        #{contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="contactAddress != null">
+        #{contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="wxTemplateId != null">
+        #{wxTemplateId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -328,6 +384,27 @@
       <if test="record.authorizerRefreshToken != null">
         authorizer_refresh_token = #{record.authorizerRefreshToken,jdbcType=VARCHAR},
       </if>
+      <if test="record.publishStatus != null">
+        publish_status = #{record.publishStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.wxacodeUrl != null">
+        wxacode_url = #{record.wxacodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxacodePayUrl != null">
+        wxacode_pay_url = #{record.wxacodePayUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vipEndDate != null">
+        vip_end_date = #{record.vipEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.contactMobile != null">
+        contact_mobile = #{record.contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactAddress != null">
+        contact_address = #{record.contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wxTemplateId != null">
+        wx_template_id = #{record.wxTemplateId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -354,7 +431,14 @@
       notice_on = #{record.noticeOn,jdbcType=INTEGER},
       mch_id = #{record.mchId,jdbcType=VARCHAR},
       mch_key = #{record.mchKey,jdbcType=VARCHAR},
-      authorizer_refresh_token = #{record.authorizerRefreshToken,jdbcType=VARCHAR}
+      authorizer_refresh_token = #{record.authorizerRefreshToken,jdbcType=VARCHAR},
+      publish_status = #{record.publishStatus,jdbcType=INTEGER},
+      wxacode_url = #{record.wxacodeUrl,jdbcType=VARCHAR},
+      wxacode_pay_url = #{record.wxacodePayUrl,jdbcType=VARCHAR},
+      vip_end_date = #{record.vipEndDate,jdbcType=TIMESTAMP},
+      contact_mobile = #{record.contactMobile,jdbcType=VARCHAR},
+      contact_address = #{record.contactAddress,jdbcType=VARCHAR},
+      wx_template_id = #{record.wxTemplateId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -419,6 +503,27 @@
       <if test="authorizerRefreshToken != null">
         authorizer_refresh_token = #{authorizerRefreshToken,jdbcType=VARCHAR},
       </if>
+      <if test="publishStatus != null">
+        publish_status = #{publishStatus,jdbcType=INTEGER},
+      </if>
+      <if test="wxacodeUrl != null">
+        wxacode_url = #{wxacodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="wxacodePayUrl != null">
+        wxacode_pay_url = #{wxacodePayUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="vipEndDate != null">
+        vip_end_date = #{vipEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contactMobile != null">
+        contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="contactAddress != null">
+        contact_address = #{contactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="wxTemplateId != null">
+        wx_template_id = #{wxTemplateId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -442,7 +547,14 @@
       notice_on = #{noticeOn,jdbcType=INTEGER},
       mch_id = #{mchId,jdbcType=VARCHAR},
       mch_key = #{mchKey,jdbcType=VARCHAR},
-      authorizer_refresh_token = #{authorizerRefreshToken,jdbcType=VARCHAR}
+      authorizer_refresh_token = #{authorizerRefreshToken,jdbcType=VARCHAR},
+      publish_status = #{publishStatus,jdbcType=INTEGER},
+      wxacode_url = #{wxacodeUrl,jdbcType=VARCHAR},
+      wxacode_pay_url = #{wxacodePayUrl,jdbcType=VARCHAR},
+      vip_end_date = #{vipEndDate,jdbcType=TIMESTAMP},
+      contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+      contact_address = #{contactAddress,jdbcType=VARCHAR},
+      wx_template_id = #{wxTemplateId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

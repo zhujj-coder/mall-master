@@ -29,4 +29,6 @@ public class OrderParam {
     private Long adminId;
     @ApiModelProperty(value = "备注")
     private String message;
+    @ApiModelProperty(value = "订单类型")
+    private String orderType;
 }

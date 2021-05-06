@@ -16,7 +16,10 @@ public class HomeFlashPromotion {
     private Date startTime;
     private Date endTime;
     private Date nextStartTime;
+    private String nextStartTimeStr;
     private Date nextEndTime;
+    private String nextEndTimeStr;
+    private Long leftTime;
     //属于该秒杀活动的商品
     private List<FlashPromotionProduct> productList;
 }

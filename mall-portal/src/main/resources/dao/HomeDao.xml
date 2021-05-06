@@ -3,9 +3,11 @@
 <mapper namespace="com.macro.mall.portal.dao.HomeDao">
     <resultMap id="flashPromotionProduct" type="com.macro.mall.portal.domain.FlashPromotionProduct"
                extends="com.macro.mall.mapper.PmsProductMapper.BaseResultMap">
+        <result column="flash_relation_id" property="flashRelationId"/>
         <result column="flash_promotion_price" property="flashPromotionPrice"/>
         <result column="flash_promotion_count" property="flashPromotionCount"/>
         <result column="flash_promotion_limit" property="flashPromotionLimit"/>
+        <result column="flash_promotion_stock" property="flashPromotionStock"/>
     </resultMap>
 
     <select id="getRecommendBrandList" resultMap="com.macro.mall.mapper.PmsBrandMapper.BaseResultMap">
@@ -24,9 +26,11 @@
 
     <select id="getFlashProductList" resultMap="flashPromotionProduct">
         SELECT
+            pr.id as flash_relation_id,
             pr.flash_promotion_price,
             pr.flash_promotion_count,
             pr.flash_promotion_limit,
+            pr.flash_promotion_stock,
             p.*
         FROM
             sms_flash_promotion_product_relation pr

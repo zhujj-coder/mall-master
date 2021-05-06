@@ -56,7 +56,9 @@ rabbitmq:
 
 wx:
   getCode: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=STAT#wechat_redirect"
-  webAccessTokenhttps: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+#  webAccessTokenhttps: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+  webAccessTokenhttps: "http://localhost:8092/wx/getOpenid?appId=%s&code=%s"
+  getaccountbasicinfo: "http://localhost:8092/wx/getaccountbasicinfo?adminId=%s"
   payUrl: "https://car.jianjiakeji.com/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"
 #  payUrl: "http://127.0.0.1:8090/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"
 aliyun:

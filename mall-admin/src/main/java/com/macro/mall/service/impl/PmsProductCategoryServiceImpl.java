@@ -44,8 +44,11 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
         BeanUtils.copyProperties(pmsProductCategoryParam, productCategory);
         //没有父分类时为一级分类
         setCategoryLevel(productCategory);
-        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
-        productCategory.setAdminId(currentAdmin.getId());
+        if(productCategory.getAdminId()==null||productCategory.getAdminId()<=0){
+            UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+            productCategory.setAdminId(currentAdmin.getId());
+        }
+
         int count = productCategoryMapper.insertSelective(productCategory);
         //创建筛选属性关联
         List<Long> productAttributeIdList = pmsProductCategoryParam.getProductAttributeIdList();
@@ -108,7 +111,16 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
                 .andAdminIdEqualTo(currentAdmin.getId());
         return productCategoryMapper.selectByExample(example);
     }
-
+    @Override
+    public List<PmsProductCategory> getList(Long parentId, Integer pageSize, Integer pageNum,Long adminId) {
+        PageHelper.startPage(pageNum, pageSize);
+        PmsProductCategoryExample example = new PmsProductCategoryExample();
+        example.setOrderByClause("sort desc");
+        example.createCriteria().
+                andParentIdEqualTo(parentId)
+                .andAdminIdEqualTo(adminId);
+        return productCategoryMapper.selectByExample(example);
+    }
     @Override
     public int delete(Long id) {
         return productCategoryMapper.deleteByPrimaryKey(id);

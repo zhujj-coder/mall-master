@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.macro.mall.mapper.SmsFlashPromotionMapper;
 import com.macro.mall.model.SmsFlashPromotion;
 import com.macro.mall.model.SmsFlashPromotionExample;
+import com.macro.mall.model.UmsAdmin;
 import com.macro.mall.service.SmsFlashPromotionService;
+import com.macro.mall.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,22 +22,33 @@ import java.util.List;
 public class SmsFlashPromotionServiceImpl implements SmsFlashPromotionService {
     @Autowired
     private SmsFlashPromotionMapper flashPromotionMapper;
-
+    @Autowired
+    private UmsAdminService umsAdminService;
     @Override
     public int create(SmsFlashPromotion flashPromotion) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         flashPromotion.setCreateTime(new Date());
+        flashPromotion.setAdminId(currentAdmin.getId());
         return flashPromotionMapper.insert(flashPromotion);
     }
 
     @Override
     public int update(Long id, SmsFlashPromotion flashPromotion) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         flashPromotion.setId(id);
-        return flashPromotionMapper.updateByPrimaryKey(flashPromotion);
+        SmsFlashPromotionExample example = new SmsFlashPromotionExample();
+        example.or().andIdEqualTo(id)
+                .andAdminIdEqualTo(currentAdmin.getId());
+        return flashPromotionMapper.updateByExampleSelective(flashPromotion,example);
     }
 
     @Override
     public int delete(Long id) {
-        return flashPromotionMapper.deleteByPrimaryKey(id);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        SmsFlashPromotionExample example = new SmsFlashPromotionExample();
+        example.or().andIdEqualTo(id)
+                .andAdminIdEqualTo(currentAdmin.getId());
+        return flashPromotionMapper.deleteByExample(example);
     }
 
     @Override
@@ -43,7 +56,11 @@ public class SmsFlashPromotionServiceImpl implements SmsFlashPromotionService {
         SmsFlashPromotion flashPromotion = new SmsFlashPromotion();
         flashPromotion.setId(id);
         flashPromotion.setStatus(status);
-        return flashPromotionMapper.updateByPrimaryKeySelective(flashPromotion);
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
+        SmsFlashPromotionExample example = new SmsFlashPromotionExample();
+        example.or().andIdEqualTo(id)
+                .andAdminIdEqualTo(currentAdmin.getId());
+        return flashPromotionMapper.updateByExample(flashPromotion,example);
     }
 
     @Override
@@ -53,11 +70,13 @@ public class SmsFlashPromotionServiceImpl implements SmsFlashPromotionService {
 
     @Override
     public List<SmsFlashPromotion> list(String keyword, Integer pageSize, Integer pageNum) {
+        UmsAdmin currentAdmin = umsAdminService.getCurrentAdmin();
         PageHelper.startPage(pageNum, pageSize);
         SmsFlashPromotionExample example = new SmsFlashPromotionExample();
         if (!StringUtils.isEmpty(keyword)) {
             example.createCriteria().andTitleLike("%" + keyword + "%");
         }
+        example.createCriteria().andAdminIdEqualTo(currentAdmin.getId());
         return flashPromotionMapper.selectByExample(example);
     }
 }

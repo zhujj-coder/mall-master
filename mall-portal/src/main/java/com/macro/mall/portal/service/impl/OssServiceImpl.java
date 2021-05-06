@@ -9,13 +9,13 @@ import com.macro.mall.portal.domain.OssCallbackParam;
 import com.macro.mall.portal.domain.OssCallbackResult;
 import com.macro.mall.portal.domain.OssPolicyResult;
 import com.macro.mall.portal.service.OssService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +26,7 @@ import java.util.UUID;
  * Created by macro on 2018/5/17.
  */
 @Service
+@Slf4j
 public class OssServiceImpl implements OssService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OssServiceImpl.class);

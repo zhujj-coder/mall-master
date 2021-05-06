@@ -584,6 +584,66 @@ public class SmsFlashPromotionProductRelationExample {
             addCriterion("sort not between", value1, value2, "sort");
             return (Criteria) this;
         }
+
+        public Criteria andFlashPromotionStockIsNull() {
+            addCriterion("flash_promotion_stock is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockIsNotNull() {
+            addCriterion("flash_promotion_stock is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockEqualTo(Integer value) {
+            addCriterion("flash_promotion_stock =", value, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockNotEqualTo(Integer value) {
+            addCriterion("flash_promotion_stock <>", value, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockGreaterThan(Integer value) {
+            addCriterion("flash_promotion_stock >", value, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockGreaterThanOrEqualTo(Integer value) {
+            addCriterion("flash_promotion_stock >=", value, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockLessThan(Integer value) {
+            addCriterion("flash_promotion_stock <", value, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockLessThanOrEqualTo(Integer value) {
+            addCriterion("flash_promotion_stock <=", value, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockIn(List<Integer> values) {
+            addCriterion("flash_promotion_stock in", values, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockNotIn(List<Integer> values) {
+            addCriterion("flash_promotion_stock not in", values, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockBetween(Integer value1, Integer value2) {
+            addCriterion("flash_promotion_stock between", value1, value2, "flashPromotionStock");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashPromotionStockNotBetween(Integer value1, Integer value2) {
+            addCriterion("flash_promotion_stock not between", value1, value2, "flashPromotionStock");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

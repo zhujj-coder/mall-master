@@ -60,6 +60,9 @@ public class OmsOrderItem implements Serializable {
     @ApiModelProperty(value = "商品销售属性:[{'key':'颜色','value':'颜色'},{'key':'容量','value':'4G'}]")
     private String productAttr;
 
+    @ApiModelProperty(value = "秒杀关系表主键")
+    private Long flashRelationId;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -230,35 +233,11 @@ public class OmsOrderItem implements Serializable {
         this.productAttr = productAttr;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", orderId=").append(orderId);
-        sb.append(", orderSn=").append(orderSn);
-        sb.append(", productId=").append(productId);
-        sb.append(", productPic=").append(productPic);
-        sb.append(", productName=").append(productName);
-        sb.append(", productBrand=").append(productBrand);
-        sb.append(", productSn=").append(productSn);
-        sb.append(", productPrice=").append(productPrice);
-        sb.append(", productQuantity=").append(productQuantity);
-        sb.append(", productSkuId=").append(productSkuId);
-        sb.append(", productSkuCode=").append(productSkuCode);
-        sb.append(", productCategoryId=").append(productCategoryId);
-        sb.append(", promotionName=").append(promotionName);
-        sb.append(", promotionAmount=").append(promotionAmount);
-        sb.append(", couponAmount=").append(couponAmount);
-        sb.append(", integrationAmount=").append(integrationAmount);
-        sb.append(", realAmount=").append(realAmount);
-        sb.append(", giftIntegration=").append(giftIntegration);
-        sb.append(", giftGrowth=").append(giftGrowth);
-        sb.append(", productAttr=").append(productAttr);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Long getFlashRelationId() {
+        return flashRelationId;
+    }
+
+    public void setFlashRelationId(Long flashRelationId) {
+        this.flashRelationId = flashRelationId;
     }
 }

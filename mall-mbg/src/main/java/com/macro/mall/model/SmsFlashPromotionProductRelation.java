@@ -27,6 +27,9 @@ public class SmsFlashPromotionProductRelation implements Serializable {
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
+    @ApiModelProperty(value = "剩余库存")
+    private Integer flashPromotionStock;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -93,22 +96,11 @@ public class SmsFlashPromotionProductRelation implements Serializable {
         this.sort = sort;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", flashPromotionId=").append(flashPromotionId);
-        sb.append(", flashPromotionSessionId=").append(flashPromotionSessionId);
-        sb.append(", productId=").append(productId);
-        sb.append(", flashPromotionPrice=").append(flashPromotionPrice);
-        sb.append(", flashPromotionCount=").append(flashPromotionCount);
-        sb.append(", flashPromotionLimit=").append(flashPromotionLimit);
-        sb.append(", sort=").append(sort);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+    public Integer getFlashPromotionStock() {
+        return flashPromotionStock;
+    }
+
+    public void setFlashPromotionStock(Integer flashPromotionStock) {
+        this.flashPromotionStock = flashPromotionStock;
     }
 }

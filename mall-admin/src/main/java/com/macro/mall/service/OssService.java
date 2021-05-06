@@ -4,6 +4,7 @@ import com.macro.mall.dto.OssCallbackResult;
 import com.macro.mall.dto.OssPolicyResult;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * oss上传管理Service
@@ -18,4 +19,6 @@ public interface OssService {
      * oss上传成功回调
      */
     OssCallbackResult callback(HttpServletRequest request);
+
+    String uploadObject2OSS(File file);
 }

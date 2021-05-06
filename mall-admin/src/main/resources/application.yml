@@ -73,3 +73,5 @@ minio:
   bucketName: mall #存储桶名称
   accessKey: minioadmin #访问的key
   secretKey: minioadmin #访问的秘钥
+wx:
+  payUrl: "https://car.jianjiakeji.com/common/pay/unified_order?bizId=%s&body=%s&total_fee=%s&openid=%s&apply_id=%s"

@@ -9,8 +9,11 @@ import com.github.pagehelper.PageHelper;
 import com.macro.mall.mapper.*;
 import com.macro.mall.model.*;
 import com.macro.mall.portal.dao.PortalProductDao;
+import com.macro.mall.portal.domain.FlashPromotionProduct;
+import com.macro.mall.portal.domain.HomeFlashPromotion;
 import com.macro.mall.portal.domain.PmsPortalProductDetail;
 import com.macro.mall.portal.domain.PmsProductCategoryNode;
+import com.macro.mall.portal.service.HomeService;
 import com.macro.mall.portal.service.OmsCartItemService;
 import com.macro.mall.portal.service.PmsPortalProductService;
 import com.macro.mall.portal.service.UmsMemberService;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +56,8 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
     private UmsMemberService memberService;
     @Autowired
     private OmsCartItemService cartItemService;
+    @Autowired
+    private HomeService homeService;
     @Override
     public List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum, Integer pageSize, Integer sort,Long adminId) {
         PageHelper.startPage(pageNum, pageSize);
@@ -82,13 +88,30 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         log.info("pmsProducts[{}]",pmsProducts);
 //        join 购物车
         List<OmsCartItem> cartItemList = cartItemService.list(memberService.getCurrentMember().getId(),adminId);
+//        秒杀商品
         pmsProducts.forEach(item->{
             cartItemList.forEach(item2->{
                 if(item.getId().equals(item2.getProductId())){
                     item.setNum(item2.getQuantity());
                 }
             });
+//          秒杀商品
+            HomeFlashPromotion homeFlashPromotion = homeService.getHomeFlashPromotion(adminId);
+            AtomicReference<FlashPromotionProduct> atomicReference = new AtomicReference() ;
+            if(homeFlashPromotion!=null&&homeFlashPromotion.getProductList()!=null){
+                homeFlashPromotion.getProductList().forEach(item3->{
+                    if(item3.getId().equals(item.getId())){
+                        atomicReference.set(item3);
+                    }
+                });
+            }
+            FlashPromotionProduct flashPromotionProduct = atomicReference.get();
+            if(flashPromotionProduct!=null){
+                item.setPrice(flashPromotionProduct.getFlashPromotionPrice());
+                item.setFlashPromotionStock(flashPromotionProduct.getFlashPromotionStock());
+            }
         });
+//
         return pmsProducts;
     }
 
@@ -144,21 +167,39 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         });
         result.setSkuStockList(skuStockList);
         //商品阶梯价格设置
-        if(product.getPromotionType()==3){
+        if(product.getPromotionType()!=null&&product.getPromotionType()==3){
             PmsProductLadderExample ladderExample = new PmsProductLadderExample();
             ladderExample.createCriteria().andProductIdEqualTo(product.getId());
             List<PmsProductLadder> productLadderList = productLadderMapper.selectByExample(ladderExample);
             result.setProductLadderList(productLadderList);
         }
         //商品满减价格设置
-        if(product.getPromotionType()==4){
+        if(product.getPromotionType()!=null&&product.getPromotionType()==4){
             PmsProductFullReductionExample fullReductionExample = new PmsProductFullReductionExample();
             fullReductionExample.createCriteria().andProductIdEqualTo(product.getId());
             List<PmsProductFullReduction> productFullReductionList = productFullReductionMapper.selectByExample(fullReductionExample);
             result.setProductFullReductionList(productFullReductionList);
         }
         //商品可用优惠券
-        result.setCouponList(portalProductDao.getAvailableCouponList(product.getId(),product.getProductCategoryId()));
+//        result.setCouponList(portalProductDao.getAvailableCouponList(product.getId(),product.getProductCategoryId()));
+        /*
+         * 查看是否是抢购商品，
+         *     如果是，修改价格和限量
+         *
+         */
+        HomeFlashPromotion homeFlashPromotion = homeService.getHomeFlashPromotion(adminId);
+        AtomicReference<FlashPromotionProduct> atomicReference = new AtomicReference() ;
+        if(homeFlashPromotion!=null&&homeFlashPromotion.getProductList()!=null){
+            homeFlashPromotion.getProductList().forEach(item->{
+                if(item.getId().equals(id)){
+                    atomicReference.set(item);
+                }
+            });
+        }
+        FlashPromotionProduct flashPromotionProduct = atomicReference.get();
+        if(flashPromotionProduct!=null){
+            result.setFlashPromotionProduct(flashPromotionProduct);
+        }
         return result;
     }
 

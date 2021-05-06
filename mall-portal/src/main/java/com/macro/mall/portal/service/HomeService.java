@@ -1,9 +1,11 @@
 package com.macro.mall.portal.service;
 
 import com.macro.mall.model.CmsSubject;
+import com.macro.mall.model.OmsCartItem;
 import com.macro.mall.model.PmsProduct;
 import com.macro.mall.model.PmsProductCategory;
 import com.macro.mall.portal.domain.HomeContentResult;
+import com.macro.mall.portal.domain.HomeFlashPromotion;
 
 import java.util.List;
 
@@ -46,4 +48,8 @@ public interface HomeService {
      */
 
     List<PmsProduct> newProductList(Integer pageNum, Integer pageSize, Long adminId);
+
+    HomeFlashPromotion getHomeFlashPromotion(Long adminId);
+
+    void checkCartItem(OmsCartItem cartItem);
 }

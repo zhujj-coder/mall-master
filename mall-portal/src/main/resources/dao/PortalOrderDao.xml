@@ -18,14 +18,33 @@
             ot.product_name ot_product_name,
             ot.product_sku_id ot_product_sku_id,
             ot.product_sku_code ot_product_sku_code,
-            ot.product_quantity ot_product_quantity
+            ot.product_quantity ot_product_quantity,
+            ot.flash_relation_id ot_flash_relation_id
         FROM
             oms_order o
             LEFT JOIN oms_order_item ot ON o.id = ot.order_id
         WHERE
             o.id = #{orderId}
     </select>
-
+    <select id="getDetailByFlashId" resultMap="orderDetailMap">
+        SELECT
+               o.id,
+               o.order_sn,
+               o.coupon_id,
+               o.integration,
+               o.member_id,
+               ot.id ot_id,
+               ot.product_name ot_product_name,
+               ot.product_sku_id ot_product_sku_id,
+               ot.product_sku_code ot_product_sku_code,
+               ot.product_quantity ot_product_quantity,
+               ot.flash_relation_id ot_flash_relation_id
+        FROM
+             oms_order o
+                 LEFT JOIN oms_order_item ot ON o.id = ot.order_id
+        WHERE
+                o.member_id = #{memberId} and ot.flash_relation_id = #{flashRelationId} and o.status in (0,1,2,3)
+    </select>
     <select id="getTimeOutOrders" resultMap="orderDetailMap">
         SELECT
             o.id,
@@ -66,6 +85,22 @@
             #{item.productSkuId}
         </foreach>
     </update>
+<!-- 抢购商品 -->
+    <update id="updateFlashSkuStock">
+        UPDATE sms_flash_promotion_product_relation
+        SET
+        flash_promotion_stock = CASE id
+        <foreach collection="itemList" item="item">
+            WHEN #{item.flashRelationId} THEN flash_promotion_stock - #{item.productQuantity}
+        </foreach>
+        END
+        WHERE
+        id IN
+        <foreach collection="itemList" item="item" separator="," open="(" close=")">
+            #{item.flashRelationId}
+        </foreach>
+    </update>
+
     <update id="updateOrderStatus">
         update oms_order
         set status=#{status}

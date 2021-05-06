@@ -57,6 +57,8 @@ public interface UmsMemberService {
     void updateIntegration(Long id,Integer integration);
 
 
+    void updateTakeCode(Long id, String takeCode);
+
     void updateIntegrationAll(Long id, Integer integration, Integer history);
 
     /**

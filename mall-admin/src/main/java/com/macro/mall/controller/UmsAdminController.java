@@ -6,19 +6,10 @@ import com.macro.mall.common.api.CommonResult;
 import com.macro.mall.common.util.DateUtil;
 import com.macro.mall.common.util.RequestUtil;
 import com.macro.mall.dao.UmsMemberDao;
-import com.macro.mall.dto.GetLocationSrcParam;
-import com.macro.mall.dto.UmsAdminLoginParam;
-import com.macro.mall.dto.UmsAdminParam;
-import com.macro.mall.dto.UpdateAdminPasswordParam;
+import com.macro.mall.dto.*;
 import com.macro.mall.mapper.UmsIntegrationConsumeSettingMapper;
-import com.macro.mall.model.UmsAdmin;
-import com.macro.mall.model.UmsIntegrationConsumeSetting;
-import com.macro.mall.model.UmsIntegrationConsumeSettingExample;
-import com.macro.mall.model.UmsRole;
-import com.macro.mall.service.OmsOrderService;
-import com.macro.mall.service.PmsProductService;
-import com.macro.mall.service.UmsAdminService;
-import com.macro.mall.service.UmsRoleService;
+import com.macro.mall.model.*;
+import com.macro.mall.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,6 +52,8 @@ public class UmsAdminController {
     private UmsMemberDao umsMemberDao;
     @Autowired
     private UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
+    @Autowired
+    private PmsProductCategoryService productCategoryService;
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
@@ -80,9 +74,42 @@ public class UmsAdminController {
         List<Long> list  = new ArrayList<>();
         list.add(1L);
         adminService.updateRole(umsAdmin.getId(),list);
+//        默认添加一条商品分类和商品
+        addProduct(umsAdmin);
         return CommonResult.success(umsAdmin);
 
     }
+
+    private void addProduct(UmsAdmin umsAdmin) {
+        PmsProductCategoryParam productCategoryParam = new PmsProductCategoryParam();
+        productCategoryParam.setName("纸巾");
+        productCategoryParam.setNavStatus(1);
+        productCategoryParam.setParentId(0L);
+        productCategoryParam.setShowStatus(0);
+        productCategoryParam.setSort(0);
+        productCategoryParam.setAdminId(umsAdmin.getId());
+        productCategoryService.create(productCategoryParam);
+        List<PmsProductCategory> list1 = productCategoryService.getList(0L, 1, 1,umsAdmin.getId());
+        PmsProductParam productParam  =new PmsProductParam();
+        productParam.setAdminId(umsAdmin.getId());
+        productParam.setAlbumPics("http://szjjkj.oss-cn-beijing.aliyuncs.com/mall/images/20210319/fa36ed92005d967f.jpg");
+        List<String> listPic = new ArrayList<>();
+        listPic.add("http://szjjkj.oss-cn-beijing.aliyuncs.com/mall/images/20210319/fa36ed92005d967f.jpg");
+        productParam.setAlbumPicsList(listPic);
+        productParam.setPic("http://szjjkj.oss-cn-beijing.aliyuncs.com/mall/images/20210319/fa36ed92005d967f.jpg");
+        productParam.setDeleteStatus(0);
+        productParam.setName("餐巾纸");
+        productParam.setOriginalPrice(new BigDecimal(10));
+        productParam.setPrice(new BigDecimal(6));
+        productParam.setPublishStatus(1);
+        productParam.setNewStatus(1);
+        productParam.setSort(0);
+        productParam.setProductSn("0");
+        productParam.setSubTitle("开心朵朵 本色抽纸50包4层加厚纸巾抽纸整箱家用实惠装纸抽餐巾纸擦手纸卫生纸 开心熊10包");
+        productParam.setProductCategoryId(list1.get(0).getId());
+        productService.create(productParam);
+    }
+
     @ApiOperation(value = "用户注册")
     @RequestMapping(value = "/registerCode", method = RequestMethod.POST)
     @ResponseBody
@@ -103,6 +130,8 @@ public class UmsAdminController {
         List<Long> list  = new ArrayList<>();
         list.add(1L);
         adminService.updateRole(umsAdmin.getId(),list);
+        //        默认添加一条商品分类和商品
+        addProduct(umsAdmin);
         return CommonResult.success(umsAdmin);
 
     }
@@ -164,6 +193,9 @@ public class UmsAdminController {
         data.put("noticeStart", umsAdmin.getNoticeStart());
         data.put("noticeEnd", umsAdmin.getNoticeEnd());
         data.put("noticeOn", umsAdmin.getNoticeOn());
+//        取货联系地址
+        data.put("contactMobile", umsAdmin.getContactMobile());
+        data.put("contactAddress", umsAdmin.getContactAddress());
         List<UmsRole> roleList = adminService.getRoleList(umsAdmin.getId());
         if(CollUtil.isNotEmpty(roleList)){
             List<String> roles = roleList.stream().map(UmsRole::getName).collect(Collectors.toList());
@@ -192,14 +224,18 @@ public class UmsAdminController {
         data.put("appSecret", umsAdmin.getAppSecret());
         data.put("mchId", umsAdmin.getMchId());
         data.put("mchKey", umsAdmin.getMchKey());
+//        取货联系地址
+        data.put("contactMobile", umsAdmin.getContactMobile());
+        data.put("contactAddress", umsAdmin.getContactAddress());
 //        积分相关
         UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
         example.or().andAdminIdEqualTo(umsAdmin.getId());
         List<UmsIntegrationConsumeSetting> umsIntegrationConsumeSettings = integrationConsumeSettingMapper.selectByExample(example);
-        data.put("deductionPerAmount",umsIntegrationConsumeSettings.get(0).getDeductionPerAmount());
-        data.put("maxPercentPerOrder",umsIntegrationConsumeSettings.get(0).getMaxPercentPerOrder());
-        data.put("couponStatus",umsIntegrationConsumeSettings.get(0).getCouponStatus());
-        data.put("imageUrl",umsIntegrationConsumeSettings.get(0).getImageUrl());
+        if(umsIntegrationConsumeSettings!=null&&umsIntegrationConsumeSettings.size()>0){
+            data.put("deductionPerAmount",umsIntegrationConsumeSettings.get(0).getDeductionPerAmount());
+            data.put("maxPercentPerOrder",umsIntegrationConsumeSettings.get(0).getMaxPercentPerOrder());
+            data.put("couponStatus",umsIntegrationConsumeSettings.get(0).getCouponStatus());
+        }
         return CommonResult.success(data);
     }
 
@@ -219,6 +255,12 @@ public class UmsAdminController {
     @ResponseBody
     public CommonResult updateNotice(@RequestBody UmsAdmin umsAdmin) {
         adminService.updateNotice(umsAdmin);
+        return CommonResult.success(null);
+    }
+    @RequestMapping(value = "/updateConcat", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateConcat(@RequestBody UmsAdmin umsAdmin) {
+        adminService.updateConcat(umsAdmin);
         return CommonResult.success(null);
     }
     @RequestMapping(value = "/updateIntegration", method = RequestMethod.POST)
@@ -332,12 +374,16 @@ public class UmsAdminController {
         List<UmsRole> roleList = adminService.getRoleList(adminId);
         return CommonResult.success(roleList);
     }
-    @ApiOperation("获取指定用户的角色")
+    @ApiOperation("生成小程序二维码")
     @RequestMapping(value = "/getLocationSrc", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<String> getLocationSrc(@Validated @RequestBody GetLocationSrcParam param) {
-        String locationSrc = adminService.getLocationSrc(param);
-        return CommonResult.success(locationSrc);
+    public CommonResult getLocationSrc(@Validated @RequestBody GetLocationSrcParam param) {
+        return CommonResult.success(adminService.getLocationSrc(param));
     }
-
+    @ApiOperation("积分支付二维码")
+    @RequestMapping(value = "/getPaySrc", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getPaySrc() {
+        return CommonResult.success(adminService.getPaySrc());
+    }
 }

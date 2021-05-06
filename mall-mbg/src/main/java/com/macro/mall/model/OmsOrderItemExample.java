@@ -1444,6 +1444,66 @@ public class OmsOrderItemExample {
             addCriterion("product_attr not between", value1, value2, "productAttr");
             return (Criteria) this;
         }
+
+        public Criteria andFlashRelationIdIsNull() {
+            addCriterion("flash_relation_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdIsNotNull() {
+            addCriterion("flash_relation_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdEqualTo(Long value) {
+            addCriterion("flash_relation_id =", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdNotEqualTo(Long value) {
+            addCriterion("flash_relation_id <>", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdGreaterThan(Long value) {
+            addCriterion("flash_relation_id >", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("flash_relation_id >=", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdLessThan(Long value) {
+            addCriterion("flash_relation_id <", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdLessThanOrEqualTo(Long value) {
+            addCriterion("flash_relation_id <=", value, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdIn(List<Long> values) {
+            addCriterion("flash_relation_id in", values, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdNotIn(List<Long> values) {
+            addCriterion("flash_relation_id not in", values, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdBetween(Long value1, Long value2) {
+            addCriterion("flash_relation_id between", value1, value2, "flashRelationId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFlashRelationIdNotBetween(Long value1, Long value2) {
+            addCriterion("flash_relation_id not between", value1, value2, "flashRelationId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
