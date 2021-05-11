@@ -29,6 +29,8 @@
     <result column="contact_mobile" jdbcType="VARCHAR" property="contactMobile" />
     <result column="contact_address" jdbcType="VARCHAR" property="contactAddress" />
     <result column="wx_template_id" jdbcType="VARCHAR" property="wxTemplateId" />
+    <result column="support_delivery" jdbcType="INTEGER" property="supportDelivery" />
+    <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -92,7 +94,8 @@
     id, username, password, icon, email, nick_name, note, create_time, login_time, status, 
     app_id, app_secret, notice_content, notice_type, notice_start, notice_end, notice_on, 
     mch_id, mch_key, authorizer_refresh_token, publish_status, wxacode_url, wxacode_pay_url, 
-    vip_end_date, contact_mobile, contact_address, wx_template_id
+    vip_end_date, contact_mobile, contact_address, wx_template_id, support_delivery, 
+    freight_amount
   </sql>
   <select id="selectByExample" parameterType="com.macro.mall.model.UmsAdminExample" resultMap="BaseResultMap">
     select
@@ -136,8 +139,8 @@
       notice_on, mch_id, mch_key, 
       authorizer_refresh_token, publish_status, 
       wxacode_url, wxacode_pay_url, vip_end_date, 
-      contact_mobile, contact_address, wx_template_id
-      )
+      contact_mobile, contact_address, wx_template_id, 
+      support_delivery, freight_amount)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
@@ -146,8 +149,8 @@
       #{noticeOn,jdbcType=INTEGER}, #{mchId,jdbcType=VARCHAR}, #{mchKey,jdbcType=VARCHAR}, 
       #{authorizerRefreshToken,jdbcType=VARCHAR}, #{publishStatus,jdbcType=INTEGER}, 
       #{wxacodeUrl,jdbcType=VARCHAR}, #{wxacodePayUrl,jdbcType=VARCHAR}, #{vipEndDate,jdbcType=TIMESTAMP}, 
-      #{contactMobile,jdbcType=VARCHAR}, #{contactAddress,jdbcType=VARCHAR}, #{wxTemplateId,jdbcType=VARCHAR}
-      )
+      #{contactMobile,jdbcType=VARCHAR}, #{contactAddress,jdbcType=VARCHAR}, #{wxTemplateId,jdbcType=VARCHAR}, 
+      #{supportDelivery,jdbcType=INTEGER}, #{freightAmount,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.macro.mall.model.UmsAdmin">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -233,6 +236,12 @@
       <if test="wxTemplateId != null">
         wx_template_id,
       </if>
+      <if test="supportDelivery != null">
+        support_delivery,
+      </if>
+      <if test="freightAmount != null">
+        freight_amount,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -312,6 +321,12 @@
       </if>
       <if test="wxTemplateId != null">
         #{wxTemplateId,jdbcType=VARCHAR},
+      </if>
+      <if test="supportDelivery != null">
+        #{supportDelivery,jdbcType=INTEGER},
+      </if>
+      <if test="freightAmount != null">
+        #{freightAmount,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -405,6 +420,12 @@
       <if test="record.wxTemplateId != null">
         wx_template_id = #{record.wxTemplateId,jdbcType=VARCHAR},
       </if>
+      <if test="record.supportDelivery != null">
+        support_delivery = #{record.supportDelivery,jdbcType=INTEGER},
+      </if>
+      <if test="record.freightAmount != null">
+        freight_amount = #{record.freightAmount,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -438,7 +459,9 @@
       vip_end_date = #{record.vipEndDate,jdbcType=TIMESTAMP},
       contact_mobile = #{record.contactMobile,jdbcType=VARCHAR},
       contact_address = #{record.contactAddress,jdbcType=VARCHAR},
-      wx_template_id = #{record.wxTemplateId,jdbcType=VARCHAR}
+      wx_template_id = #{record.wxTemplateId,jdbcType=VARCHAR},
+      support_delivery = #{record.supportDelivery,jdbcType=INTEGER},
+      freight_amount = #{record.freightAmount,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -524,6 +547,12 @@
       <if test="wxTemplateId != null">
         wx_template_id = #{wxTemplateId,jdbcType=VARCHAR},
       </if>
+      <if test="supportDelivery != null">
+        support_delivery = #{supportDelivery,jdbcType=INTEGER},
+      </if>
+      <if test="freightAmount != null">
+        freight_amount = #{freightAmount,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -554,7 +583,9 @@
       vip_end_date = #{vipEndDate,jdbcType=TIMESTAMP},
       contact_mobile = #{contactMobile,jdbcType=VARCHAR},
       contact_address = #{contactAddress,jdbcType=VARCHAR},
-      wx_template_id = #{wxTemplateId,jdbcType=VARCHAR}
+      wx_template_id = #{wxTemplateId,jdbcType=VARCHAR},
+      support_delivery = #{supportDelivery,jdbcType=INTEGER},
+      freight_amount = #{freightAmount,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

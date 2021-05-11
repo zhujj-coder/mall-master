@@ -79,7 +79,8 @@ public enum ExceptionEnum {
     FLASH_BUY_LIMIT(40600,"限购数量达到上限！"),
     FLASH_BUY_FINISH(40601,"您已秒杀过！"),
     FLASH_STOCK_EMPTY(40602,"库存不足，已被抢光！"),
-    TAKE_CODE_ERROR(40700,"取货码长度必须为4！");
+    TAKE_CODE_ERROR(40700,"取货码长度必须为4！"),
+    PROGRAM_NOT_PUBLISH(40800,"小程序尚未发布!");
     private Integer code;
     private String msg;
 

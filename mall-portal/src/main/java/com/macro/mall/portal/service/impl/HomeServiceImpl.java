@@ -116,6 +116,10 @@ public class HomeServiceImpl implements HomeService {
         Date now = new Date();
         SmsFlashPromotion flashPromotion = getFlashPromotion(now,adminId);
         if (flashPromotion != null) {
+            // 设置活动时间
+            String start = DateUtil.formatTime(flashPromotion.getStartDate());
+            String end = DateUtil.formatTime(flashPromotion.getEndDate());
+            homeFlashPromotion.setActivityDurationString(String.format("%s - %s",start,end));
             //获取当前秒杀场次
             SmsFlashPromotionSession flashPromotionSession = getFlashPromotionSession(now,adminId);
             if (flashPromotionSession != null) {

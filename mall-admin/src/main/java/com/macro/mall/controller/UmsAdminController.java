@@ -227,6 +227,8 @@ public class UmsAdminController {
 //        取货联系地址
         data.put("contactMobile", umsAdmin.getContactMobile());
         data.put("contactAddress", umsAdmin.getContactAddress());
+        data.put("freightAmount", umsAdmin.getFreightAmount());
+        data.put("supportDelivery", umsAdmin.getSupportDelivery());
 //        积分相关
         UmsIntegrationConsumeSettingExample example =new UmsIntegrationConsumeSettingExample();
         example.or().andAdminIdEqualTo(umsAdmin.getId());

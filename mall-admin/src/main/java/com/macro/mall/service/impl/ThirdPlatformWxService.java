@@ -458,7 +458,7 @@ public class ThirdPlatformWxService {
             }
             return jsonObject1;
         }else{
-            throw new MyException(Integer.valueOf(jsonObject1.getString("errcode")),jsonObject1.getString("errmsg"));
+            throw new MyException(ExceptionEnum.PROGRAM_NOT_PUBLISH);
         }
     }
     //要在高并发环境下能有比较好的体验，可以使用ThreadLocal来限制SimpleDateFormat只能在线程内共享，这样就避免了多线程导致的线程安全问题。

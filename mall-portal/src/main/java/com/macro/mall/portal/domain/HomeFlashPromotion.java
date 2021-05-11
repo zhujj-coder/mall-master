@@ -22,4 +22,6 @@ public class HomeFlashPromotion {
     private Long leftTime;
     //属于该秒杀活动的商品
     private List<FlashPromotionProduct> productList;
+    // 活动时间 格式：2021年5月1日 - 2021年6月1日
+    private String activityDurationString;
 }

@@ -2,9 +2,7 @@ package com.macro.mall.portal.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.macro.mall.mapper.*;
 import com.macro.mall.model.*;
@@ -22,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -134,9 +133,13 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         //获取商品信息
         PmsProduct product = productMapper.selectByPrimaryKey(id);
 //        修改相册
-        if(product!=null&&product.getAlbumPics()!=null){
-            product.setAlbumPicsList(Arrays.asList(product.getAlbumPics().split(",")));
+        List<String> albumPicsList =new ArrayList<>();
+        albumPicsList.add(product.getPic());
+        if(product!=null&&product.getAlbumPics()!=null&&product.getAlbumPics().length()>0){
+            List<String> list = Arrays.asList(product.getAlbumPics().split(","));
+            albumPicsList.addAll(list);
         }
+        product.setAlbumPicsList(albumPicsList);
         result.setProduct(product);
         //获取品牌信息
         PmsBrand brand = brandMapper.selectByPrimaryKey(product.getBrandId());

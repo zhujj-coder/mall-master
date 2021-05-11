@@ -82,6 +82,8 @@ alter table ums_admin add column  vip_end_date  datetime default null comment '�
 alter table ums_admin add column  contact_mobile  varchar(64) default null comment '取货手机号';
 alter table ums_admin add column  contact_address  varchar(256) default null comment '取货地址';
 alter table ums_admin add column  wx_template_id  varchar(256) default null comment '小程序消息模板id';
+alter table ums_admin add column  support_delivery   int(1) default '0' comment '是否支持配送';
+alter table ums_admin add column  freight_amount decimal(10,2) null comment '运费金额';
 alter table oms_cart_item add column  buy_limit  int default 0 comment 'null 或0 不限量';
 alter table oms_cart_item add column  flash_relation_id  bigint default 0 comment '秒杀关系表主键';
 alter table oms_order_item add column  flash_relation_id  bigint default 0 comment '秒杀关系表主键';
