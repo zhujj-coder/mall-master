@@ -28,9 +28,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description
@@ -153,7 +151,15 @@ public class WXController {
         if(admin!=null){
             tokenMap.put("contactMobile",admin.getContactMobile());
             tokenMap.put("contactAddress",admin.getContactAddress());
+            Optional.ofNullable(admin.getVipEndDate()).ifPresent(date -> {
+                if(date.after(new Date())){
+                    tokenMap.put("isVIP","1");
+                }else{
+                    tokenMap.put("isVIP","0");
+                }
+            });
         }
+
     }
 
     @ApiOperation("获取小程序商户信息")

@@ -91,6 +91,38 @@ alter table sms_flash_promotion_product_relation add column flash_promotion_stoc
 alter table oms_order add column  flash_relation_id  bigint default 0 comment '秒杀关系表主键';
 
 
+DROP TABLE IF EXISTS `cms_help`;
+CREATE TABLE `cms_help` (
+                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                            `category_id` bigint(20) DEFAULT NULL,
+                            `icon` varchar(500) DEFAULT NULL,
+                            `title` varchar(100) DEFAULT NULL,
+                            `show_status` int(1) DEFAULT NULL,
+                            `create_time` datetime DEFAULT NULL,
+                            `read_count` int(1) DEFAULT NULL,
+                            `content` text,
+                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='帮助表';
+
+
+DROP TABLE IF EXISTS `ums_upload_file`;
+CREATE TABLE `ums_upload_file` (
+                                   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                   share_admin_id bigint(20) not null,
+                                   `mobile_no` varchar(20) DEFAULT '',
+                                   `wechat_no` varchar(500) DEFAULT '',
+                                   `card_no` varchar(100) DEFAULT '',
+                                   `bank_name` varchar(100) DEFAULT '',
+                                   `file_list_id_cards` varchar(500) DEFAULT '',
+                                   `file_list_business` varchar(500) DEFAULT '',
+                                   `file_list_permit` varchar(500) DEFAULT '',
+                                   `create_status` int(1) DEFAULT 0 comment '0:未创建，1 已创建',
+                                   `create_time` datetime DEFAULT now(),
+                                   `update_time` datetime DEFAULT now(),
+                                   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='准商户资料上传表';
+
+
 
 
 
