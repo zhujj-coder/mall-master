@@ -1,5 +1,6 @@
 package com.macro.mall.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -1922,6 +1923,126 @@ public class UmsAdminExample {
 
         public Criteria andWxTemplateIdNotBetween(String value1, String value2) {
             addCriterion("wx_template_id not between", value1, value2, "wxTemplateId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryIsNull() {
+            addCriterion("support_delivery is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryIsNotNull() {
+            addCriterion("support_delivery is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryEqualTo(Integer value) {
+            addCriterion("support_delivery =", value, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryNotEqualTo(Integer value) {
+            addCriterion("support_delivery <>", value, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryGreaterThan(Integer value) {
+            addCriterion("support_delivery >", value, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryGreaterThanOrEqualTo(Integer value) {
+            addCriterion("support_delivery >=", value, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryLessThan(Integer value) {
+            addCriterion("support_delivery <", value, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryLessThanOrEqualTo(Integer value) {
+            addCriterion("support_delivery <=", value, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryIn(List<Integer> values) {
+            addCriterion("support_delivery in", values, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryNotIn(List<Integer> values) {
+            addCriterion("support_delivery not in", values, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryBetween(Integer value1, Integer value2) {
+            addCriterion("support_delivery between", value1, value2, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andSupportDeliveryNotBetween(Integer value1, Integer value2) {
+            addCriterion("support_delivery not between", value1, value2, "supportDelivery");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountIsNull() {
+            addCriterion("freight_amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountIsNotNull() {
+            addCriterion("freight_amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountEqualTo(BigDecimal value) {
+            addCriterion("freight_amount =", value, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountNotEqualTo(BigDecimal value) {
+            addCriterion("freight_amount <>", value, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountGreaterThan(BigDecimal value) {
+            addCriterion("freight_amount >", value, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("freight_amount >=", value, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountLessThan(BigDecimal value) {
+            addCriterion("freight_amount <", value, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("freight_amount <=", value, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountIn(List<BigDecimal> values) {
+            addCriterion("freight_amount in", values, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountNotIn(List<BigDecimal> values) {
+            addCriterion("freight_amount not in", values, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("freight_amount between", value1, value2, "freightAmount");
+            return (Criteria) this;
+        }
+
+        public Criteria andFreightAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("freight_amount not between", value1, value2, "freightAmount");
             return (Criteria) this;
         }
     }

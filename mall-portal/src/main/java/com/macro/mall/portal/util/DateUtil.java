@@ -1,5 +1,8 @@
 package com.macro.mall.portal.util;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,5 +34,11 @@ public class DateUtil {
         calendar.set(Calendar.MONTH, 0);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         return calendar.getTime();
+    }
+    public static String formatTime(Date date){
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
+        return dateTimeFormatter.format(instant.atZone(zoneId).toLocalDateTime());
     }
 }

@@ -41,6 +41,8 @@ public interface OmsPortalOrderService {
 
     void reduceStock(Long orderId);
 
+    void addStock(Long orderId);
+
     /**
      * 自动取消超时订单
      */

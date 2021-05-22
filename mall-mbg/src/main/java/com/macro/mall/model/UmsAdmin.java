@@ -2,6 +2,7 @@ package com.macro.mall.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class UmsAdmin implements Serializable {
@@ -82,6 +83,12 @@ public class UmsAdmin implements Serializable {
 
     @ApiModelProperty(value = "小程序消息模板id")
     private String wxTemplateId;
+
+    @ApiModelProperty(value = "是否支持配送")
+    private Integer supportDelivery;
+
+    @ApiModelProperty(value = "运费金额")
+    private BigDecimal freightAmount;
 
     private static final long serialVersionUID = 1L;
 
@@ -299,5 +306,21 @@ public class UmsAdmin implements Serializable {
 
     public void setWxTemplateId(String wxTemplateId) {
         this.wxTemplateId = wxTemplateId;
+    }
+
+    public Integer getSupportDelivery() {
+        return supportDelivery;
+    }
+
+    public void setSupportDelivery(Integer supportDelivery) {
+        this.supportDelivery = supportDelivery;
+    }
+
+    public BigDecimal getFreightAmount() {
+        return freightAmount;
+    }
+
+    public void setFreightAmount(BigDecimal freightAmount) {
+        this.freightAmount = freightAmount;
     }
 }

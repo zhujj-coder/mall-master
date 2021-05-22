@@ -442,6 +442,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         umsAdminNew.setId(umsAdminCurrent.getId());
         umsAdminNew.setContactMobile(umsAdmin.getContactMobile());
         umsAdminNew.setContactAddress(umsAdmin.getContactAddress());
+       umsAdminNew.setSupportDelivery(umsAdmin.getSupportDelivery());
+       umsAdminNew.setFreightAmount(umsAdmin.getFreightAmount());
         adminMapper.updateByPrimaryKeySelective(umsAdminNew);
     }
 

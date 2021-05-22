@@ -82,7 +82,7 @@ public class OmsCartItemController {
                 抢购商品要限制数量
              */
             OmsCartItem byId = cartItemService.getById(id, adminId);
-            if(quantity>byId.getBuyLimit()){
+            if(byId.getFlashRelationId()!=null&&byId.getBuyLimit()!=null&&quantity>byId.getBuyLimit()){
                 throw new MyException(ExceptionEnum.FLASH_BUY_LIMIT);
             }
             int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity,adminId);

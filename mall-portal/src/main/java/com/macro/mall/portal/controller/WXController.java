@@ -151,6 +151,7 @@ public class WXController {
         if(admin!=null){
             tokenMap.put("contactMobile",admin.getContactMobile());
             tokenMap.put("contactAddress",admin.getContactAddress());
+            tokenMap.put("supportDelivery",admin.getSupportDelivery()==null?"0":admin.getSupportDelivery().toString());
             Optional.ofNullable(admin.getVipEndDate()).ifPresent(date -> {
                 if(date.after(new Date())){
                     tokenMap.put("isVIP","1");

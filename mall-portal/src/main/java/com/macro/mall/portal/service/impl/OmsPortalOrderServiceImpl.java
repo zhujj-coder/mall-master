@@ -90,6 +90,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private HomeService homeService;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private UmsAdminMapper umsAdminMapper;
     final private String USER ="zjjhot@163.com";
     final private String UserKEY ="d8dc615805a24fbb908f524110be83b5";
     @Override
@@ -208,9 +210,20 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 //        lockStock(cartPromotionItemList);
         //根据商品合计、运费、活动优惠、优惠券、积分计算应付金额  add 备注
         OmsOrder order = new OmsOrder();
+//      运费要用啊 配送且有运维才收运费
+        order.setFreightAmount(new BigDecimal(0));
+        //        自取或者配送 radio 1 自取 2 配送 3 扫码点餐 0-> 直接支付订单
+        if(orderParam.getOrderType()!=null){
+            order.setOrderType(Integer.valueOf(orderParam.getOrderType()));
+        }
+        // 订单类型
+        if(order.getOrderType()==2){
+            UmsAdmin umsAdmin = umsAdminMapper.selectByPrimaryKey(adminId);
+            order.setFreightAmount(umsAdmin.getFreightAmount());
+        }
         order.setDiscountAmount(new BigDecimal(0));
         order.setTotalAmount(calcTotalAmount(orderItemList));
-        order.setFreightAmount(new BigDecimal(0));
+
         order.setPromotionAmount(calcPromotionAmount(orderItemList));
         order.setPromotionInfo(getOrderPromotionInfo(orderItemList));
         order.setNote(orderParam.getMessage());
@@ -232,7 +245,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //获取积分使用规则
         ConfirmOrderResult.CalcAmount calcAmount = calcCartAmount(order.getTotalAmount(), currentMember.getIntegration(), adminId);
 //        order.setPayAmount(calcPayAmount(order));
-        order.setPayAmount(calcAmount.getPayAmount());
+        order.setPayAmount(calcAmount.getPayAmount().add(order.getFreightAmount()));
         //转化为订单信息并插入数据库
         order.setMemberId(currentMember.getId());
         order.setCreateTime(new Date());
@@ -244,12 +257,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单
         order.setStatus(0);
         //订单类型：0->正常订单；1->秒杀订单
-        order.setOrderType(0);
+//        order.setOrderType(0);
 
-//        自取或者配送 radio 1 自取 2 配送
-        if(orderParam.getOrderType()!=null){
-            order.setOrderType(Integer.valueOf(orderParam.getOrderType()));
-        }
+
 
         //收货人信息：姓名、电话、邮编、地址
         if(orderParam.getMemberReceiveAddressId()!=null&&orderParam.getMemberReceiveAddressId()>0){
@@ -261,9 +271,21 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             order.setReceiverCity(address.getCity());
             order.setReceiverRegion(address.getRegion());
             order.setReceiverDetailAddress(address.getDetailAddress());
-        }else{
+        }else if(order.getOrderType()==3){
+            // 扫码点餐
             order.setReceiverDetailAddress(orderParam.getDetailAddress());
             order.setReceiverName(orderParam.getDetailAddress());
+            order.setReceiverPhone("");
+        }else{
+//            随机生成四位取货码
+            StringBuilder sb = new StringBuilder();
+            Random random = new Random();
+            sb.append(random.nextInt(10));
+            sb.append(random.nextInt(10));
+            sb.append(random.nextInt(10));
+            sb.append(random.nextInt(10));
+            order.setReceiverDetailAddress(sb.toString());
+            order.setReceiverName(sb.toString());
             order.setReceiverPhone("");
         }
 
@@ -343,7 +365,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         order.setSourceType(1);
         //订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单
         order.setStatus(0);
-        //订单类型：0->正常订单；1->秒杀订单
+        //订单类型：0-> 直接支付订单
         order.setOrderType(0);
         //收货人信息：姓名、电话、邮编、地址
 //        UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(orderParam.getMemberReceiveAddressId());
@@ -453,7 +475,24 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             log.error("修改库存异常",e);
         }
     }
-
+    @Override
+    public void addStock(Long orderId) {
+        try {
+            OmsOrderDetail orderDetail = portalOrderDao.getDetail(orderId);
+            log.info("orderDetail[{}]",orderDetail);
+            List<OmsOrderItem> collect = orderDetail.getOrderItemList().stream().filter(omsOrderItem ->
+                    omsOrderItem.getFlashRelationId()!=null&&omsOrderItem.getFlashRelationId()!=0
+            ).collect(Collectors.toList());
+            if(collect.size()>0){
+                collect.forEach(item->{
+                    item.setProductQuantity(0-item.getProductQuantity());
+                });
+                portalOrderDao.updateFlashSkuStock(collect);
+            }
+        }catch (Exception e){
+            log.error("修改库存异常",e);
+        }
+    }
     private void executePrinter(OmsOrder omsOrder) {
         try {
             if(omsOrder.getReceiverName()==null||omsOrder.getReceiverName().length()<=0){
@@ -689,8 +728,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         List<Long> ids = new ArrayList<>();
         for (OmsOrderDetail timeOutOrder : timeOutOrders) {
             ids.add(timeOutOrder.getId());
+            //秒杀数量放回去
+            this.addStock(timeOutOrder.getId());
         }
         portalOrderDao.updateOrderStatus(ids, 4);
+
         for (OmsOrderDetail timeOutOrder : timeOutOrders) {
             //解除订单商品库存锁定
             portalOrderDao.releaseSkuStockLock(timeOutOrder.getOrderItemList());
@@ -719,6 +761,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             //修改订单状态为取消
             cancelOrder.setStatus(4);
             orderMapper.updateByPrimaryKeySelective(cancelOrder);
+            // 延迟消息队列
+            //秒杀数量放回去
+            this.addStock(orderId);
             OmsOrderItemExample orderItemExample = new OmsOrderItemExample();
             orderItemExample.createCriteria().andOrderIdEqualTo(orderId);
             List<OmsOrderItem> orderItemList = orderItemMapper.selectByExample(orderItemExample);
@@ -755,6 +800,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             //修改订单状态为取消
             cancelOrder.setStatus(4);
             orderMapper.updateByPrimaryKeySelective(cancelOrder);
+            //抢购订单库存改回去
+            this.addStock(order.getId());
             OmsOrderItemExample orderItemExample = new OmsOrderItemExample();
             orderItemExample.createCriteria().andOrderIdEqualTo(orderId);
             List<OmsOrderItem> orderItemList = orderItemMapper.selectByExample(orderItemExample);
@@ -1221,7 +1268,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
 
         ConfirmOrderResult.CalcAmount calcAmount = new ConfirmOrderResult.CalcAmount();
-        calcAmount.setFreightAmount(new BigDecimal(0));
+        UmsAdmin admin = umsAdminMapper.selectByPrimaryKey(adminId);
+        calcAmount.setFreightAmount(admin.getFreightAmount());
 //        BigDecimal totalAmount = new BigDecimal("0");
 //        BigDecimal promotionAmount = new BigDecimal("0");
         BigDecimal integrationAmout = new BigDecimal("0");
@@ -1264,4 +1312,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         return detailByFlashId.getOrderItemList();
     }
 
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        sb.append(random.nextInt(10));
+        sb.append(random.nextInt(10));
+        sb.append(random.nextInt(10));
+        sb.append(random.nextInt(10));
+        System.out.println(sb.toString());
+    }
 }
